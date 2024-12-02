@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">CookUp</string>
     <string name="arrow_back">voltar</string>
-    <string name="log_in">Iniciar Sessão</string>
+    <string name="title_login">Iniciar Sessão</string>
+    <string name="login_input">login de entrada</string>
 </resources>

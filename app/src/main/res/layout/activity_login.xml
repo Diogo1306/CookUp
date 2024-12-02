@@ -1,36 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".LoginActivity">
 
     <TextView
-        android:id="@+id/text_login"
+        android:id="@+id/title_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:contentDescription="@string/log_in"
+        android:contentDescription="@string/title_login"
         android:fontFamily="@font/poppins_bold"
-        android:text="@string/log_in"
+        android:text="@string/title_login"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
-        <ImageView
-            android:id="@+id/arrow_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="40dp"
-            android:contentDescription="@string/arrow_back"
-            android:src="@drawable/arrow_back"
-            app:layout_constraintRight_toLeftOf="@+id/text_login"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+        android:id="@+id/arrow_back"
+        android:contentDescription="@string/arrow_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/arrow_back"
+        app:layout_constraintRight_toLeftOf="@+id/title_login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:id="@+id/input_login"
+        style="@style/input"
+        android:contentDescription="@string/title_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_login" />
+
+    <EditText
+        android:id="@+id/input_login_background_style"
+        style="@style/input_style"
+        android:hint="Email..."
+        android:fontFamily="@font/poppins_regular"
+        android:textSize="15sp"
+        android:drawableLeft="@drawable/male_person"
+        app:layout_constraintEnd_toEndOf="@id/input_login"
+        app:layout_constraintStart_toStartOf="@id/input_login"
+        app:layout_constraintTop_toTopOf="@id/input_login"
+        tools:ignore="Autofill,HardcodedText,RtlHardcoded,TextFields,TouchTargetSizeCheck,VisualLintTextFieldSize" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
