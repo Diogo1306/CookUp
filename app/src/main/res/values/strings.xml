@@ -2,5 +2,17 @@
     <string name="app_name">CookUp</string>
     <string name="arrow_back">voltar</string>
     <string name="title_login">Iniciar Sessão</string>
-    <string name="login_input">login de entrada</string>
+    <string name="input_login_title_email">Digite o seu e-mail:</string>
+    <string name="input_login_title_password">Digite o seu palavra-passe:</string>
+    <string name="email">e-mail</string>
+    <string name="passowrd">palavra-passe</string>
+    <string name="button_continue">Continuar</string>
+    <string name="google">Continuar com o Google</string>
+    <string name="input_sing_up_title_name">Digite o seu Nome:</string>
+    <string name="title_signup">Cadastre-se Aqui</string>
+    <string name="name">Nome e Sobrenome</string>
+
+
+
+
 </resources>
