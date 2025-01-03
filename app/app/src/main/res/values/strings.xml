@@ -11,6 +11,9 @@
     <string name="input_sing_up_title_name">Digite o seu Nome:</string>
     <string name="title_signup">Cadastre-se Aqui</string>
     <string name="name">Nome e Sobrenome</string>
+    <string name="singuptologin">Já tem conta no CookUp? Inicie sessão</string>
+    <string name="logintosingup">Novo no CookUp? Crie uma conta</string>
+    <string name="privacy_policy">Ao usar o Cookup você concorda com nossos Termos e Política de Privacidade</string>
 
 
 
