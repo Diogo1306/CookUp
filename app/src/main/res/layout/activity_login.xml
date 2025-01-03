@@ -70,7 +70,7 @@
             android:text="@string/input_login_title_email" />
 
         <EditText
-            android:id="@+id/input_email_container"
+            android:id="@+id/input_email"
             style="@style/input"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -100,7 +100,7 @@
             android:text="@string/input_login_title_password" />
 
         <EditText
-            android:id="@+id/input_password_container"
+            android:id="@+id/input_password"
             style="@style/input"
             android:layout_width="match_parent"
             android:layout_height="48dp"
