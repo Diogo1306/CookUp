@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -16,7 +17,7 @@
     <LinearLayout
         android:id="@+id/header_login_container"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:orientation="horizontal"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
@@ -28,10 +29,11 @@
             android:id="@+id/arrow_back"
             android:layout_width="34dp"
             android:layout_height="34dp"
+            android:layout_margin="5dp"
             android:layout_gravity="center_vertical"
             android:background="@color/white"
             android:contentDescription="@string/arrow_back"
-            android:src="@drawable/ic_arrow_back"
+            android:src="@drawable/ic_arrow_left"
             tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
@@ -41,7 +43,7 @@
             android:gravity="center"
             android:layout_marginEnd="34dp"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_black"
             android:text="@string/title_login"
             android:textSize="20sp" />
     </LinearLayout>
@@ -50,7 +52,6 @@
         android:id="@+id/body_input_login_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:orientation="vertical"
@@ -65,7 +66,7 @@
             android:autofillHints="emailAddress"
             android:fontFamily="@font/poppins_regular"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_black"
             android:layout_marginStart="20dp"
             android:text="@string/input_login_title_email" />
 
@@ -95,7 +96,7 @@
             android:fontFamily="@font/poppins_regular"
             android:importantForAutofill="no"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_black"
             android:layout_marginStart="20dp"
             android:text="@string/input_login_title_password" />
 
@@ -147,7 +148,7 @@
             style="@style/button_secundary"
             android:layout_margin="10dp"
             android:text="@string/google"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_black"
             android:fontFamily="@font/poppins_semibold"
             android:textSize="16sp"
             android:textAlignment="center"
@@ -166,7 +167,7 @@
             android:textSize="14sp"
             android:textAlignment="center"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_black"
             />
 
     </LinearLayout>
@@ -188,7 +189,7 @@
             android:textAlignment="center"
             android:fontFamily="@font/poppins_regular"
             android:textSize="12sp"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_black"
             />
 
     </LinearLayout>
