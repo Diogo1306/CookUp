@@ -1,7 +1,9 @@
 package com.diogo.cookup.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +27,6 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import java.util.Objects;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -61,10 +62,6 @@ public class SignupActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Snackbar snackbar = Snackbar.make(v, message[1], Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.WHITE);
-                        snackbar.setTextColor(Color.BLACK);
-                        snackbar.show();
 
                         FirebaseAuth auth = FirebaseAuth.getInstance();
                         if(auth.getCurrentUser() != null) {
@@ -89,6 +86,14 @@ public class SignupActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
+                        Snackbar snackbar = Snackbar.make(v, message[1], Snackbar.LENGTH_SHORT);
+                        snackbar.setBackgroundTint(Color.WHITE);
+                        snackbar.setTextColor(Color.BLACK);
+                        snackbar.show();
+
+                        new Handler().postDelayed(this::ScreenLogin, 2000);
+
                     } else {
                         String erro = getErrorString(task);
                         Snackbar snackbar = Snackbar.make(v, erro, Snackbar.LENGTH_SHORT);
@@ -114,6 +119,12 @@ public class SignupActivity extends AppCompatActivity {
             erro = "Erro ao cadastrar, tente novamente mais tarde.";
         }
         return erro;
+    }
+
+    private void ScreenLogin() {
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void iniciarComponente() {

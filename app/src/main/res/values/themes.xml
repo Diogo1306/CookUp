@@ -3,6 +3,7 @@
     <style name="white.Theme.CookUp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.CookUp" parent="white.Theme.CookUp" />
