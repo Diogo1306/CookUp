@@ -1,9 +1,12 @@
 package com.diogo.cookup.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.utils.NavigationUtils;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -28,14 +32,19 @@ public class LoginActivity extends AppCompatActivity {
     private TextView text_logintosingup;
     private EditText edit_email, edit_password;
     private Button bt_login;
+    private boolean isPasswordVisible = false;
+
     private final String[] message = {"Preencha todos os campos.", "Login efetuado com sucesso"};
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         iniciarComponentes();
+
+        NavigationUtils.setupBackButton(this, R.id.arrow_back);
 
         text_logintosingup.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
@@ -55,6 +64,30 @@ public class LoginActivity extends AppCompatActivity {
                 authUser(v);
             }
         });
+
+        edit_password.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (edit_password.getRight() - edit_password.getCompoundDrawables()[2].getBounds().width())) {
+                    togglePasswordVisibility();
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+
+            edit_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            edit_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock, 0, R.drawable.ic_eye, 0);
+        } else {
+            edit_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            edit_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock, 0, R.drawable.ic_eye_off, 0);
+        }
+        edit_password.setSelection(edit_password.getText().length());
+        isPasswordVisible = !isPasswordVisible;
     }
 
     private void authUser(View view) {
@@ -71,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         new Handler().postDelayed(this::ScreenMain, 2000);
                     } else {
-                        String erro = getString(task);
+                        String erro = getErrorMessage(task);
 
                         Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
                         snackbar.setBackgroundTint(Color.RED);
@@ -82,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private static String getString(Task<AuthResult> task) {
+    private static String getErrorMessage(Task<AuthResult> task) {
         String erro;
         try {
             throw Objects.requireNonNull(task.getException());

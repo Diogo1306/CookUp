@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.ui.activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -22,7 +23,8 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Botão de Logout
+        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+
         Button btnLogout = view.findViewById(R.id.btn_logout);
 
 
