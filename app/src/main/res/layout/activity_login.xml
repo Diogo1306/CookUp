@@ -43,7 +43,7 @@
             android:gravity="center"
             android:layout_marginEnd="34dp"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/gray_black"
+            android:textColor="@color/black"
             android:text="@string/title_login"
             android:textSize="20sp" />
     </LinearLayout>
@@ -66,7 +66,7 @@
             android:autofillHints="emailAddress"
             android:fontFamily="@font/poppins_regular"
             android:textSize="14sp"
-            android:textColor="@color/gray_black"
+            android:textColor="@color/black"
             android:layout_marginStart="20dp"
             android:text="@string/input_login_title_email" />
 
@@ -96,7 +96,7 @@
             android:fontFamily="@font/poppins_regular"
             android:importantForAutofill="no"
             android:textSize="14sp"
-            android:textColor="@color/gray_black"
+            android:textColor="@color/black"
             android:layout_marginStart="20dp"
             android:text="@string/input_login_title_password" />
 
@@ -148,7 +148,7 @@
             style="@style/button_secundary"
             android:layout_margin="10dp"
             android:text="@string/google"
-            android:textColor="@color/gray_black"
+            android:textColor="@color/black"
             android:fontFamily="@font/poppins_semibold"
             android:textSize="16sp"
             android:textAlignment="center"
@@ -167,7 +167,7 @@
             android:textSize="14sp"
             android:textAlignment="center"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/gray_black"
+            android:textColor="@color/black"
             />
 
     </LinearLayout>
@@ -189,7 +189,7 @@
             android:textAlignment="center"
             android:fontFamily="@font/poppins_regular"
             android:textSize="12sp"
-            android:textColor="@color/gray_black"
+            android:textColor="@color/black"
             />
 
     </LinearLayout>

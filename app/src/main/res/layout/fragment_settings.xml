@@ -53,7 +53,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/gray_white" />
+            android:background="@color/sc_black" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_profile"
@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/gray_black"
+                    android:textColor="@color/sc_black"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -103,7 +103,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/gray_white" />
+            android:background="@color/sc_black" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_email"
@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/gray_black"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -153,7 +153,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/gray_white" />
+            android:background="@color/sc_black" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_password"
@@ -186,7 +186,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/gray_black"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -204,7 +204,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/gray_white" />
+            android:background="@color/sc_black" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_logout"
