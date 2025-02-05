@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -31,7 +31,7 @@
             android:layout_height="34dp"
             android:layout_margin="5dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/white"
+            android:background="@color/transparent"
             android:contentDescription="@string/arrow_back"
             android:src="@drawable/ic_arrow_left"
             tools:ignore="TouchTargetSizeCheck" />
@@ -43,7 +43,7 @@
             android:gravity="center"
             android:layout_marginEnd="34dp"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             android:text="@string/title_login"
             android:textSize="20sp" />
     </LinearLayout>
@@ -66,7 +66,7 @@
             android:autofillHints="emailAddress"
             android:fontFamily="@font/poppins_regular"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             android:layout_marginStart="20dp"
             android:text="@string/input_login_title_email" />
 
@@ -85,6 +85,7 @@
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
+            android:textColorHint="@color/text_primary"
             android:textSize="14sp"
             tools:ignore="VisualLintTextFieldSize" />
 
@@ -96,7 +97,7 @@
             android:fontFamily="@font/poppins_regular"
             android:importantForAutofill="no"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             android:layout_marginStart="20dp"
             android:text="@string/input_login_title_password" />
 
@@ -105,8 +106,9 @@
             style="@style/input"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:drawableEnd="@drawable/ic_eye"
+            android:autofillHints="password"
             android:drawableStart="@drawable/ic_lock"
+            android:drawableEnd="@drawable/ic_eye"
             android:drawablePadding="8dp"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
@@ -115,8 +117,8 @@
             android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
+            android:textColorHint="@color/text_primary"
             android:textSize="14sp"
-            android:autofillHints="password"
             tools:ignore="VisualLintTextFieldSize" />
 
     </LinearLayout>
@@ -137,8 +139,8 @@
             android:id="@+id/login_button"
             style="@style/button_primary"
             android:layout_margin="10dp"
-            android:text="@string/button_continue"
             android:fontFamily="@font/poppins_semibold"
+            android:text="@string/button_continue"
             android:textColor="@color/white"
             android:textSize="16sp"
             tools:ignore="TextContrastCheck,VisualLintButtonSize" />
@@ -148,7 +150,7 @@
             style="@style/button_secundary"
             android:layout_margin="10dp"
             android:text="@string/google"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
             android:textSize="16sp"
             android:textAlignment="center"
@@ -167,7 +169,7 @@
             android:textSize="14sp"
             android:textAlignment="center"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             />
 
     </LinearLayout>
@@ -189,7 +191,7 @@
             android:textAlignment="center"
             android:fontFamily="@font/poppins_regular"
             android:textSize="12sp"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             />
 
     </LinearLayout>
