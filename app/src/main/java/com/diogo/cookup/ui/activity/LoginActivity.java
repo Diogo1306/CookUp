@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,20 +11,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.NavigationUtils;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
+import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,8 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edit_email, edit_password;
     private Button bt_login;
     private boolean isPasswordVisible = false;
-
-    private final String[] message = {"Preencha todos os campos.", "Login efetuado com sucesso"};
+    private AuthViewModel authViewModel;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -42,44 +35,79 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         iniciarComponentes();
 
         NavigationUtils.setupBackButton(this, R.id.arrow_back);
 
-        text_logintosingup.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-            startActivity(intent);
-        });
+        text_logintosingup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
 
-        bt_login.setOnClickListener(v -> {
-            String email = edit_email.getText().toString().trim();
-            String password = edit_password.getText().toString().trim();
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Snackbar snackbar = Snackbar.make(v, message[0], Snackbar.LENGTH_SHORT);
-                snackbar.setBackgroundTint(Color.WHITE);
-                snackbar.setTextColor(Color.BLACK);
-                snackbar.show();
-            } else {
-                authUser(v);
-            }
-        });
+        bt_login.setOnClickListener(this::login);
 
         edit_password.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edit_password.getRight() - edit_password.getCompoundDrawables()[2].getBounds().width())) {
                     togglePasswordVisibility();
-                    return true;
+                    return true; // Consome o evento corretamente
                 }
             }
             return false;
         });
+
+        observeViewModel();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            ScreenMain();
+        }
+    }
+
+    private void observeViewModel() {
+        authViewModel.getUserLiveData().observe(this, user -> {
+            if (user != null) {
+                MessageUtils.showSnackbarWithDelay(
+                        findViewById(android.R.id.content),
+                        "Login efetuado com sucesso!",
+                        Color.GREEN,
+                        LoginActivity.this,
+                        MainActivity.class,
+                        2500
+                );
+            }
+        });
+
+        authViewModel.getErrorMessage().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                MessageUtils.showSnackbar(findViewById(android.R.id.content), errorMessage, Color.RED);
+            }
+        });
+    }
+
+    private void login(View v) {
+        String email = edit_email.getText().toString().trim();
+        String password = edit_password.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            MessageUtils.showSnackbar(v, "Preencha todos os campos.", Color.RED);
+            return;
+        }
+
+        authViewModel.login(email, password);
+    }
+
+    private void ScreenMain() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
-
             edit_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             edit_password.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock, 0, R.drawable.ic_eye, 0);
         } else {
@@ -88,61 +116,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         edit_password.setSelection(edit_password.getText().length());
         isPasswordVisible = !isPasswordVisible;
-    }
-
-    private void authUser(View view) {
-        String email = edit_email.getText().toString().trim();
-        String password = edit_password.getText().toString().trim();
-
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Snackbar snackbar = Snackbar.make(view, message[1], Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.GREEN);
-                        snackbar.setTextColor(Color.WHITE);
-                        snackbar.show();
-
-                        new Handler().postDelayed(this::ScreenMain, 2000);
-                    } else {
-                        String erro = getErrorMessage(task);
-
-                        Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.RED);
-                        snackbar.setTextColor(Color.WHITE);
-                        snackbar.show();
-                    }
-                });
-    }
-
-    @NonNull
-    private static String getErrorMessage(Task<AuthResult> task) {
-        String erro;
-        try {
-            throw Objects.requireNonNull(task.getException());
-        } catch (FirebaseAuthInvalidUserException e) {
-            erro = "Utilizador não encontrado.";
-        } catch (FirebaseAuthInvalidCredentialsException e) {
-            erro = "Credenciais inválidas. Verifique o email e a palavra-passe.";
-        } catch (Exception e) {
-            erro = "Erro ao fazer login. Tente novamente.";
-        }
-        return erro;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (currentUser != null) {
-            ScreenMain();
-        }
-    }
-
-    private void ScreenMain() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void iniciarComponentes() {

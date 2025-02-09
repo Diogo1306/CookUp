@@ -1,14 +1,14 @@
 package com.diogo.cookup.data.model;
 
 public class ApiResponse {
-    private boolean sucesso;
-    private String mensagem;
+    private boolean success;
+    private String message;
 
-    public boolean isSucesso() {
-        return sucesso;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public String getMensagem() {
-        return mensagem;
+    public String getMessage() {
+        return message;
     }
 }
