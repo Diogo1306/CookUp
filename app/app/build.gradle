@@ -38,13 +38,15 @@ dependencies {
     implementation libs.appcompat.v170
 
     // Firebase
-    implementation(platform(libs.firebase.bom)) // Firebase BOM
-    implementation(libs.firebase.analytics) // Firebase Analytics
-    implementation(libs.firebase.auth) // Firebase Auth
+    implementation(platform(libs.firebase.bom)) 
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
 
     // Dependencies XAMPP
     implementation libs.retrofit
+    implementation libs.logging.interceptor
     implementation libs.converter.gson
+    implementation libs.okhttp
 
     implementation libs.appcompat
     implementation libs.material

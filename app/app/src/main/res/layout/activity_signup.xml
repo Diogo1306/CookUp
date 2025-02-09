@@ -52,7 +52,6 @@
         android:id="@+id/body_input_signup_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:orientation="vertical"
@@ -73,7 +72,7 @@
             android:textSize="14sp" />
 
         <EditText
-            android:id="@+id/input_name"
+            android:id="@+id/input_username"
             style="@style/input"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -153,6 +152,38 @@
             android:textSize="14sp"
             tools:ignore="VisualLintTextFieldSize" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:autofillHints="password"
+            android:fontFamily="@font/poppins_regular"
+            android:importantForAutofill="no"
+            android:text="@string/input_login_title_password"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/input_confirm_password"
+            style="@style/input"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="password"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawableEnd="@drawable/ic_eye"
+            android:drawablePadding="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/poppins_regular"
+            android:gravity="center_vertical"
+            android:hint="@string/passowrd"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="@color/text_primary"
+            android:textSize="14sp"
+            tools:ignore="VisualLintTextFieldSize" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -178,7 +209,7 @@
             tools:ignore="TextContrastCheck,VisualLintButtonSize" />
 
         <TextView
-            android:id="@+id/singuptologin"
+            android:id="@+id/signuptologin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/singuptologin"
