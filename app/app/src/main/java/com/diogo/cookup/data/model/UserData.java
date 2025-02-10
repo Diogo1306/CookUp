@@ -1,9 +1,9 @@
 package com.diogo.cookup.data.model;
 
 public class UserData {
-    private String firebase_uid;
+    private final String firebase_uid;
     private String username;
-    private String email;
+    private final String email;
     private String profile_picture;
 
     public UserData(String firebase_uid, String username, String email, String profile_picture) {

@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getRawX() >= (edit_password.getRight() - edit_password.getCompoundDrawables()[2].getBounds().width())) {
                     togglePasswordVisibility();
-                    return true; // Consome o evento corretamente
+                    return true;
                 }
             }
             return false;
