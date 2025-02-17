@@ -31,4 +31,14 @@
         <item name="android:drawablePadding">8dp</item>
     </style>
 
+    <style name="BottomNavView" parent="@style/Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:background">@drawable/bottom_nav_menu</item>
+        <item name="itemIconSize">32dp</item>
+
+        <item name="itemTextColor">@color/background_secondary</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="itemIconTint">@color/bottom_navmenu_icon_selector</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

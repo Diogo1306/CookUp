@@ -82,7 +82,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/profile_name"
+                    android:id="@+id/settings_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
@@ -133,7 +133,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/email_address"
+                    android:id="@+id/settings_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
@@ -187,9 +187,10 @@
                     android:id="@+id/password_hidden"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="******"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
 
                 <ImageView
                     android:id="@+id/password_arrow"

@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public class NavigationUtils {
 
+
     public static void setupBackButton(Activity activity, int buttonId) {
         ImageButton backButton = activity.findViewById(buttonId);
         if (backButton != null) {
@@ -16,8 +17,8 @@ public class NavigationUtils {
         }
     }
 
-    public static void setupBackButton(Fragment fragment, View view, int buttonId) {
-        ImageButton backButton = view.findViewById(buttonId);
+    public static void setupBackButton(Fragment fragment, View rootView, int buttonId) {
+        ImageButton backButton = rootView.findViewById(buttonId);
         if (backButton != null) {
             backButton.setOnClickListener(v -> {
                 FragmentActivity activity = fragment.getActivity();

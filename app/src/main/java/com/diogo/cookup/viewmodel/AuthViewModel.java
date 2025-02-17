@@ -8,11 +8,11 @@ import com.diogo.cookup.data.repository.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AuthViewModel extends ViewModel {
+
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> errorMessageLiveData = new MutableLiveData<>();
-    private final MutableLiveData<UserData> userDataLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public AuthViewModel() {
         authRepository = new AuthRepository();
@@ -24,11 +24,7 @@ public class AuthViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> getErrorMessage() {
-        return errorMessageLiveData;
-    }
-
-    public MutableLiveData<UserData> getUserDataLiveData() {
-        return userDataLiveData;
+        return errorMessage;
     }
 
     public void login(String email, String password) {
@@ -36,14 +32,12 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onSuccess(FirebaseUser user) {
                 if (user != null) {
-                    userLiveData.setValue(user);
-                    loadUserData(user.getUid());
+                    userLiveData.postValue(user);
                 }
             }
-
             @Override
-            public void onError(String message) {
-                errorMessageLiveData.setValue(message);
+            public void onError(String msg) {
+                errorMessage.postValue(msg);
             }
         });
     }
@@ -53,33 +47,19 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onSuccess(FirebaseUser user) {
                 if (user != null) {
-                    userLiveData.setValue(user);
-                    loadUserData(user.getUid());
+                    userLiveData.postValue(user);
                 }
             }
 
             @Override
-            public void onError(String message) {
-                errorMessageLiveData.setValue(message);
-            }
-        });
-    }
-
-    private void loadUserData(String firebaseUid) {
-        userRepository.getUser(firebaseUid, new UserRepository.UserCallback() {
-            @Override
-            public void onSuccess(UserData user) {
-                userDataLiveData.setValue(user);
-            }
-
-            @Override
-            public void onError(String message) {
-                errorMessageLiveData.setValue("Erro ao carregar os dados do utilizador.");
+            public void onError(String msg) {
+                errorMessage.postValue(msg);
             }
         });
     }
 
     public void logout() {
         authRepository.logout();
+        userLiveData.setValue(null);
     }
 }

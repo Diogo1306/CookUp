@@ -2,13 +2,15 @@ package com.diogo.cookup.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.UserRepository;
 
 public class UserViewModel extends ViewModel {
     private final UserRepository userRepository;
+
     private final MutableLiveData<UserData> userLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> errorMessageLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public UserViewModel() {
         userRepository = new UserRepository();
@@ -18,20 +20,20 @@ public class UserViewModel extends ViewModel {
         return userLiveData;
     }
 
-    public MutableLiveData<String> getErrorMessage() {
-        return errorMessageLiveData;
+    public MutableLiveData<String> getErrorMessageLiveData() {
+        return errorMessage;
     }
 
     public void loadUser(String firebaseUid) {
         userRepository.getUser(firebaseUid, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(UserData user) {
-                userLiveData.setValue(user);
+                userLiveData.postValue(user);
             }
 
             @Override
             public void onError(String message) {
-                errorMessageLiveData.setValue("Erro ao carregar usuário: " + message);
+                errorMessage.postValue("Erro ao carregar usuário: " + message);
             }
         });
     }
@@ -40,12 +42,12 @@ public class UserViewModel extends ViewModel {
         userRepository.createOrUpdateUser(userData, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(UserData user) {
-                userLiveData.setValue(user);
+                userLiveData.postValue(user);
             }
 
             @Override
             public void onError(String message) {
-                errorMessageLiveData.setValue("Erro ao atualizar usuário: " + message);
+                errorMessage.postValue("Erro ao atualizar usuário: " + message);
             }
         });
     }
