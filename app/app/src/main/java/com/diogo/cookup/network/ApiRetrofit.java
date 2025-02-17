@@ -1,13 +1,14 @@
 package com.diogo.cookup.network;
 
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import java.util.concurrent.TimeUnit;
 
 public class ApiRetrofit {
-    private static final String BASE_URL = "http://192.168.0.26/PAP/CookUp_Core/";
+    private static final String BASE_URL = "http://192.168.0.26/PAP/CookUp_Core/public/";
+
     private static Retrofit retrofit = null;
 
     private static OkHttpClient getHttpClient() {
@@ -21,8 +22,8 @@ public class ApiRetrofit {
                 .build();
     }
 
-    public static synchronized  Retrofit getClient() {
-        if(retrofit == null) {
+    public static synchronized Retrofit getClient() {
+        if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(getHttpClient())

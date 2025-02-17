@@ -3,7 +3,6 @@ package com.diogo.cookup.data.repository;
 import com.diogo.cookup.data.model.UserData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.diogo.cookup.data.repository.UserRepository;
 
 public class AuthRepository {
     private final FirebaseAuth auth;
@@ -18,9 +17,13 @@ public class AuthRepository {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        callback.onSuccess(auth.getCurrentUser());
+                        FirebaseUser currentUser = auth.getCurrentUser();
+                        callback.onSuccess(currentUser);
                     } else {
-                        callback.onError("Erro ao fazer login: " + task.getException().getMessage());
+                        String errorMsg = (task.getException() != null)
+                                ? task.getException().getMessage()
+                                : "Erro desconhecido";
+                        callback.onError("Erro ao fazer login: " + errorMsg);
                     }
                 });
     }
@@ -29,41 +32,54 @@ public class AuthRepository {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        if (user != null) {
-                            UserData userData = new UserData(user.getUid(), username, email, "");
+                        FirebaseUser firebaseUser = auth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            UserData userData = new UserData(
+                                    firebaseUser.getUid(),
+                                    username,
+                                    email,
+                                    ""
+                            );
                             userRepository.createOrUpdateUser(userData, new UserRepository.UserCallback() {
                                 @Override
                                 public void onSuccess(UserData user) {
-                                    callback.onSuccess(auth.getCurrentUser());
+                                    callback.onSuccess(firebaseUser);
                                 }
 
                                 @Override
                                 public void onError(String message) {
-                                    deleteFirebaseUser(user, callback);
-                                    callback.onError("Erro ao salvar usuário na API: " + message);
+                                    deleteFirebaseUser(firebaseUser, callback, message);
                                 }
                             });
+                        } else {
+                            callback.onError("Usuário Firebase é nulo após signup!");
                         }
                     } else {
-                        callback.onError("Erro ao criar conta: " + task.getException().getMessage());
+                        String errorMsg = (task.getException() != null)
+                                ? task.getException().getMessage()
+                                : "Erro desconhecido";
+                        callback.onError("Erro ao criar conta: " + errorMsg);
                     }
                 });
     }
 
-    private void deleteFirebaseUser(FirebaseUser firebaseUser, AuthCallback callback) {
+    private void deleteFirebaseUser(FirebaseUser firebaseUser, AuthCallback callback, String originalErrorMessage) {
         firebaseUser.delete()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        callback.onSuccess(null);
+                .addOnCompleteListener(deleteTask -> {
+                    if (deleteTask.isSuccessful()) {
+                        callback.onError(originalErrorMessage);
                     } else {
-                        callback.onError("Erro ao excluir conta: " + task.getException().getMessage());
+                        String errorMsg = (deleteTask.getException() != null)
+                                ? deleteTask.getException().getMessage()
+                                : "Erro desconhecido";
+                        callback.onError(originalErrorMessage + " | Erro ao excluir conta no Firebase: " + errorMsg);
                     }
                 });
     }
 
     public void logout() {
-        auth.signOut();
+        FirebaseAuth.getInstance().signOut();
+
     }
 
     public interface AuthCallback {
