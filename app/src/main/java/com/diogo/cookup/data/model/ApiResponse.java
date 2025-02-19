@@ -1,9 +1,9 @@
 package com.diogo.cookup.data.model;
 
-public class ApiResponse {
+public class ApiResponse<T> {
     private boolean success;
     private String message;
-    private UserData data;
+    private T data;
 
     public boolean isSuccess() {
         return success;
@@ -13,7 +13,7 @@ public class ApiResponse {
         return message;
     }
 
-    public UserData getData() {
+    public T getData() {
         return data;
     }
 }
