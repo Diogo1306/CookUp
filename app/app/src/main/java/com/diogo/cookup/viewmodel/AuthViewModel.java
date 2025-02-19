@@ -2,7 +2,6 @@ package com.diogo.cookup.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.AuthRepository;
 import com.diogo.cookup.data.repository.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
