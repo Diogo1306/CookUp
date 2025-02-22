@@ -139,9 +139,10 @@
             android:layout_height="48dp"
             android:autofillHints="password"
             android:drawableStart="@drawable/ic_lock"
-            android:drawableEnd="@drawable/ic_eye"
+            android:drawableEnd="@drawable/ic_eye_off"
             android:drawablePadding="8dp"
             android:ellipsize="end"
+            android:focusable="true"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
             android:hint="@string/passowrd"
@@ -150,6 +151,7 @@
             android:singleLine="true"
             android:textColorHint="@color/text_primary"
             android:textSize="14sp"
+            android:clickable="true"
             tools:ignore="VisualLintTextFieldSize,DuplicateSpeakableTextCheck" />
 
         <TextView
@@ -171,7 +173,7 @@
             android:layout_height="48dp"
             android:autofillHints="password"
             android:drawableStart="@drawable/ic_lock"
-            android:drawableEnd="@drawable/ic_eye"
+            android:drawableEnd="@drawable/ic_eye_off"
             android:drawablePadding="8dp"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
@@ -180,6 +182,8 @@
             android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
+            android:clickable="true"
+            android:focusable="true"
             android:textColorHint="@color/text_primary"
             android:textSize="14sp"
             tools:ignore="VisualLintTextFieldSize" />
