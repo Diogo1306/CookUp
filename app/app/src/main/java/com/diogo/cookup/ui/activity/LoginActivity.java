@@ -8,12 +8,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.ui.fragment.WelcomeFragment;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
@@ -25,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editEmail, inputPassword;
     private Button btnLogin;
     private TextView btnGoToSignup;
+    private ImageButton arrowBack;
     private boolean isPasswordVisible = false;
     private AuthViewModel authViewModel;
 
@@ -32,10 +35,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         if (user != null) {
             navigateToMainActivity();
+        } else {
+            showWelcomeFragment();
         }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +50,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        NavigationUtils.setupBackButton(this, R.id.arrow_back);
+
         setupViews();
         setupObservers();
         setupListeners();
-
-        NavigationUtils.setupBackButton(this, R.id.arrow_back);
-
     }
 
     private void setupViews() {
@@ -56,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword = findViewById(R.id.input_password);
         btnLogin = findViewById(R.id.login_button);
         btnGoToSignup = findViewById(R.id.logintosingup);
+        arrowBack = findViewById(R.id.arrow_back);
     }
 
     private void setupObservers() {
@@ -76,11 +83,13 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword.setOnTouchListener(this::onPasswordToggleTouch);
         btnLogin.setOnClickListener(this::Login);
         btnGoToSignup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
+
+        arrowBack.setOnClickListener(v -> showWelcomeFragment());
     }
 
     private boolean onPasswordToggleTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            int drawableEndPosition = inputPassword.getRight() - inputPassword.getCompoundDrawables()[2].getBounds().width();
+            int drawableEndPosition = inputPassword.getRight() - inputPassword.getPaddingEnd();
             if (event.getRawX() >= drawableEndPosition) {
                 togglePasswordVisibility();
                 return true;
@@ -118,5 +127,13 @@ public class LoginActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void showWelcomeFragment() {
+        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new WelcomeFragment())
+                    .commit();
+        }
     }
 }
