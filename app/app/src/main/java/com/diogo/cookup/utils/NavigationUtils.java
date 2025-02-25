@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentActivity;
 
 public class NavigationUtils {
 
-
     public static void setupBackButton(Activity activity, int buttonId) {
         ImageButton backButton = activity.findViewById(buttonId);
         if (backButton != null) {
