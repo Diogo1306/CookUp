@@ -38,11 +38,10 @@ public class LoginActivity extends AppCompatActivity {
 
         if (user != null) {
             navigateToMainActivity();
-        } else {
+        } else if (getIntent().getBooleanExtra("show_welcome", true)) {
             showWelcomeFragment();
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

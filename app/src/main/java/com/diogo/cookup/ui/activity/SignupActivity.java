@@ -74,7 +74,9 @@ public class SignupActivity extends AppCompatActivity {
         editConfirmPassword.setOnTouchListener((v, event) -> onPasswordToggleTouch(editConfirmPassword, event));
         btnSignUp.setOnClickListener(this::Signup);
         btnGoToLogin.setOnClickListener(v -> {
-            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+            intent.putExtra("show_welcome", false);
+            startActivity(intent);
             finish();
         });
     }
