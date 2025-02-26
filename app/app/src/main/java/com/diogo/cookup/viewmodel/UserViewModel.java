@@ -3,6 +3,7 @@ package com.diogo.cookup.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.UserRepository;
 
@@ -11,6 +12,7 @@ public class UserViewModel extends ViewModel {
 
     private final MutableLiveData<UserData> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<ApiResponse<UserData>> userApiResponseLiveData = new MutableLiveData<>();
 
     public UserViewModel() {
         userRepository = new UserRepository();
@@ -20,9 +22,10 @@ public class UserViewModel extends ViewModel {
         return userLiveData;
     }
 
-    public MutableLiveData<String> getErrorMessageLiveData() {
-        return errorMessage;
-    }
+    public MutableLiveData<String> getErrorMessageLiveData() { return errorMessage; }
+
+    public MutableLiveData<ApiResponse<UserData>> getApiResponseLiveData() { return userApiResponseLiveData; }
+
 
     public void loadUser(String firebaseUid) {
         userRepository.getUser(firebaseUid, new UserRepository.UserCallback() {
@@ -51,4 +54,6 @@ public class UserViewModel extends ViewModel {
             }
         });
     }
+
+
 }

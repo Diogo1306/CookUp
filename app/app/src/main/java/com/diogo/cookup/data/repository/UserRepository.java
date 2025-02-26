@@ -5,6 +5,9 @@ import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
+
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,13 +48,24 @@ public class UserRepository {
             public void onResponse(@NonNull Call<ApiResponse<UserData>> call, @NonNull Response<ApiResponse<UserData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<UserData> apiResponse = response.body();
+
                     if (apiResponse.isSuccess()) {
                         callback.onSuccess(userData);
                     } else {
                         callback.onError(apiResponse.getMessage());
                     }
                 } else {
-                    callback.onError("Erro ao criar/atualizar usuário (HTTP " + response.code() + ")");
+                    String errorMessage = "Erro ao criar/atualizar usuário (HTTP " + response.code() + ")";
+                    if (response.code() == 409) {
+                        try {
+                            String errorBody = response.errorBody().string();
+                            JSONObject jsonObject = new JSONObject(errorBody);
+                            errorMessage = jsonObject.getString("message");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    callback.onError(errorMessage);
                 }
             }
 
@@ -61,7 +75,6 @@ public class UserRepository {
             }
         });
     }
-
 
     public interface UserCallback {
         void onSuccess(UserData user);
