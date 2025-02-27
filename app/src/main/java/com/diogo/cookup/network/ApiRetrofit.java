@@ -13,12 +13,12 @@ public class ApiRetrofit {
 
     private static OkHttpClient getHttpClient() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY); 
 
         return new OkHttpClient.Builder()
                 .addInterceptor(logging)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
                 .build();
     }
 
