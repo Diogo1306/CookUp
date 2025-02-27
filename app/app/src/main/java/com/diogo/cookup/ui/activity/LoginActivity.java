@@ -3,6 +3,7 @@ package com.diogo.cookup.ui.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,7 +68,9 @@ public class LoginActivity extends AppCompatActivity {
     private void setupObservers() {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                navigateToMainActivity();
+                MessageUtils.showSnackbar(findViewById(android.R.id.content), "Login bem-sucedido!", Color.GREEN);
+
+                new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });
 
@@ -77,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void setupListeners() {
         inputPassword.setOnTouchListener(this::onPasswordToggleTouch);

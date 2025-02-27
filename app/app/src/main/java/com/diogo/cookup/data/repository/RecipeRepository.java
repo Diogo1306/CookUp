@@ -8,7 +8,6 @@ import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
-import com.google.gson.Gson;
 
 import java.util.List;
 import retrofit2.Call;
@@ -26,13 +25,14 @@ public class RecipeRepository {
         apiService.getAllRecipes(true).enqueue(new Callback<ApiResponse<List<RecipeData>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Response<ApiResponse<List<RecipeData>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    List<RecipeData> recipes = response.body().getData();
-                    Log.d("DEBUG_JSON", "Recebido: " + new Gson().toJson(recipes));
-                    if (recipes != null) {
+
+                if (response.isSuccessful() && response.body() != null) {
+
+                    if (response.body().isSuccess()) {
+                        List<RecipeData> recipes = response.body().getData();
                         recipesLiveData.postValue(recipes);
                     } else {
-                        errorMessage.postValue("Nenhuma receita encontrada.");
+                        errorMessage.postValue(response.body().getMessage());
                     }
                 } else {
                     errorMessage.postValue("Erro ao buscar receitas.");
@@ -42,6 +42,7 @@ public class RecipeRepository {
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Throwable t) {
                 errorMessage.postValue("Erro de conexão: " + t.getMessage());
+                Log.e("API_DEBUG", "Erro na requisição: ", t);
             }
         });
     }

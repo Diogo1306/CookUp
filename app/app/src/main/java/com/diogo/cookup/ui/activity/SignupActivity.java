@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,9 +67,12 @@ public class SignupActivity extends AppCompatActivity {
     private void setupObservers() {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                MessageUtils.showSnackbar(findViewById(android.R.id.content), "Conta criada com sucesso!", Color.GREEN);
-                startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                finish();
+                MessageUtils.showSnackbar(findViewById(android.R.id.content), "Cadastro realizado com sucesso!", Color.GREEN);
+
+                new Handler().postDelayed(() -> {
+                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                    finish();
+                }, 2000);
             }
         });
 
@@ -78,6 +82,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private boolean onPasswordToggleTouch(EditText editText, MotionEvent event, boolean isMainPassword) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
