@@ -12,6 +12,7 @@ public class AuthViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> successMessage = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public AuthViewModel() {
@@ -21,6 +22,10 @@ public class AuthViewModel extends ViewModel {
 
     public LiveData<FirebaseUser> getUserLiveData() {
         return userLiveData;
+    }
+
+    public LiveData<String> getSuccessMessage() {
+        return successMessage;
     }
 
     public LiveData<String> getErrorMessage() {
@@ -35,6 +40,11 @@ public class AuthViewModel extends ViewModel {
             }
 
             @Override
+            public void onSuccess(FirebaseUser user, String message) {
+
+            }
+
+            @Override
             public void onError(String msg) {
                 errorMessage.postValue(msg);
             }
@@ -45,12 +55,17 @@ public class AuthViewModel extends ViewModel {
         authRepository.signup(email, password, username, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                userLiveData.postValue(user);
             }
 
             @Override
-            public void onError(String msg) {
-                errorMessage.postValue(msg);
+            public void onSuccess(FirebaseUser user, String message) {
+                userLiveData.postValue(user);
+                successMessage.postValue(message);
+            }
+
+            @Override
+            public void onError(String message) {
+                errorMessage.postValue(message);
             }
         });
     }

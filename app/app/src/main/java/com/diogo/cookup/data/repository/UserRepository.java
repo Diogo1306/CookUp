@@ -1,13 +1,13 @@
 package com.diogo.cookup.data.repository;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
+
 import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,7 +26,7 @@ public class UserRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<UserData> apiResponse = response.body();
                     if (apiResponse.isSuccess() && apiResponse.getData() != null) {
-                        callback.onSuccess(apiResponse.getData());
+                        callback.onSuccess(apiResponse.getData(), apiResponse.getMessage());
                     } else {
                         callback.onError(apiResponse.getMessage());
                     }
@@ -49,13 +49,18 @@ public class UserRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<UserData> apiResponse = response.body();
                     if (apiResponse.isSuccess()) {
-                        callback.onSuccess(apiResponse.getData());
+                        callback.onSuccess(apiResponse.getData(), apiResponse.getMessage());
                     } else {
                         callback.onError(apiResponse.getMessage());
                     }
                 } else {
-                    String errorMessage = "Erro ao criar/atualizar usuário (HTTP " + response.code() + ")";
-                    callback.onError(errorMessage);
+                    try {
+                        JSONObject jsonError = new JSONObject(response.errorBody().string());
+                        String errorMessage = jsonError.optString("message", "Erro desconhecido.");
+                        callback.onError(errorMessage);
+                    } catch (Exception e) {
+                        callback.onError("Erro desconhecido ao processar resposta da API.");
+                    }
                 }
             }
 
@@ -67,7 +72,8 @@ public class UserRepository {
     }
 
     public interface UserCallback {
-        void onSuccess(UserData user);
+        void onSuccess(UserData user, String message);
         void onError(String message);
     }
+
 }

@@ -11,6 +11,7 @@ public class UserViewModel extends ViewModel {
     private final UserRepository userRepository;
 
     private final MutableLiveData<UserData> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> successMessage = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<ApiResponse<UserData>> userApiResponseLiveData = new MutableLiveData<>();
 
@@ -20,6 +21,10 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<UserData> getUserLiveData() {
         return userLiveData;
+    }
+
+    public LiveData<String> getSuccessMessageLiveData() {
+        return successMessage;
     }
 
     public LiveData<String> getErrorMessageLiveData() {
@@ -33,8 +38,9 @@ public class UserViewModel extends ViewModel {
     public void loadUser(String firebaseUid) {
         userRepository.getUser(firebaseUid, new UserRepository.UserCallback() {
             @Override
-            public void onSuccess(UserData user) {
+            public void onSuccess(UserData user, String message) {
                 userLiveData.postValue(user);
+                successMessage.postValue(message);
             }
 
             @Override
@@ -47,8 +53,9 @@ public class UserViewModel extends ViewModel {
     public void updateUser(UserData userData) {
         userRepository.createOrUpdateUser(userData, new UserRepository.UserCallback() {
             @Override
-            public void onSuccess(UserData user) {
+            public void onSuccess(UserData user, String message) {
                 userLiveData.postValue(user);
+                successMessage.postValue(message);
             }
 
             @Override

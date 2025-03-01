@@ -38,11 +38,6 @@ public class AuthRepository {
     }
 
     public void signup(String email, String password, String username, AuthCallback callback) {
-        if (email == null || email.isEmpty() || password == null || password.isEmpty() || username == null || username.isEmpty()) {
-            callback.onError("Todos os campos são obrigatórios.");
-            return;
-        }
-
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -54,10 +49,11 @@ public class AuthRepository {
                                     email,
                                     ""
                             );
+
                             userRepository.createOrUpdateUser(userData, new UserRepository.UserCallback() {
                                 @Override
-                                public void onSuccess(UserData user) {
-                                    callback.onSuccess(firebaseUser);
+                                public void onSuccess(UserData user, String message) {
+                                    callback.onSuccess(firebaseUser, message);
                                 }
 
                                 @Override
@@ -66,13 +62,18 @@ public class AuthRepository {
                                 }
                             });
                         } else {
-                            callback.onError("Usuário Firebase é nulo após signup!");
+                            callback.onError("Erro inesperado: Usuário Firebase é nulo após signup!");
                         }
                     } else {
-                        String errorMsg = (task.getException() != null)
-                                ? task.getException().getMessage()
-                                : "Erro desconhecido";
-                        callback.onError("Erro ao criar conta: " + errorMsg);
+                        String errorMsg;
+                        if (task.getException() != null && task.getException().getMessage().contains("email address is already in use")) {
+                            errorMsg = "O e-mail já está em uso.";
+                        } else {
+                            errorMsg = (task.getException() != null)
+                                    ? task.getException().getMessage()
+                                    : "Erro desconhecido ao criar conta.";
+                        }
+                        callback.onError(errorMsg);
                     }
                 });
     }
@@ -97,6 +98,7 @@ public class AuthRepository {
 
     public interface AuthCallback {
         void onSuccess(FirebaseUser user);
+        void onSuccess(FirebaseUser user, String message);
         void onError(String message);
     }
 }
