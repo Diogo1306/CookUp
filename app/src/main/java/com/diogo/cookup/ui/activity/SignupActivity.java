@@ -60,14 +60,19 @@ public class SignupActivity extends AppCompatActivity {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 MessageUtils.showSnackbar(findViewById(android.R.id.content), "Cadastro realizado com sucesso!", Color.GREEN);
-
                 new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });
 
         authViewModel.getErrorMessage().observe(this, errorMessage -> {
-            if (errorMessage != null) {
+            if (errorMessage != null && !errorMessage.isEmpty()) {
                 MessageUtils.showSnackbar(findViewById(android.R.id.content), errorMessage, Color.RED);
+            }
+        });
+
+        authViewModel.getSuccessMessage().observe(this, successMessage -> {
+            if (successMessage != null && !successMessage.isEmpty()) {
+                MessageUtils.showSnackbar(findViewById(android.R.id.content), successMessage, Color.GREEN);
             }
         });
     }
