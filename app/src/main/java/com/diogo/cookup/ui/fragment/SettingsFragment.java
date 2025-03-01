@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.diogo.cookup.R;
 import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.utils.MessageUtils;
@@ -37,10 +35,21 @@ public class SettingsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        setupViews(view);
+        setupViewModels(view);
+        loadUserData(view);
+        setupListeners();
+
+        return view;
+    }
+
+    private void setupViews(View view) {
         txtName = view.findViewById(R.id.settings_name);
         txtEmail = view.findViewById(R.id.settings_email);
         btnLogout = view.findViewById(R.id.btn_logout);
+    }
 
+    private void setupViewModels(View view) {
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
@@ -56,22 +65,27 @@ public class SettingsFragment extends Fragment {
                 MessageUtils.showSnackbar(view, error, Color.RED);
             }
         });
+    }
 
+    private void loadUserData(View view) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             userViewModel.loadUser(currentUser.getUid());
         } else {
             MessageUtils.showSnackbar(view, "Usuário não logado", Color.RED);
         }
+    }
 
-        btnLogout.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
+    private void setupListeners() {
+        btnLogout.setOnClickListener(v -> logoutUser());
+    }
 
-            Intent intent = new Intent(requireActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            requireActivity().finish();
-        });
-        return view;
+    private void logoutUser() {
+        authViewModel.logout();
+
+        Intent intent = new Intent(requireActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
     }
 }

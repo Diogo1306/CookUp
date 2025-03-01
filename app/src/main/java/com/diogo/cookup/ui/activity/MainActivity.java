@@ -2,14 +2,13 @@ package com.diogo.cookup.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import com.diogo.cookup.R;
 import com.diogo.cookup.ui.fragment.HomeFragment;
 import com.diogo.cookup.ui.fragment.SearchFragment;
 import com.diogo.cookup.ui.fragment.SavesFragment;
 import com.diogo.cookup.ui.fragment.ProfileFragment;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import com.diogo.cookup.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            navigateToLogin();
         }
     }
 
@@ -35,8 +33,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        setupBottomNavigation();
+        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+    }
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+    private void setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+
             int itemId = item.getItemId();
 
             if (itemId == R.id.navigation_home) {
@@ -52,16 +56,26 @@ public class MainActivity extends AppCompatActivity {
                 openFragment(new ProfileFragment());
                 return true;
             }
+
+            if (selectedFragment != null) {
+                openFragment(selectedFragment);
+                return true;
+            }
             return false;
         });
-        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
     }
 
-    private void openFragment (Fragment fragment) {
+    private void openFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
                 .commit();
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

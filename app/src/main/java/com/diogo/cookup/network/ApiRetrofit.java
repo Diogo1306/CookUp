@@ -8,18 +8,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiRetrofit {
     private static final String BASE_URL = "http://192.168.0.26/PAP/CookUp_Core/public/";
-
     private static Retrofit retrofit = null;
+    private static OkHttpClient httpClient = null;
 
     private static OkHttpClient getHttpClient() {
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY); 
+        if (httpClient == null) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        return new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .build();
+            httpClient = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .addInterceptor(chain -> {
+                        return chain.proceed(chain.request().newBuilder()
+                                .header("User-Agent", "CookUpApp/1.0")
+                                .build());
+                    })
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        }
+        return httpClient;
     }
 
     public static synchronized Retrofit getClient() {

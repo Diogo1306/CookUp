@@ -69,7 +69,6 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 MessageUtils.showSnackbar(findViewById(android.R.id.content), "Login bem-sucedido!", Color.GREEN);
-
                 new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });
@@ -81,12 +80,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
     private void setupListeners() {
         inputPassword.setOnTouchListener(this::onPasswordToggleTouch);
-        btnLogin.setOnClickListener(this::Login);
+        btnLogin.setOnClickListener(this::performLogin);
         btnGoToSignup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
-
         arrowBack.setOnClickListener(v -> showWelcomeFragment());
     }
 
@@ -113,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
         isPasswordVisible = !isPasswordVisible;
     }
 
-    private void Login(View view) {
+    private void performLogin(View view) {
         String email = editEmail.getText().toString().trim();
         String password = inputPassword.getText().toString().trim();
 
