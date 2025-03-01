@@ -1,5 +1,6 @@
 package com.diogo.cookup.viewmodel;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.diogo.cookup.data.repository.AuthRepository;
@@ -14,15 +15,15 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public AuthViewModel() {
-        authRepository = new AuthRepository();
         userRepository = new UserRepository();
+        authRepository = new AuthRepository(userRepository);
     }
 
-    public MutableLiveData<FirebaseUser> getUserLiveData() {
+    public LiveData<FirebaseUser> getUserLiveData() {
         return userLiveData;
     }
 
-    public MutableLiveData<String> getErrorMessage() {
+    public LiveData<String> getErrorMessage() {
         return errorMessage;
     }
 
@@ -30,10 +31,9 @@ public class AuthViewModel extends ViewModel {
         authRepository.login(email, password, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                if (user != null) {
-                    userLiveData.postValue(user);
-                }
+                userLiveData.postValue(user);
             }
+
             @Override
             public void onError(String msg) {
                 errorMessage.postValue(msg);
@@ -45,9 +45,7 @@ public class AuthViewModel extends ViewModel {
         authRepository.signup(email, password, username, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                if (user != null) {
-                    userLiveData.postValue(user);
-                }
+                userLiveData.postValue(user);
             }
 
             @Override
@@ -59,6 +57,6 @@ public class AuthViewModel extends ViewModel {
 
     public void logout() {
         authRepository.logout();
-        userLiveData.setValue(null);
+        userLiveData.postValue(null);
     }
 }

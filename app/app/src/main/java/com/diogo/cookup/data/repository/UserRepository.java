@@ -1,13 +1,13 @@
 package com.diogo.cookup.data.repository;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
-
 import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,7 +20,7 @@ public class UserRepository {
     }
 
     public void getUser(String firebaseUid, UserCallback callback) {
-        apiService.getUser(firebaseUid).enqueue(new Callback<ApiResponse<UserData>>() {
+        apiService.getUser("user", firebaseUid).enqueue(new Callback<ApiResponse<UserData>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<UserData>> call, @NonNull Response<ApiResponse<UserData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -43,28 +43,18 @@ public class UserRepository {
     }
 
     public void createOrUpdateUser(UserData userData, UserCallback callback) {
-        apiService.createOrUpdateUser(userData).enqueue(new Callback<ApiResponse<UserData>>() {
+        apiService.createOrUpdateUser("user", userData).enqueue(new Callback<ApiResponse<UserData>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<UserData>> call, @NonNull Response<ApiResponse<UserData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<UserData> apiResponse = response.body();
-
                     if (apiResponse.isSuccess()) {
-                        callback.onSuccess(userData);
+                        callback.onSuccess(apiResponse.getData());
                     } else {
                         callback.onError(apiResponse.getMessage());
                     }
                 } else {
                     String errorMessage = "Erro ao criar/atualizar usuário (HTTP " + response.code() + ")";
-                    if (response.code() == 409) {
-                        try {
-                            String errorBody = response.errorBody().string();
-                            JSONObject jsonObject = new JSONObject(errorBody);
-                            errorMessage = jsonObject.getString("message");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
                     callback.onError(errorMessage);
                 }
             }

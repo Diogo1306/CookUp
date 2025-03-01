@@ -13,10 +13,15 @@ import com.diogo.cookup.data.model.RecipeData;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
-    private final List<RecipeData> recipeList;
+    private List<RecipeData> recipeList;
+    private OnItemClickListener onItemClickListener;
 
     public RecipeAdapter(List<RecipeData> recipes) {
         this.recipeList = recipes;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
     @NonNull
@@ -29,30 +34,22 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeData recipe = recipeList.get(position);
-        holder.title.setText(recipe.getTitle());
-
-        int prepTime = recipe.getPreparation_time();
-        String preparationText = (prepTime > 0) ? prepTime + " min." : "Tempo não disponível";
-        holder.preparationTime.setText(preparationText);
-
-        int servingsCount = recipe.getServings();
-        String servingsText = (servingsCount > 0) ? servingsCount + " doses" : "Quantidade não disponível";
-        holder.servings.setText(servingsText);
-
-        Glide.with(holder.itemView.getContext())
-                .load(recipe.getImage())
-                .placeholder(R.drawable.placeholder)
-                .into(holder.image);
+        holder.bind(recipe, onItemClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return recipeList.size();
+        return (recipeList != null) ? recipeList.size() : 0;
+    }
+
+    public void updateData(List<RecipeData> newRecipes) {
+        this.recipeList = newRecipes;
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title, preparationTime, servings;
-        ImageView image;
+        private final TextView title, preparationTime, servings;
+        private final ImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -61,5 +58,30 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             servings = itemView.findViewById(R.id.servings);
             image = itemView.findViewById(R.id.recipe_image);
         }
+
+        public void bind(RecipeData recipe, OnItemClickListener listener) {
+            title.setText(recipe.getTitle());
+
+            int prepTime = recipe.getPreparationTime();
+            preparationTime.setText(prepTime > 0 ? prepTime + " min." : "Tempo não disponível");
+
+            int servingsCount = recipe.getServings();
+            servings.setText(servingsCount > 0 ? servingsCount + " doses" : "Quantidade não disponível");
+
+            Glide.with(itemView.getContext())
+                    .load(recipe.getImage())
+                    .placeholder(R.drawable.placeholder)
+                    .into(image);
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(recipe);
+                }
+            });
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(RecipeData recipe);
     }
 }

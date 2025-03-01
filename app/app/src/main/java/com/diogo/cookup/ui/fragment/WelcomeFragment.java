@@ -11,20 +11,13 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowInsetsController;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.ui.activity.SignupActivity;
-
 import java.io.IOException;
 
 public class WelcomeFragment extends Fragment implements TextureView.SurfaceTextureListener {
@@ -39,6 +32,13 @@ public class WelcomeFragment extends Fragment implements TextureView.SurfaceText
 
         hideSystemUI();
 
+        setupViews(view);
+        setupVideoBackground();
+
+        return view;
+    }
+
+    private void setupViews(View view) {
         textureView = view.findViewById(R.id.video_texture);
         textureView.setSurfaceTextureListener(this);
 
@@ -51,8 +51,6 @@ public class WelcomeFragment extends Fragment implements TextureView.SurfaceText
             getParentFragmentManager().beginTransaction().remove(WelcomeFragment.this).commit();
             restoreSystemUI();
         });
-
-        return view;
     }
 
     private void hideSystemUI() {
@@ -64,13 +62,18 @@ public class WelcomeFragment extends Fragment implements TextureView.SurfaceText
     }
 
     private void restoreSystemUI() {
-        requireActivity().getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_VISIBLE
-        );
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+    private void setupVideoBackground() {
+        if (textureView.isAvailable()) {
+            initializeMediaPlayer(textureView.getSurfaceTexture());
+        } else {
+            textureView.setSurfaceTextureListener(this);
+        }
+    }
+
+    private void initializeMediaPlayer(SurfaceTexture surface) {
         mediaPlayer = new MediaPlayer();
         try {
             Uri videoUri = Uri.parse("android.resource://" + requireContext().getPackageName() + "/" + R.raw.video_welcome);
@@ -89,16 +92,18 @@ public class WelcomeFragment extends Fragment implements TextureView.SurfaceText
     }
 
     @Override
+    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+        initializeMediaPlayer(surface);
+    }
+
+    @Override
     public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
         applyFullScreenZoom();
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+        releaseMediaPlayer();
         return true;
     }
 
@@ -142,7 +147,10 @@ public class WelcomeFragment extends Fragment implements TextureView.SurfaceText
     public void onDestroyView() {
         super.onDestroyView();
         restoreSystemUI();
+        releaseMediaPlayer();
+    }
 
+    private void releaseMediaPlayer() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();

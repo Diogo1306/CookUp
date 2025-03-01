@@ -1,6 +1,5 @@
 package com.diogo.cookup.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,10 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.diogo.cookup.R;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.NavigationUtils;
@@ -55,13 +52,8 @@ public class SignupActivity extends AppCompatActivity {
         editPassword.setOnTouchListener((v, event) -> onPasswordToggleTouch(editPassword, event, true));
         editConfirmPassword.setOnTouchListener((v, event) -> onPasswordToggleTouch(editConfirmPassword, event, false));
 
-        btnSignUp.setOnClickListener(this::signUp);
-        btnGoToLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-            intent.putExtra("show_welcome", false);
-            startActivity(intent);
-            finish();
-        });
+        btnSignUp.setOnClickListener(this::performSignUp);
+        btnGoToLogin.setOnClickListener(v -> navigateToLogin());
     }
 
     private void setupObservers() {
@@ -69,10 +61,7 @@ public class SignupActivity extends AppCompatActivity {
             if (firebaseUser != null) {
                 MessageUtils.showSnackbar(findViewById(android.R.id.content), "Cadastro realizado com sucesso!", Color.GREEN);
 
-                new Handler().postDelayed(() -> {
-                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                    finish();
-                }, 2000);
+                new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });
 
@@ -82,7 +71,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private boolean onPasswordToggleTouch(EditText editText, MotionEvent event, boolean isMainPassword) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -96,30 +84,26 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void togglePasswordVisibility(EditText editText, boolean isMainPassword) {
-        if (isMainPassword) {
-            isPasswordVisible = !isPasswordVisible;
-            editText.setInputType(isPasswordVisible ?
-                    (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) :
-                    (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
-            editText.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_lock, 0,
-                    isPasswordVisible ? R.drawable.ic_eye_on : R.drawable.ic_eye_off, 0);
-        } else {
-            isConfirmPasswordVisible = !isConfirmPasswordVisible;
-            editText.setInputType(isConfirmPasswordVisible ?
-                    (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) :
-                    (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
-            editText.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_lock, 0,
-                    isConfirmPasswordVisible ? R.drawable.ic_eye_on : R.drawable.ic_eye_off, 0);
-        }
+        boolean visibilityFlag = isMainPassword ? isPasswordVisible : isConfirmPasswordVisible;
 
-        editText.setTypeface(editText.getTypeface());
+        editText.setInputType(visibilityFlag ?
+                (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) :
+                (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD));
+
+        editText.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_lock, 0,
+                visibilityFlag ? R.drawable.ic_eye_off : R.drawable.ic_eye_on, 0);
 
         editText.setSelection(editText.getText().length());
+
+        if (isMainPassword) {
+            isPasswordVisible = !isPasswordVisible;
+        } else {
+            isConfirmPasswordVisible = !isConfirmPasswordVisible;
+        }
     }
 
-    private void signUp(View view) {
+    private void performSignUp(View view) {
         String username = editUsername.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
@@ -136,5 +120,19 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         authViewModel.signup(email, password, username);
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        intent.putExtra("show_welcome", false);
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

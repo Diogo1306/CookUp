@@ -8,17 +8,26 @@ public class AuthRepository {
     private final FirebaseAuth auth;
     private final UserRepository userRepository;
 
-    public AuthRepository() {
+    public AuthRepository(UserRepository userRepository) {
         this.auth = FirebaseAuth.getInstance();
-        this.userRepository = new UserRepository();
+        this.userRepository = userRepository;
     }
 
     public void login(String email, String password, AuthCallback callback) {
+        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+            callback.onError("Email e senha não podem estar vazios.");
+            return;
+        }
+
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser currentUser = auth.getCurrentUser();
-                        callback.onSuccess(currentUser);
+                        if (currentUser != null) {
+                            callback.onSuccess(currentUser);
+                        } else {
+                            callback.onError("Erro ao obter dados do utilizador após login.");
+                        }
                     } else {
                         String errorMsg = (task.getException() != null)
                                 ? task.getException().getMessage()
@@ -29,6 +38,11 @@ public class AuthRepository {
     }
 
     public void signup(String email, String password, String username, AuthCallback callback) {
+        if (email == null || email.isEmpty() || password == null || password.isEmpty() || username == null || username.isEmpty()) {
+            callback.onError("Todos os campos são obrigatórios.");
+            return;
+        }
+
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -71,15 +85,14 @@ public class AuthRepository {
                     } else {
                         String errorMsg = (deleteTask.getException() != null)
                                 ? deleteTask.getException().getMessage()
-                                : "Erro desconhecido";
-                        callback.onError(originalErrorMessage + " | Erro ao excluir conta no Firebase: " + errorMsg);
+                                : "Erro desconhecido ao excluir conta do Firebase.";
+                        callback.onError(originalErrorMessage + " | Firebase Delete Error: " + errorMsg);
                     }
                 });
     }
 
     public void logout() {
-        FirebaseAuth.getInstance().signOut();
-
+        auth.signOut();
     }
 
     public interface AuthCallback {
