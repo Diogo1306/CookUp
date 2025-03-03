@@ -55,8 +55,7 @@ public class AuthViewModel extends ViewModel {
     public void signup(String email, String password, String username) {
         authRepository.signup(email, password, username, new AuthRepository.AuthCallback() {
             @Override
-            public void onSuccess(FirebaseUser user) {
-            }
+            public void onSuccess(FirebaseUser user) {}
 
             @Override
             public void onSuccess(FirebaseUser user, String message) {
@@ -84,7 +83,12 @@ public class AuthViewModel extends ViewModel {
                 @Override
                 public void onSuccess(UserData user, String message) {
                     userLiveData.postValue(firebaseUser);
-                    successMessage.postValue(message);
+
+                    if (message.equals("Usuário atualizado")) {
+                        successMessage.postValue("Login bem-sucedido!");
+                    } else {
+                        successMessage.postValue(message);
+                    }
                 }
 
                 @Override

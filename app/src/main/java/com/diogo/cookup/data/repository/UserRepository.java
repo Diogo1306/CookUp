@@ -55,7 +55,8 @@ public class UserRepository {
                     }
                 } else {
                     try {
-                        JSONObject jsonError = new JSONObject(response.errorBody().string());
+                        String errorBody = response.errorBody().string();
+                        JSONObject jsonError = new JSONObject(errorBody);
                         String errorMessage = jsonError.optString("message", "Erro desconhecido.");
                         callback.onError(errorMessage);
                     } catch (Exception e) {
