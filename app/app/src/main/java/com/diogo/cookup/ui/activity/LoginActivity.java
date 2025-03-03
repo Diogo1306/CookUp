@@ -101,6 +101,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        authViewModel.getSuccessMessage().observe(this, success -> {
+            if (success != null) {
+                MessageUtils.showSnackbar(findViewById(android.R.id.content), success, Color.GREEN);
+            }
+        });
+
         authViewModel.getErrorMessage().observe(this, error -> {
             if (error != null) {
                 MessageUtils.showSnackbar(findViewById(android.R.id.content), error, Color.RED);
@@ -158,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                         .setServerClientId(getString(R.string.default_web_client_id))
                         .setFilterByAuthorizedAccounts(false)
                         .build())
+                .setAutoSelectEnabled(true)
                 .build();
 
         oneTapClient.beginSignIn(signInRequest)
