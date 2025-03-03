@@ -59,7 +59,6 @@ public class SignupActivity extends AppCompatActivity {
     private void setupObservers() {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                MessageUtils.showSnackbar(findViewById(android.R.id.content), "Cadastro realizado com sucesso!", Color.GREEN);
                 new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });

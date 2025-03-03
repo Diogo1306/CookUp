@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,17 +23,41 @@ import com.diogo.cookup.ui.fragment.WelcomeFragment;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editEmail, inputPassword;
-    private Button btnLogin;
+    private Button btnLogin, btnGoogleLogin;
     private TextView btnGoToSignup;
     private ImageButton arrowBack;
     private boolean isPasswordVisible = false;
     private AuthViewModel authViewModel;
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
+
+    private final ActivityResultLauncher<IntentSenderRequest> googleLoginLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    try {
+                        SignInCredential credential = Identity.getSignInClient(this)
+                                .getSignInCredentialFromIntent(result.getData());
+                        String idToken = credential.getGoogleIdToken();
+                        if (idToken != null) {
+                            firebaseAuthWithGoogle(idToken);
+                        }
+                    } catch (Exception e) {
+                        MessageUtils.showSnackbar(findViewById(android.R.id.content), "Falha no login com Google", Color.RED);
+                    }
+                }
+            });
 
     @Override
     protected void onStart() {
@@ -50,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        NavigationUtils.setupBackButton(this, R.id.arrow_back);
+        oneTapClient = Identity.getSignInClient(this);
 
         setupViews();
         setupObservers();
@@ -61,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.input_email);
         inputPassword = findViewById(R.id.input_password);
         btnLogin = findViewById(R.id.login_button);
+        btnGoogleLogin = findViewById(R.id.google_Button);
         btnGoToSignup = findViewById(R.id.logintosingup);
         arrowBack = findViewById(R.id.arrow_back);
     }
@@ -83,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setupListeners() {
         inputPassword.setOnTouchListener(this::onPasswordToggleTouch);
         btnLogin.setOnClickListener(this::performLogin);
+        btnGoogleLogin.setOnClickListener(v -> signInWithGoogle());
         btnGoToSignup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
         arrowBack.setOnClickListener(v -> showWelcomeFragment());
     }
@@ -120,6 +149,42 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         authViewModel.login(email, password);
+    }
+
+    private void signInWithGoogle() {
+        signInRequest = BeginSignInRequest.builder()
+                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        .setServerClientId(getString(R.string.default_web_client_id))
+                        .setFilterByAuthorizedAccounts(false)
+                        .build())
+                .build();
+
+        oneTapClient.beginSignIn(signInRequest)
+                .addOnSuccessListener(this, result -> {
+                    IntentSenderRequest intentSenderRequest =
+                            new IntentSenderRequest.Builder(result.getPendingIntent().getIntentSender()).build();
+                    googleLoginLauncher.launch(intentSenderRequest);
+                })
+                .addOnFailureListener(e -> {
+                    MessageUtils.showSnackbar(findViewById(android.R.id.content), "Erro ao iniciar login: " + e.getMessage(), Color.RED);
+                    e.printStackTrace();
+                });
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if (firebaseUser != null) {
+                            authViewModel.saveGoogleUser(firebaseUser);
+                        }
+                    } else {
+                        MessageUtils.showSnackbar(findViewById(android.R.id.content), "Falha ao autenticar com Google", Color.RED);
+                    }
+                });
     }
 
     private void navigateToMainActivity() {
