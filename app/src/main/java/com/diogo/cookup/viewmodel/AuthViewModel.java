@@ -3,6 +3,7 @@ package com.diogo.cookup.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.AuthRepository;
 import com.diogo.cookup.data.repository.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +42,7 @@ public class AuthViewModel extends ViewModel {
 
             @Override
             public void onSuccess(FirebaseUser user, String message) {
-
+                successMessage.postValue(message);
             }
 
             @Override
@@ -68,6 +69,30 @@ public class AuthViewModel extends ViewModel {
                 errorMessage.postValue(message);
             }
         });
+    }
+
+    public void saveGoogleUser(FirebaseUser firebaseUser) {
+        if (firebaseUser != null) {
+            String firebaseUid = firebaseUser.getUid();
+            String username = firebaseUser.getDisplayName() != null ? firebaseUser.getDisplayName() : "Usuário Google";
+            String email = firebaseUser.getEmail();
+            String profilePicture = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : "";
+
+            UserData userData = new UserData(firebaseUid, username, email, profilePicture);
+
+            userRepository.createOrUpdateUser(userData, new UserRepository.UserCallback() {
+                @Override
+                public void onSuccess(UserData user, String message) {
+                    userLiveData.postValue(firebaseUser);
+                    successMessage.postValue(message);
+                }
+
+                @Override
+                public void onError(String message) {
+                    errorMessage.postValue(message);
+                }
+            });
+        }
     }
 
     public void logout() {

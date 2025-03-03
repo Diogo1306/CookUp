@@ -12,7 +12,20 @@
           "package_name": "com.diogo.cookup"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "279648868565-17cv8apbjburrgb1qsak94a4faqa4g3s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diogo.cookup",
+            "certificate_hash": "fad44ca9eaa240c731f5c5d015afe411c44eeaf8"
+          }
+        },
+        {
+          "client_id": "279648868565-9212hg2h0ss9qjepumbeh1e4h8ptcrco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC1G0Pe_3c2gnggA0YGSNbeXJGXoDZG9EQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279648868565-9212hg2h0ss9qjepumbeh1e4h8ptcrco.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
