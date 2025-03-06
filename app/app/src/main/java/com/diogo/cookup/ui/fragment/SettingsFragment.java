@@ -17,6 +17,7 @@ import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,7 +26,7 @@ public class SettingsFragment extends Fragment {
     private AuthViewModel authViewModel;
     private UserViewModel userViewModel;
     private TextView txtName, txtEmail;
-    private Button btnLogout;
+    private MaterialCardView btnLogout;
 
     @Nullable
     @Override
@@ -46,7 +47,7 @@ public class SettingsFragment extends Fragment {
     private void setupViews(View view) {
         txtName = view.findViewById(R.id.settings_name);
         txtEmail = view.findViewById(R.id.settings_email);
-        btnLogout = view.findViewById(R.id.btn_logout);
+        btnLogout = view.findViewById(R.id.button_logout);
     }
 
     private void setupViewModels(View view) {

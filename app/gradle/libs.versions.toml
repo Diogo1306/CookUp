@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.2"
+agp = "8.9.0"
 appcompatVersion = "1.7.0"
 compiler = "4.15.1"
 converterGson = "2.9.0"

@@ -19,18 +19,18 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" >
 
         <ImageButton
             android:id="@+id/arrow_back"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_margin="5dp"
+            android:layout_width="@dimen/icon_size_large"
+            android:layout_height="@dimen/icon_size_large"
             android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
             android:background="@color/transparent"
             android:contentDescription="@string/arrow_back"
             android:src="@drawable/ic_arrow_left"
@@ -41,19 +41,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_marginEnd="34dp"
+            android:layout_marginEnd="@dimen/margin_large"
             android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/text_primary"
             android:text="@string/title_signup"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_large" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/body_input_signup_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -63,22 +63,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:autofillHints="emailAddress"
             android:fontFamily="@font/poppins_regular"
             android:text="@string/input_sing_up_title_name"
             android:textColor="@color/text_primary"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_small" />
 
         <EditText
             android:id="@+id/input_username"
             style="@style/input"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/btn_height"
             android:autofillHints="name"
             android:drawableStart="@drawable/ic_person"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
@@ -87,28 +87,27 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/text_primary"
-            android:textSize="14sp"
-            tools:ignore="VisualLintTextFieldSize,DuplicateSpeakableTextCheck" />
+            android:textSize="@dimen/text_small" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:autofillHints="emailAddress"
             android:fontFamily="@font/poppins_regular"
             android:text="@string/input_login_title_email"
             android:textColor="@color/text_primary"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_small" />
 
         <EditText
             android:id="@+id/input_email"
             style="@style/input"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/btn_height"
             android:autofillHints="emailAddress"
             android:drawableStart="@drawable/ic_email"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/margin_small"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
@@ -117,30 +116,30 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             tools:ignore="VisualLintTextFieldSize" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:autofillHints="password"
             android:fontFamily="@font/poppins_regular"
             android:importantForAutofill="no"
             android:text="@string/input_login_title_password"
             android:textColor="@color/text_primary"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_small" />
 
         <EditText
             android:id="@+id/input_password"
             style="@style/input"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/btn_height"
             android:autofillHints="password"
             android:drawableStart="@drawable/ic_lock"
             android:drawableEnd="@drawable/ic_eye_off"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
             android:focusable="true"
             android:fontFamily="@font/poppins_regular"
@@ -150,31 +149,31 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             android:clickable="true"
             tools:ignore="VisualLintTextFieldSize,DuplicateSpeakableTextCheck" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:autofillHints="password"
             android:fontFamily="@font/poppins_regular"
             android:importantForAutofill="no"
             android:text="@string/input_login_title_password"
             android:textColor="@color/text_primary"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_small" />
 
         <EditText
             android:id="@+id/input_confirm_password"
             style="@style/input"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/btn_height"
             android:autofillHints="password"
             android:drawableStart="@drawable/ic_lock"
             android:drawableEnd="@drawable/ic_eye_off"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
@@ -185,7 +184,7 @@
             android:clickable="true"
             android:focusable="true"
             android:textColorHint="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             tools:ignore="VisualLintTextFieldSize" />
 
     </LinearLayout>
@@ -194,9 +193,9 @@
         android:id="@+id/body_button_signup_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/body_input_signup_container"
         app:layout_constraintStart_toStartOf="parent"
@@ -205,11 +204,11 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_button"
             style="@style/button_primary"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_small"
             android:text="@string/button_continue"
             android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_medium"
             tools:ignore="TextContrastCheck,VisualLintButtonSize" />
 
         <TextView
@@ -217,7 +216,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/singuptologin"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             android:textAlignment="center"
             android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/text_primary"
@@ -229,7 +228,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="30dp"
+        android:layout_margin="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -240,7 +239,7 @@
             android:text="@string/privacy_policy"
             android:textAlignment="center"
             android:fontFamily="@font/poppins_regular"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_very_small"
             android:textColor="@color/text_primary"
             />
 

@@ -13,15 +13,15 @@
         android:background="@color/background"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="16dp"
+        android:padding="@dimen/padding_medium"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
             android:id="@+id/arrow_back"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/icon_size_medium"
+            android:layout_height="@dimen/icon_size_medium"
             android:background="@color/transparent"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_left"
@@ -31,10 +31,10 @@
             android:id="@+id/title_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/margin_medium"
             android:text="@string/settings"
             android:textColor="@color/text_primary"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_large"
             android:fontFamily="@font/poppins_semibold" />
     </LinearLayout>
 
@@ -51,8 +51,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:background="@color/background_secondary" />
 
         <com.google.android.material.card.MaterialCardView
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/background"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -79,7 +79,7 @@
                     android:layout_weight="1"
                     android:text="@string/profile"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_medium" />
 
                 <TextView
                     android:id="@+id/settings_name"
@@ -87,13 +87,13 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_medium" />
 
                 <ImageView
                     android:id="@+id/profile_arrow"
                     android:background="@color/transparent"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="@dimen/icon_size_medium"
+                    android:layout_height="@dimen/icon_size_medium"
                     android:src="@drawable/ic_arrow_right"
                     android:contentDescription="@string/go_to_profile" />
             </LinearLayout>
@@ -102,8 +102,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:background="@color/background_secondary" />
 
         <com.google.android.material.card.MaterialCardView
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/background"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -130,7 +130,7 @@
                     android:layout_weight="1"
                     android:text="@string/email"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_medium" />
 
                 <TextView
                     android:id="@+id/settings_email"
@@ -138,13 +138,13 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_medium" />
 
                 <ImageView
                     android:id="@+id/email_arrow"
                     android:background="@color/background"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="@dimen/icon_size_medium"
+                    android:layout_height="@dimen/icon_size_medium"
                     android:src="@drawable/ic_arrow_right"
                     android:contentDescription="@string/go_to_email" />
             </LinearLayout>
@@ -153,8 +153,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:background="@color/background_secondary" />
 
         <com.google.android.material.card.MaterialCardView
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/background"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -181,7 +181,7 @@
                     android:layout_weight="1"
                     android:text="@string/password"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_medium" />
 
                 <TextView
                     android:id="@+id/password_hidden"
@@ -189,13 +189,13 @@
                     android:layout_height="wrap_content"
                     android:text="******"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_medium"
                     tools:ignore="HardcodedText" />
 
                 <ImageView
                     android:id="@+id/password_arrow"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="@dimen/icon_size_medium"
+                    android:layout_height="@dimen/icon_size_medium"
                     android:src="@drawable/ic_arrow_right"
                     android:contentDescription="@string/go_to_password" />
             </LinearLayout>
@@ -205,26 +205,52 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:background="@color/background_secondary" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_logout"
-            android:layout_width="155dp"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/button_logout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/button_primary"
-            android:fontFamily="@font/poppins_semibold"
-            android:padding="12dp"
-            android:text="@string/logout"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/settings_list"
-            tools:ignore="TextSizeCheck,TextContrastCheck" />
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:focusable="true">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_medium"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/logout"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_medium" />
+
+                <ImageView
+                    android:id="@+id/icon_logout"
+                    android:layout_width="@dimen/icon_size_medium"
+                    android:layout_height="@dimen/icon_size_medium"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/go_to_password" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:background="@color/background_secondary" />
 
     </LinearLayout>
 
