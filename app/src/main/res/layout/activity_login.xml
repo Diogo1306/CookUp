@@ -19,18 +19,18 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" >
 
         <ImageButton
             android:id="@+id/arrow_back"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_margin="5dp"
+            android:layout_width="@dimen/icon_size_large"
+            android:layout_height="@dimen/icon_size_large"
             android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_small"
             android:background="@color/transparent"
             android:contentDescription="@string/arrow_back"
             android:src="@drawable/ic_arrow_left"
@@ -40,20 +40,20 @@
             android:id="@+id/title_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginEnd="34dp"
+            android:layout_marginEnd="@dimen/margin_large"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/text_primary"
+            android:gravity="center"
             android:text="@string/title_login"
-            android:textSize="20sp" />
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_large" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/body_input_login_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/header_login_container"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,22 +62,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_small"
             android:autofillHints="emailAddress"
             android:fontFamily="@font/poppins_regular"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             android:textColor="@color/text_primary"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/margin_medium"
             android:text="@string/input_login_title_email" />
 
         <EditText
             android:id="@+id/input_email"
             style="@style/input"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/btn_height"
             android:autofillHints="emailAddress"
             android:drawableStart="@drawable/ic_email"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
@@ -86,30 +86,29 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/text_primary"
-            android:textSize="14sp"
-            tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
+            android:textSize="@dimen/text_small" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_small"
             android:autofillHints="password"
             android:fontFamily="@font/poppins_regular"
             android:importantForAutofill="no"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             android:textColor="@color/text_primary"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/margin_medium"
             android:text="@string/input_login_title_password" />
 
         <EditText
             android:id="@+id/input_password"
             style="@style/input"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/btn_height"
             android:autofillHints="password"
             android:drawableStart="@drawable/ic_lock"
             android:drawableEnd="@drawable/ic_eye_off"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
@@ -118,14 +117,14 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             android:focusable="true"
             android:clickable="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="@dimen/margin_small"
             android:autofillHints="password"
             android:fontFamily="@font/poppins_regular"
             android:importantForAutofill="no"
@@ -140,9 +139,9 @@
         android:id="@+id/body_button_login_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/body_input_login_container"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,35 +150,33 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login_button"
             style="@style/button_primary"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_small"
             android:fontFamily="@font/poppins_semibold"
             android:text="@string/button_continue"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+            android:textSize="@dimen/text_medium" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/google_Button"
             style="@style/button_secundary"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_small"
             android:text="@string/google"
             android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_medium"
             android:textAlignment="center"
             android:gravity="center"
             android:drawableStart="@drawable/ic_google"
             android:drawablePadding="-12dp"
-            android:padding="12dp"
-            android:layout_gravity="center"
-            tools:ignore="VisualLintButtonSize" />
+            android:padding="@dimen/padding_medium"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/logintosingup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/logintosingup"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_small"
             android:textAlignment="center"
             android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/text_primary"
@@ -192,7 +189,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="30dp"
+        android:layout_margin="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -203,7 +200,7 @@
             android:text="@string/privacy_policy"
             android:textAlignment="center"
             android:fontFamily="@font/poppins_regular"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_very_small"
             android:textColor="@color/text_primary"
             />
 
