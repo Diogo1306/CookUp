@@ -5,6 +5,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.diogo.cookup.R;
 
 public class NavigationUtils {
 
@@ -28,4 +32,15 @@ public class NavigationUtils {
             });
         }
     }
+
+    public static void openFragment(FragmentActivity activity, Fragment fragment) {
+        if (activity != null) {
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    }
+
 }

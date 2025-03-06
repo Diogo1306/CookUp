@@ -1,20 +1,19 @@
 package com.diogo.cookup.ui.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.utils.MessageUtils;
+import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.material.card.MaterialCardView;
@@ -26,7 +25,8 @@ public class SettingsFragment extends Fragment {
     private AuthViewModel authViewModel;
     private UserViewModel userViewModel;
     private TextView txtName, txtEmail;
-    private MaterialCardView btnLogout;
+    private MaterialCardView btn_profile, btn_account, btn_appearance;
+
 
     @Nullable
     @Override
@@ -39,7 +39,7 @@ public class SettingsFragment extends Fragment {
         setupViews(view);
         setupViewModels(view);
         loadUserData(view);
-        setupListeners();
+        setupListeners(view);
 
         return view;
     }
@@ -47,7 +47,9 @@ public class SettingsFragment extends Fragment {
     private void setupViews(View view) {
         txtName = view.findViewById(R.id.settings_name);
         txtEmail = view.findViewById(R.id.settings_email);
-        btnLogout = view.findViewById(R.id.button_logout);
+        btn_profile = view.findViewById(R.id.button_profile);
+        btn_account = view.findViewById(R.id.button_account);
+        btn_appearance = view.findViewById(R.id.button_appearance);
     }
 
     private void setupViewModels(View view) {
@@ -77,16 +79,10 @@ public class SettingsFragment extends Fragment {
         }
     }
 
-    private void setupListeners() {
-        btnLogout.setOnClickListener(v -> logoutUser());
-    }
-
-    private void logoutUser() {
-        authViewModel.logout();
-
-        Intent intent = new Intent(requireActivity(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        requireActivity().finish();
+    private void setupListeners(View view) {
+        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+        btn_profile.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new SettingsProfileFragment()));
+        btn_account.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new SettingsAccountFragment()));
+        btn_appearance.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new SettingsAppearanceFragment()));
     }
 }
