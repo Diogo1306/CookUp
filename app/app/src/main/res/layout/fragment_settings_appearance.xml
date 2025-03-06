@@ -9,9 +9,12 @@
         android:id="@+id/header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/background"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -40,10 +43,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="@dimen/padding_large"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
         app:layout_constraintTop_toBottomOf="@id/header_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:background="@color/background_secondary" />
 
         <LinearLayout
             android:id="@+id/button_theme_light"
@@ -73,6 +85,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:background="@color/background_secondary" />
 
         <LinearLayout
@@ -103,6 +117,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:background="@color/background_secondary" />
 
         <LinearLayout
@@ -140,10 +156,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Corresponder às definições do dispositivo"
-                android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_small"
-                android:paddingTop="@dimen/padding_small" />
+                android:textColor="@color/gray"
+                android:textSize="@dimen/text_small" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:background="@color/background_secondary" />
 
     </LinearLayout>
 
