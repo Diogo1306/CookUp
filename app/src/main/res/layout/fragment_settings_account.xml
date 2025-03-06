@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".ui.fragment.SettingsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.SettingsAccountFragment">
 
     <LinearLayout
         android:id="@+id/header_container"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
-            android:text="@string/settings"
+            android:text="@string/account"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/text_large"
             android:fontFamily="@font/poppins_semibold" />
@@ -57,7 +57,7 @@
             android:background="@color/background_secondary" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/button_profile"
+            android:id="@+id/button_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardElevation="0dp"
@@ -78,12 +78,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/profile"
+                    android:text="@string/email"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
                 <TextView
-                    android:id="@+id/settings_name"
+                    android:id="@+id/account_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
@@ -109,7 +109,7 @@
             android:background="@color/background_secondary" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/button_account"
+            android:id="@+id/button_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardElevation="0dp"
@@ -130,7 +130,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/account"
+                    android:text="@string/password"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
@@ -138,7 +138,7 @@
                     android:id="@+id/settings_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="******"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium"
                     tools:ignore="HardcodedText" />
@@ -151,6 +151,49 @@
                     android:src="@drawable/ic_arrow_right"
                     android:contentDescription="@string/go_to_email" />
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:background="@color/background_secondary" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/button_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:focusable="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_medium"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/logout"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_medium" />
+
+                <ImageView
+                    android:id="@+id/arrow_logout"
+                    android:layout_width="@dimen/icon_size_medium"
+                    android:layout_height="@dimen/icon_size_medium"
+                    android:src="@drawable/ic_logout"
+                    android:contentDescription="@string/go_to_password" />
+            </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
         <View
@@ -182,16 +225,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/appearance"
+                    android:text="@string/delete_account"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
-                <ImageView
-                    android:id="@+id/password_arrow"
-                    android:layout_width="@dimen/icon_size_medium"
-                    android:layout_height="@dimen/icon_size_medium"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="@string/go_to_password" />
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -202,6 +239,7 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             android:background="@color/background_secondary" />
+
 
     </LinearLayout>
 
