@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true"
+    tools:context=".ui.fragment.ChangeEmailFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/header_change_email_container"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/arrow_back"
+                android:layout_width="@dimen/icon_size_large"
+                android:layout_height="@dimen/icon_size_large"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/margin_small"
+                android:background="@color/transparent"
+                android:contentDescription="@string/back"
+                android:src="@drawable/ic_arrow_left"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/title_change_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:text="Alterar email"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/body_change_email_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/header_change_email_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Novo email"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="@dimen/border_radius"
+                app:boxCornerRadiusTopEnd="@dimen/border_radius"
+                app:boxCornerRadiusBottomStart="@dimen/border_radius"
+                app:boxCornerRadiusBottomEnd="@dimen/border_radius">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextNewEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Palavra-passe atual"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="@dimen/border_radius"
+                app:boxCornerRadiusTopEnd="@dimen/border_radius"
+                app:boxCornerRadiusBottomStart="@dimen/border_radius"
+                app:boxCornerRadiusBottomEnd="@dimen/border_radius">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Irás receber um email com link de verificação. Clica no link e depois confirma aqui."
+                android:textAlignment="center"
+                android:textSize="@dimen/text_very_small"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="@dimen/padding_small" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSendVerification"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enviar verificação" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonConfirm"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Confirmar agora"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

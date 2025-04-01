@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="@drawable/card_recipe_img"
     android:padding="@dimen/padding_small"
-    android:layout_margin="@dimen/margin_small"
     android:elevation="16dp">
 
     <androidx.cardview.widget.CardView

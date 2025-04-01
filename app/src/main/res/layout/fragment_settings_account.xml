@@ -96,12 +96,14 @@
                     tools:ignore="HardcodedText" />
 
                 <ImageView
-                    android:id="@+id/profile_arrow"
+                    android:id="@+id/account_icon"
                     android:background="@color/transparent"
                     android:layout_width="@dimen/icon_size_medium"
                     android:layout_height="@dimen/icon_size_medium"
+                    android:layout_marginStart="@dimen/margin_small"
                     android:src="@drawable/ic_arrow_right"
                     android:contentDescription="@string/go_to_profile" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -152,6 +154,7 @@
                     android:background="@color/background"
                     android:layout_width="@dimen/icon_size_medium"
                     android:layout_height="@dimen/icon_size_medium"
+                    android:layout_marginStart="@dimen/margin_small"
                     android:src="@drawable/ic_arrow_right"
                     android:contentDescription="@string/go_to_email" />
             </LinearLayout>
@@ -194,6 +197,7 @@
                     android:id="@+id/arrow_logout"
                     android:layout_width="@dimen/icon_size_medium"
                     android:layout_height="@dimen/icon_size_medium"
+                    android:layout_marginStart="@dimen/margin_small"
                     android:src="@drawable/ic_logout"
                     android:contentDescription="@string/go_to_password" />
             </LinearLayout>
@@ -208,7 +212,7 @@
             android:background="@color/background_secondary" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/button_appearance"
+            android:id="@+id/button_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardElevation="0dp"
@@ -230,7 +234,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/delete_account"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/gray"
                     android:textSize="@dimen/text_medium" />
 
             </LinearLayout>

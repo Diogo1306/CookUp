@@ -6,7 +6,10 @@ import androidx.lifecycle.ViewModel;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.AuthRepository;
 import com.diogo.cookup.data.repository.UserRepository;
+import com.diogo.cookup.utils.AuthUtils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 public class AuthViewModel extends ViewModel {
 
@@ -15,6 +18,9 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> successMessage = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> resetEmailSent = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> passwordUpdated = new MutableLiveData<>();
+    private final MutableLiveData<String> loginProvider = new MutableLiveData<>();
 
     public AuthViewModel() {
         userRepository = new UserRepository();
@@ -31,6 +37,18 @@ public class AuthViewModel extends ViewModel {
 
     public LiveData<String> getErrorMessage() {
         return errorMessage;
+    }
+
+    public LiveData<Boolean> getResetEmailSent() {
+        return resetEmailSent;
+    }
+
+    public LiveData<Boolean> getPasswordUpdated() {
+        return passwordUpdated;
+    }
+
+    public LiveData<String> getLoginProvider() {
+        return loginProvider;
     }
 
     public void login(String email, String password) {
@@ -84,7 +102,7 @@ public class AuthViewModel extends ViewModel {
                 public void onSuccess(UserData user, String message) {
                     userLiveData.postValue(firebaseUser);
 
-                    if (message.equals("Usuário atualizado")) {
+                    if (message.equals("Conta atualizada")) {
                         successMessage.postValue("Login bem-sucedido!");
                     } else {
                         successMessage.postValue(message);
@@ -97,6 +115,20 @@ public class AuthViewModel extends ViewModel {
                 }
             });
         }
+    }
+
+    public void sendPasswordResetEmail(String email) {
+        authRepository.sendPasswordResetEmail(email, task -> resetEmailSent.postValue(task.isSuccessful()));
+    }
+
+    public void updatePassword(String newPassword) {
+        authRepository.updatePassword(newPassword, task -> passwordUpdated.postValue(task.isSuccessful()));
+    }
+
+    public void checkLoginProvider() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String provider = AuthUtils.getProvider(user);
+        loginProvider.setValue(provider);
     }
 
     public void logout() {

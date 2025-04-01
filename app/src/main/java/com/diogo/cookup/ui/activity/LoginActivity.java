@@ -16,9 +16,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.ui.fragment.ForgotPasswordFragment;
 import com.diogo.cookup.ui.fragment.WelcomeFragment;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.NavigationUtils;
@@ -36,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editEmail, inputPassword;
     private Button btnLogin, btnGoogleLogin;
-    private TextView btnGoToSignup;
+    private TextView btnGoToSignup, forgot_password;
     private ImageButton arrowBack;
     private boolean isPasswordVisible = false;
     private AuthViewModel authViewModel;
@@ -91,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogleLogin = findViewById(R.id.google_Button);
         btnGoToSignup = findViewById(R.id.logintosingup);
         arrowBack = findViewById(R.id.arrow_back);
+        forgot_password = findViewById(R.id.forgot_password);
     }
 
     private void setupObservers() {
@@ -120,6 +124,8 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogleLogin.setOnClickListener(v -> signInWithGoogle());
         btnGoToSignup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
         arrowBack.setOnClickListener(v -> showWelcomeFragment());
+        forgot_password.setOnClickListener(v -> forgotPasswordFragment());
+
     }
 
     private boolean onPasswordToggleTouch(View v, MotionEvent event) {
@@ -208,4 +214,13 @@ public class LoginActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+    private void forgotPasswordFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, new ForgotPasswordFragment());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
 }

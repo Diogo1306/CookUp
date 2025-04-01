@@ -91,21 +91,17 @@ public class SettingsAppearanceFragment extends Fragment {
         int currentTheme = preferences.getInt("selected_theme", -1);
 
         if (currentTheme != themeMode) {
+
+            String currentFragmentTag = requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass().getName();
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("selected_theme", themeMode);
             editor.putBoolean("theme_changed", true);
+            editor.putString("last_fragment", currentFragmentTag);
             editor.apply();
 
             AppCompatDelegate.setDefaultNightMode(themeMode);
-
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .detach(this)
-                    .attach(this)
-                    .commit();
         }
     }
-
 
     private void updateSelectedIcon(int selectedTheme) {
         iconThemeLight.setImageResource(R.drawable.ic_radio_unselected);
