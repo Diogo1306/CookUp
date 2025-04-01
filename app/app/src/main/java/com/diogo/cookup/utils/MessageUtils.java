@@ -1,5 +1,6 @@
 package com.diogo.cookup.utils;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import com.google.android.material.snackbar.Snackbar;
@@ -16,5 +17,9 @@ public class MessageUtils {
             snackbar.setBackgroundTint(color);
             snackbar.show();
         }
+    }
+
+    public static void showToast(Context context, String s) {
+
     }
 }

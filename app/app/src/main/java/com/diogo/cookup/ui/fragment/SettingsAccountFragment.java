@@ -1,66 +1,118 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.ui.activity.LoginActivity;
+import com.diogo.cookup.utils.MessageUtils;
+import com.diogo.cookup.utils.NavigationUtils;
+import com.diogo.cookup.viewmodel.AuthViewModel;
+import com.diogo.cookup.viewmodel.UserViewModel;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SettingsAccountFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SettingsAccountFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
+    private TextView txtEmail;
+    private MaterialCardView btn_Email, btn_password, btn_logout, btn_deleteAccount;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SettingsAccountFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsAccountFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SettingsAccountFragment newInstance(String param1, String param2) {
-        SettingsAccountFragment fragment = new SettingsAccountFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_settings_account, container, false);
+
+        setupViews(view);
+        setupViewModels(view);
+        loadUserData(view);
+        setupLisners(view);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        authViewModel.checkLoginProvider();
+
+
+        authViewModel.getLoginProvider().observe(getViewLifecycleOwner(), provider -> {
+            boolean isGoogle = "google.com".equals(provider);
+
+            if (isGoogle) {
+                btn_password.setVisibility(View.GONE);
+
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser != null) {
+                    txtEmail.setText(currentUser.getEmail());
+                }
+
+                btn_Email.setClickable(false);
+                btn_Email.setFocusable(false);
+                btn_Email.setForeground(null);
+
+                ImageView accountIcon = requireView().findViewById(R.id.account_icon);
+                accountIcon.setImageResource(R.drawable.ic_google);
+                accountIcon.setContentDescription("Login com Google");
+            }
+        });
+
+        return view;
+    }
+
+    private void setupViews(View view) {
+        txtEmail = view.findViewById(R.id.account_email);
+        btn_Email = view.findViewById(R.id.button_email);
+        btn_password = view.findViewById(R.id.button_password);
+        btn_logout = view.findViewById(R.id.button_logout);
+        btn_deleteAccount = view.findViewById(R.id.button_delete);
+    }
+
+    private void setupViewModels(View view) {
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), userData -> {
+            if (userData != null) {
+                txtEmail.setText(userData.getEmail());
+            }
+        });
+
+        userViewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                MessageUtils.showSnackbar(view, error, Color.RED);
+            }
+        });
+    }
+
+    private void loadUserData(View view) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser != null ){
+            userViewModel.loadUser(currentUser.getUid());
+        }else {
+            MessageUtils.showSnackbar(view, "Usuário não logado", Color.RED);
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings_account, container, false);
+    private void setupLisners(View view)  {
+        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+        btn_Email.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new ChangeEmailFragment()));
+        btn_password.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new ChangePasswordFragment()));
+        btn_logout.setOnClickListener(v -> {
+                authViewModel.logout();
+        Intent intent = new Intent(requireActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        });
     }
+
 }

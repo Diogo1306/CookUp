@@ -1,6 +1,9 @@
 package com.diogo.cookup.data.repository;
 
+import android.media.MediaPlayer;
+
 import com.diogo.cookup.data.model.UserData;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -90,6 +93,17 @@ public class AuthRepository {
                         callback.onError(originalErrorMessage + " | Firebase Delete Error: " + errorMsg);
                     }
                 });
+    }
+
+    public void sendPasswordResetEmail(String email, OnCompleteListener<Void> listener) {
+        auth.sendPasswordResetEmail(email).addOnCompleteListener(listener);
+    }
+
+    public void updatePassword(String newPassword, OnCompleteListener<Void> listener) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.updatePassword(newPassword).addOnCompleteListener(listener);
+        }
     }
 
     public void logout() {
