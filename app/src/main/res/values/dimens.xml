@@ -9,7 +9,9 @@
     <dimen name="icon_size_small">20dp</dimen>
     <dimen name="icon_size_medium">24dp</dimen>
     <dimen name="icon_size_large">32dp</dimen>
-    <dimen name="btn_height">48dp</dimen>
+
+    <dimen name="btn_height">54dp</dimen>
+    <dimen name="input_height">52dp</dimen>
 
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>

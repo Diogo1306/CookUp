@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,109 +13,113 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/header_change_email_container"
+            android:id="@+id/header_container"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
+            android:background="@color/background"
+            android:gravity="center_vertical"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <ImageButton
                 android:id="@+id/arrow_back"
-                android:layout_width="@dimen/icon_size_large"
-                android:layout_height="@dimen/icon_size_large"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/margin_small"
+                android:layout_width="@dimen/icon_size_medium"
+                android:layout_height="@dimen/icon_size_medium"
                 android:background="@color/transparent"
                 android:contentDescription="@string/back"
                 android:src="@drawable/ic_arrow_left"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
-                android:id="@+id/title_change_email"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:fontFamily="@font/poppins_semibold"
-                android:gravity="center"
-                android:text="Alterar email"
+                android:id="@+id/title_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:text="@string/update_email_title"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_large" />
+                android:textSize="@dimen/text_large"
+                android:fontFamily="@font/poppins_semibold" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/body_change_email_container"
+            android:id="@+id/body_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/header_change_email_container"
+            app:layout_constraintTop_toBottomOf="@id/header_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Novo email"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusTopStart="@dimen/border_radius"
-                app:boxCornerRadiusTopEnd="@dimen/border_radius"
-                app:boxCornerRadiusBottomStart="@dimen/border_radius"
-                app:boxCornerRadiusBottomEnd="@dimen/border_radius">
+            <EditText
+                android:id="@+id/editTextNewEmail"
+                style="@style/input"
+                android:autofillHints="emailAddress"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="@dimen/padding_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColorHint="@color/text_primary" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextNewEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Palavra-passe atual"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusTopStart="@dimen/border_radius"
-                app:boxCornerRadiusTopEnd="@dimen/border_radius"
-                app:boxCornerRadiusBottomStart="@dimen/border_radius"
-                app:boxCornerRadiusBottomEnd="@dimen/border_radius">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
-            </com.google.android.material.textfield.TextInputLayout>
-
+            <EditText
+                android:id="@+id/editTextPassword"
+                style="@style/input"
+                android:autofillHints="password"
+                android:drawableStart="@drawable/ic_lock"
+                android:drawableEnd="@drawable/ic_eye_off"
+                android:drawablePadding="@dimen/padding_small"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center_vertical"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:layout_marginTop="@dimen/margin_small"
+                android:singleLine="true"
+                android:textColorHint="@color/text_primary"
+                android:focusable="true"
+                android:clickable="true" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Irás receber um email com link de verificação. Clica no link e depois confirma aqui."
+                android:text="@string/email_verification_hint"
                 android:textAlignment="center"
                 android:textSize="@dimen/text_very_small"
                 android:paddingTop="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_small" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonSendVerification"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Enviar verificação" />
+                style="@style/button_primary"
+                android:layout_margin="@dimen/margin_small"
+                android:text="@string/send_verification"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonConfirm"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Confirmar agora"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:visibility="visible" />
+                style="@style/button_secundary"
+                android:layout_margin="@dimen/margin_small"
+                android:text="@string/confirm_change"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_medium"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:padding="@dimen/padding_medium"
+                android:layout_gravity="center" />
 
         </LinearLayout>
 

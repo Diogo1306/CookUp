@@ -39,7 +39,6 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_button"
             style="@style/button_primary"
-            android:layout_width="339dp"
             android:layout_marginBottom="@dimen/margin_small"
             android:fontFamily="@font/poppins_semibold"
             android:text="@string/welcome_criar_conta"
