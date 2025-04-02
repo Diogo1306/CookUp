@@ -34,7 +34,8 @@ public class ChangePasswordFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private boolean isPasswordVisible = false;
 
-    public ChangePasswordFragment() {}
+    public ChangePasswordFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -152,7 +153,7 @@ public class ChangePasswordFragment extends Fragment {
         Vibrator vibrator = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+                vibrator.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 vibrator.vibrate(50);
             }

@@ -73,20 +73,16 @@
         <EditText
             android:id="@+id/input_email"
             style="@style/input"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/btn_height"
             android:autofillHints="emailAddress"
             android:drawableStart="@drawable/ic_email"
             android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
-            android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColorHint="@color/text_primary"
-            android:textSize="@dimen/text_small" />
+            android:textColorHint="@color/text_primary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -103,14 +99,11 @@
         <EditText
             android:id="@+id/input_password"
             style="@style/input"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/btn_height"
             android:autofillHints="password"
             android:drawableStart="@drawable/ic_lock"
             android:drawableEnd="@drawable/ic_eye_off"
             android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
-            android:fontFamily="@font/poppins_regular"
             android:gravity="center_vertical"
             android:hint="@string/password"
             android:inputType="textPassword"
@@ -154,8 +147,7 @@
             android:layout_margin="@dimen/margin_small"
             android:fontFamily="@font/poppins_semibold"
             android:text="@string/button_continue"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_medium" />
+            android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/google_Button"
@@ -164,7 +156,6 @@
             android:text="@string/google"
             android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
-            android:textSize="@dimen/text_medium"
             android:textAlignment="center"
             android:gravity="center"
             android:drawableStart="@drawable/ic_google"

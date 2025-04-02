@@ -2,22 +2,32 @@
 <resources>
     <style name="input">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">46dp</item>
+        <item name="android:layout_height">@dimen/input_height</item>
         <item name="android:background">@drawable/input</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:paddingStart">@dimen/padding_medium</item>
+        <item name="android:paddingEnd">@dimen/padding_medium</item>
+        <item name="android:paddingTop">@dimen/padding_small</item>
+        <item name="android:paddingBottom">@dimen/padding_small</item>
+        <item name="android:layout_marginStart">@dimen/margin_small</item>
+        <item name="android:layout_marginEnd">@dimen/margin_small</item>
     </style>
 
     <style name="BaseButton">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">56dp</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
+        <item name="android:textSize">@dimen/text_medium</item>
         <item name="android:fontFamily">@font/poppins_semibold</item>
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">12dp</item>
+        <item name="android:paddingTop">@dimen/padding_small</item>
+        <item name="android:paddingBottom">@dimen/padding_small</item>
+        <item name="android:paddingStart">@dimen/padding_medium</item>
+        <item name="android:paddingEnd">@dimen/padding_medium</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
     <style name="button_primary" parent="BaseButton">
@@ -28,17 +38,15 @@
     <style name="button_secundary" parent="BaseButton">
         <item name="android:background">@drawable/button_secundary</item>
         <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:drawablePadding">8dp</item>
     </style>
 
     <style name="BottomNavView" parent="@style/Widget.MaterialComponents.BottomNavigationView.Colored">
         <item name="android:background">@drawable/bottom_nav_menu</item>
-        <item name="itemIconSize">32dp</item>
-
+        <item name="itemIconSize">@dimen/icon_size_large</item>
         <item name="itemTextColor">@color/background_secondary</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
         <item name="itemIconTint">@color/bottom_navmenu_icon_selector</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_very_small</item>
     </style>
 
 </resources>

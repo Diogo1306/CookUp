@@ -1,11 +1,17 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,6 +38,7 @@ public class ChangeEmailFragment extends Fragment {
     private Button buttonSendVerification, buttonConfirm;
     private FirebaseUser user;
     private UserViewModel userViewModel;
+    private boolean isPasswordVisible = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +51,8 @@ public class ChangeEmailFragment extends Fragment {
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        setupPasswordVisibilityToggle(editTextPassword);
 
         buttonSendVerification.setOnClickListener(v -> reauthenticateAndSendVerification(view));
         buttonConfirm.setOnClickListener(v -> confirmEmailChange(view));
@@ -67,7 +76,6 @@ public class ChangeEmailFragment extends Fragment {
             return;
         }
 
-        // 🚀 Atualiza os dados do utilizador para garantir que o email está atualizado
         user.reload().addOnCompleteListener(reloadTask -> {
             if (!reloadTask.isSuccessful()) {
                 MessageUtils.showSnackbar(view, "Erro ao atualizar estado do utilizador.");
@@ -131,7 +139,6 @@ public class ChangeEmailFragment extends Fragment {
             return;
         }
 
-        // Reautentica com o NOVO email e password
         AuthCredential credential = EmailAuthProvider.getCredential(confirmedEmail, password);
         currentUser.reauthenticate(credential).addOnCompleteListener(authTask -> {
             if (!authTask.isSuccessful()) {
@@ -173,5 +180,41 @@ public class ChangeEmailFragment extends Fragment {
                 });
             });
         });
+    }
+
+    private void setupPasswordVisibilityToggle(EditText passwordEditText) {
+        passwordEditText.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (passwordEditText.getRight() - passwordEditText.getCompoundDrawables()[2].getBounds().width())) {
+                    togglePasswordVisibility(passwordEditText);
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    private void togglePasswordVisibility(EditText passwordEditText) {
+        if (isPasswordVisible) {
+            passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            passwordEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock, 0, R.drawable.ic_eye_off, 0);
+        } else {
+            passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            passwordEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock, 0, R.drawable.ic_eye_on, 0);
+        }
+        passwordEditText.setSelection(passwordEditText.getText().length());
+        vibrate();
+        isPasswordVisible = !isPasswordVisible;
+    }
+
+    private void vibrate() {
+        Vibrator vibrator = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(50);
+            }
+        }
     }
 }
