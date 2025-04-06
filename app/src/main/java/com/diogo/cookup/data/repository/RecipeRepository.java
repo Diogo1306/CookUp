@@ -16,7 +16,7 @@ public class RecipeRepository {
     private final ApiService apiService;
 
     public RecipeRepository() {
-        apiService = ApiRetrofit.getClient().create(ApiService.class);
+        apiService = ApiRetrofit.getApiService();
     }
 
     public void getAllRecipes(MutableLiveData<List<RecipeData>> recipesLiveData, MutableLiveData<String> errorMessage) {

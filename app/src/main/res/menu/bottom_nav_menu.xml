@@ -2,17 +2,17 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home"
-        android:title="inicio" />
+        android:title="início" />
 
     <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search"
-        android:title="receitas" />
+        android:title="explorar" />
 
     <item
         android:id="@+id/navigation_saves"
         android:icon="@drawable/ic_saves"
-        android:title="salvos" />
+        android:title="Guardados" />
 
     <item
         android:id="@+id/navigation_profile"

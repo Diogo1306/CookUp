@@ -40,4 +40,9 @@ public class ApiRetrofit {
         }
         return retrofit;
     }
+
+    public static ApiService getApiService() {
+        return getClient().create(ApiService.class);
+    }
+
 }

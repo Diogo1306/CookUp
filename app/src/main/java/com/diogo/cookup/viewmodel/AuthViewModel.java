@@ -1,17 +1,21 @@
 package com.diogo.cookup.viewmodel;
 
+import android.app.Application;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.AuthRepository;
 import com.diogo.cookup.data.repository.UserRepository;
 import com.diogo.cookup.utils.AuthUtils;
+import com.diogo.cookup.utils.SharedPrefHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 
-public class AuthViewModel extends ViewModel {
+public class AuthViewModel extends AndroidViewModel {
 
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
@@ -21,10 +25,13 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<Boolean> resetEmailSent = new MutableLiveData<>();
     private final MutableLiveData<Boolean> passwordUpdated = new MutableLiveData<>();
     private final MutableLiveData<String> loginProvider = new MutableLiveData<>();
+    private final SharedPrefHelper sharedPrefHelper;
 
-    public AuthViewModel() {
+    public AuthViewModel(@NonNull Application application) {
+        super(application);
         userRepository = new UserRepository();
         authRepository = new AuthRepository(userRepository);
+        sharedPrefHelper = SharedPrefHelper.getInstance(application.getApplicationContext());
     }
 
     public LiveData<FirebaseUser> getUserLiveData() {
@@ -54,8 +61,20 @@ public class AuthViewModel extends ViewModel {
     public void login(String email, String password) {
         authRepository.login(email, password, new AuthRepository.AuthCallback() {
             @Override
-            public void onSuccess(FirebaseUser user) {
-                userLiveData.postValue(user);
+            public void onSuccess(FirebaseUser firebaseUser) {
+                userLiveData.postValue(firebaseUser);
+
+                userRepository.getUser(firebaseUser.getUid(), new UserRepository.UserCallback() {
+                    @Override
+                    public void onSuccess(UserData user, String message) {
+                        sharedPrefHelper.saveUser(user);
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        errorMessage.postValue(msg);
+                    }
+                });
             }
 
             @Override
@@ -73,12 +92,24 @@ public class AuthViewModel extends ViewModel {
     public void signup(String email, String password, String username) {
         authRepository.signup(email, password, username, new AuthRepository.AuthCallback() {
             @Override
-            public void onSuccess(FirebaseUser user) {}
+            public void onSuccess(FirebaseUser firebaseUser) {}
 
             @Override
-            public void onSuccess(FirebaseUser user, String message) {
-                userLiveData.postValue(user);
+            public void onSuccess(FirebaseUser firebaseUser, String message) {
+                userLiveData.postValue(firebaseUser);
                 successMessage.postValue(message);
+
+                userRepository.getUser(firebaseUser.getUid(), new UserRepository.UserCallback() {
+                    @Override
+                    public void onSuccess(UserData user, String msg) {
+                        sharedPrefHelper.saveUser(user);
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        errorMessage.postValue(msg);
+                    }
+                });
             }
 
             @Override
@@ -100,9 +131,10 @@ public class AuthViewModel extends ViewModel {
             userRepository.createOrUpdateUser(userData, new UserRepository.UserCallback() {
                 @Override
                 public void onSuccess(UserData user, String message) {
+                    sharedPrefHelper.saveUser(user);
                     userLiveData.postValue(firebaseUser);
 
-                    if (message.equals("Conta atualizada")) {
+                    if ("Conta atualizada".equals(message)) {
                         successMessage.postValue("Login bem-sucedido!");
                     } else {
                         successMessage.postValue(message);
@@ -133,6 +165,7 @@ public class AuthViewModel extends ViewModel {
 
     public void logout() {
         authRepository.logout();
+        sharedPrefHelper.clearUser();
         userLiveData.postValue(null);
     }
 }

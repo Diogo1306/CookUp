@@ -6,9 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.SavesFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_saved_lists"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="save" />
+        android:padding="16dp"
+        android:clipToPadding="false" />
 
 </FrameLayout>

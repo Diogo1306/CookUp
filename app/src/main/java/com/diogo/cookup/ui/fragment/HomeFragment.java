@@ -38,9 +38,17 @@ public class HomeFragment extends Fragment {
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
         adapter = new RecipeAdapter(null);
+
+        adapter.setOnSaveClickListener(recipeId -> {
+            SaveRecipeBottomSheet bottomSheet = SaveRecipeBottomSheet.newInstance(recipeId);
+            bottomSheet.show(getParentFragmentManager(), "SaveRecipeBottomSheet");
+        });
+
         recyclerView.setAdapter(adapter);
     }
+
 
     private void setupViewModel(View view) {
         recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
