@@ -3,6 +3,7 @@ package com.diogo.cookup.ui.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import java.util.List;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
     private List<RecipeData> recipeList;
     private OnItemClickListener onItemClickListener;
+    private OnSaveClickListener onSaveClickListener;
 
     public RecipeAdapter(List<RecipeData> recipes) {
         this.recipeList = recipes;
@@ -22,6 +24,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
+    }
+
+    public void setOnSaveClickListener(OnSaveClickListener listener) {
+        this.onSaveClickListener = listener;
     }
 
     @NonNull
@@ -34,7 +40,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeData recipe = recipeList.get(position);
-        holder.bind(recipe, onItemClickListener);
+        holder.bind(recipe, onItemClickListener, onSaveClickListener);
     }
 
     @Override
@@ -50,6 +56,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title, preparationTime, servings;
         private final ImageView image;
+        private final ImageButton buttonSave;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -57,9 +64,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             preparationTime = itemView.findViewById(R.id.preparation_time);
             servings = itemView.findViewById(R.id.servings);
             image = itemView.findViewById(R.id.recipe_image);
+            buttonSave = itemView.findViewById(R.id.button_save_recipe);
         }
 
-        public void bind(RecipeData recipe, OnItemClickListener listener) {
+        public void bind(RecipeData recipe, OnItemClickListener clickListener, OnSaveClickListener saveClickListener) {
             title.setText(recipe.getTitle());
 
             int prepTime = recipe.getPreparationTime();
@@ -74,8 +82,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                     .into(image);
 
             itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onItemClick(recipe);
+                if (clickListener != null) {
+                    clickListener.onItemClick(recipe);
+                }
+            });
+
+            buttonSave.setOnClickListener(v -> {
+                if (saveClickListener != null) {
+                    saveClickListener.onSaveClick(recipe.getRecipeId());
                 }
             });
         }
@@ -83,5 +97,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     public interface OnItemClickListener {
         void onItemClick(RecipeData recipe);
+    }
+
+    public interface OnSaveClickListener {
+        void onSaveClick(int recipeId);
     }
 }

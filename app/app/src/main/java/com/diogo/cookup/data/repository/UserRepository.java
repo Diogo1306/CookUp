@@ -16,7 +16,7 @@ public class UserRepository {
     private final ApiService apiService;
 
     public UserRepository() {
-        apiService = ApiRetrofit.getClient().create(ApiService.class);
+        apiService =  ApiRetrofit.getApiService();
     }
 
     public void getUser(String firebaseUid, UserCallback callback) {

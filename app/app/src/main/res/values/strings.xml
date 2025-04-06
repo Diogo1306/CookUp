@@ -53,9 +53,10 @@
     <string name="error_sending_email">Erro ao enviar email: %1$s</string>
     <string name="resend_verification">Reenviar verificação</string>
     <string name="waiting_seconds">A verificar... %1$d s</string>
-    <string name="email_verification_hint">Introduz o teu novo email e a tua palavra-passe atual. Por questões de segurança, iremos reautenticar a tua conta antes de proceder à alteração.Depois de enviado, irás receber um email com um link de verificação. Clica nesse link para confirmares o novo endereço de email. Assim que confirmares, volta à aplicação e toca em "Confirmar alteração" para concluir o processo.
-</string>
+    <string name="email_verification_hint">Introduz o teu novo email e a tua palavra-passe atual. Por questões de segurança, iremos reautenticar a tua conta antes de proceder à alteração.Depois de enviado, irás receber um email com um link de verificação. Clica nesse link para confirmares o novo endereço de email. Assim que confirmares, volta à aplicação e toca em "Confirmar alteração" para concluir o processo.</string>
     <string name="send_verification">Enviar verificação</string>
     <string name="confirm_change">Confirmar alteração</string>
     <string name="update_email_title">Atualizar email</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
