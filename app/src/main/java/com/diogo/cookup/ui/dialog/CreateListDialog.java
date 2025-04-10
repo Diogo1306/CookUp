@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.data.model.SavedListData;
 import com.diogo.cookup.ui.adapter.ColorAdapter;
 
 import java.util.Arrays;
@@ -23,49 +24,76 @@ public class CreateListDialog {
         void onListCreate(String name, String color);
     }
 
+    public interface OnListEditListener {
+        void onEdit(int listId, String name, String color);
+    }
+
     public static void show(Context context, OnListCreateListener listener) {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_create_list, null);
 
         EditText nameInput = view.findViewById(R.id.edit_list_name);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_colors);
 
-        List<String> colorOptions = Arrays.asList(
-                "#FFA07A", // Salmão vivo
-                "#F4A460", // Caramelo
-                "#FFB347", // Laranja damasco
-                "#B0E57C", // Verde kiwi
-                "#98E2B7", // Verde menta mais vivo
-                "#C397D8", // Roxo uva suave
-                "#FF69B4", // Rosa chiclete
-                "#87CEFA", // Azul céu claro
-                "#FFDEAD", // Amendoim
-                "#BC8F8F"  // Chocolate com leite
-        );
+        List<String> colorOptions = getColorOptions();
+        final String[] selectedColor = {colorOptions.get(0)};
 
-        final String[] backgroundColor = {colorOptions.get(0)};
-
-        ColorAdapter adapter = new ColorAdapter(colorOptions, color -> backgroundColor[0] = color);
+        ColorAdapter adapter = new ColorAdapter(colorOptions, color -> selectedColor[0] = color);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
         recyclerView.setAdapter(adapter);
 
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Criar nova lista")
                 .setView(view)
-                .setPositiveButton("Criar", (dialogInterface, which) -> {
+                .setPositiveButton("Criar", (d, i) -> {
                     String name = nameInput.getText().toString().trim();
-
                     if (!name.isEmpty()) {
-                        listener.onListCreate(name, backgroundColor[0]);
+                        listener.onListCreate(name, selectedColor[0]);
                     }
                 })
                 .setNegativeButton("Cancelar", null)
                 .create();
 
         dialog.show();
+        dialog.getWindow().getDecorView().setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+    }
 
-        View window = dialog.getWindow().getDecorView();
-        int color = ContextCompat.getColor(context, R.color.background);
-        window.setBackgroundColor(color);
+    public static void show(Context context, SavedListData list, OnListEditListener listener) {
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_create_list, null);
 
+        EditText nameInput = view.findViewById(R.id.edit_list_name);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_colors);
+
+        nameInput.setText(list.list_name);
+
+        List<String> colorOptions = getColorOptions();
+        final String[] selectedColor = {list.color};
+
+        ColorAdapter adapter = new ColorAdapter(colorOptions, selected -> selectedColor[0] = selected);
+        adapter.setSelectedColor(list.color);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
+        recyclerView.setAdapter(adapter);
+
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle("Editar lista")
+                .setView(view)
+                .setPositiveButton("Guardar", (d, i) -> {
+                    String name = nameInput.getText().toString().trim();
+                    if (!name.isEmpty()) {
+                        listener.onEdit(list.list_id, name, selectedColor[0]);
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.show();
+        dialog.getWindow().getDecorView().setBackgroundColor(ContextCompat.getColor(context, R.color.background));
+    }
+
+    private static List<String> getColorOptions() {
+        return Arrays.asList(
+                "#FFA07A", "#F4A460", "#FFB347", "#B0E57C", "#98E2B7",
+                "#C397D8", "#FF69B4", "#87CEFA", "#FFDEAD", "#BC8F8F"
+        );
     }
 }

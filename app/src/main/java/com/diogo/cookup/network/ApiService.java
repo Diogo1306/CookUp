@@ -53,6 +53,14 @@ public interface ApiService {
             @Field("color") String color
     );
 
+    @FormUrlEncoded
+    @POST("api.php")
+    Call<ApiResponse<Void>> removeRecipeFromList(
+            @Query("route") String route,
+            @Field("list_id") int listId,
+            @Field("recipe_id") int recipeId
+    );
+
     @GET("api.php")
     Call<ApiResponse<List<SavedListData>>> getUserLists(
             @Query("route") String route,
@@ -73,4 +81,23 @@ public interface ApiService {
             @Query("route") String route,
             @Query("list_id") int listId
     );
+
+    @GET("api.php")
+    Call<ApiResponse<List<Integer>>> getRecipeListIds(
+            @Query("route") String route,
+            @Query("recipe_id") int recipeId
+    );
+
+    @GET("api.php")
+    Call<ApiResponse<Void>> deleteList(
+            @Query("route") String route,
+            @Query("list_id") int listId
+    );
+
+    @GET("api.php")
+    Call<ApiResponse<List<Integer>>> getSavedRecipeIds(
+            @Query("route") String route,
+            @Query("user_id") int userId
+    );
+
 }
