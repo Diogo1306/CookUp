@@ -6,30 +6,35 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
+
 import java.util.List;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
+public class RecipeAdapterDefault extends RecyclerView.Adapter<RecipeAdapterDefault.ViewHolder> {
     private final List<RecipeData> recipeList;
-    private final boolean isSavedMode;
-    private OnItemClickListener onItemClickListener;
-    private OnSaveClickListener onSaveClickListener;
+    private final OnItemClickListener itemClickListener;
+    private final OnSaveClickListener saveClickListener;
+    private final List<Integer> savedRecipeIds;
 
-    public RecipeAdapter(List<RecipeData> recipes, boolean isSavedMode) {
-        this.recipeList = recipes;
-        this.isSavedMode = isSavedMode;
+    public RecipeAdapterDefault(List<RecipeData> recipeList, List<Integer> savedRecipeIds, OnItemClickListener itemClickListener, OnSaveClickListener saveClickListener) {
+        this.recipeList = recipeList;
+        this.itemClickListener = itemClickListener;
+        this.saveClickListener = saveClickListener;
+        this.savedRecipeIds = savedRecipeIds;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClickListener = listener;
-    }
-
-    public void setOnSaveClickListener(OnSaveClickListener listener) {
-        this.onSaveClickListener = listener;
+    public void updateData(List<RecipeData> newRecipes, List<Integer> newSavedIds) {
+        recipeList.clear();
+        recipeList.addAll(newRecipes);
+        savedRecipeIds.clear();
+        savedRecipeIds.addAll(newSavedIds);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -42,21 +47,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeData recipe = recipeList.get(position);
-        holder.bind(recipe, onItemClickListener, onSaveClickListener, isSavedMode);
+        holder.bind(recipe);
     }
 
     @Override
     public int getItemCount() {
-        return recipeList != null ? recipeList.size() : 0;
+        return recipeList.size();
     }
 
-    public void updateData(List<RecipeData> newRecipes) {
-        recipeList.clear();
-        recipeList.addAll(newRecipes);
-        notifyDataSetChanged();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title, preparationTime, servings;
         private final ImageView image;
         private final ImageButton buttonSave;
@@ -70,33 +69,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             buttonSave = itemView.findViewById(R.id.button_save_recipe);
         }
 
-        public void bind(RecipeData recipe, OnItemClickListener clickListener, OnSaveClickListener saveClickListener, boolean isSavedMode) {
+        public void bind(RecipeData recipe) {
             title.setText(recipe.getTitle());
-
-            int prepTime = recipe.getPreparationTime();
-            preparationTime.setText(prepTime > 0 ? prepTime + " min." : "Tempo não disponível");
-
-            int servingsCount = recipe.getServings();
-            servings.setText(servingsCount > 0 ? servingsCount + " doses" : "Quantidade não disponível");
+            preparationTime.setText(recipe.getPreparationTime() > 0 ? recipe.getPreparationTime() + " min." : "Tempo não disponível");
+            servings.setText(recipe.getServings() > 0 ? recipe.getServings() + " doses" : "Quantidade não disponível");
 
             Glide.with(itemView.getContext())
                     .load(recipe.getImage())
                     .placeholder(R.drawable.placeholder)
                     .into(image);
 
-            itemView.setOnClickListener(v -> {
-                if (clickListener != null) clickListener.onItemClick(recipe);
-            });
+            itemView.setOnClickListener(v -> itemClickListener.onItemClick(recipe));
 
-            if (isSavedMode) {
-                buttonSave.setImageResource(R.drawable.ic_trash);
-            } else {
+            if (savedRecipeIds.contains(recipe.getRecipeId())) {
                 buttonSave.setImageResource(R.drawable.ic_bookmark_selected);
+            } else {
+                buttonSave.setImageResource(R.drawable.ic_bookmark);
             }
 
-            buttonSave.setOnClickListener(v -> {
-                if (saveClickListener != null) saveClickListener.onSaveClick(recipe.getRecipeId());
-            });
+            buttonSave.setOnClickListener(v -> saveClickListener.onSaveClick(recipe.getRecipeId()));
         }
     }
 

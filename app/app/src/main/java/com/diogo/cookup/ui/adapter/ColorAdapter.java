@@ -16,6 +16,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
 
     private final List<String> colorList;
     private int selectedPosition = -1;
+    private String selectedColor = "";
     private final OnColorSelectedListener listener;
 
     public interface OnColorSelectedListener {
@@ -25,6 +26,12 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
     public ColorAdapter(List<String> colorList, OnColorSelectedListener listener) {
         this.colorList = colorList;
         this.listener = listener;
+    }
+
+    public void setSelectedColor(String color) {
+        this.selectedColor = color;
+        this.selectedPosition = colorList.indexOf(color);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -37,7 +44,6 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
     @Override
     public void onBindViewHolder(@NonNull ColorViewHolder holder, int position) {
         String color = colorList.get(position);
-
         holder.colorView.setBackgroundColor(Color.parseColor(color));
 
         if (position == selectedPosition) {
@@ -48,8 +54,9 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
 
         holder.itemView.setOnClickListener(v -> {
             selectedPosition = holder.getAdapterPosition();
+            selectedColor = colorList.get(selectedPosition);
             notifyDataSetChanged();
-            listener.onColorSelected(color);
+            listener.onColorSelected(selectedColor);
         });
     }
 

@@ -1,6 +1,10 @@
 package com.diogo.cookup.ui.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -8,22 +12,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.adapter.RecipeAdapter;
-import com.diogo.cookup.utils.MessageUtils;
+import com.diogo.cookup.ui.adapter.RecipeAdapterSaved;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.ArrayList;
+
 public class SavedRecipesFragment extends Fragment {
 
     private SavedListViewModel viewModel;
-    private RecipeAdapter adapter;
+    private RecipeAdapterSaved adapter;
     private int listId;
     private String listName;
 
@@ -41,12 +41,15 @@ public class SavedRecipesFragment extends Fragment {
         listName = getArguments().getString("list_name");
 
         TextView listNameText = view.findViewById(R.id.text_list_name);
-        listNameText.setText("Lista: " + listName);
+        listNameText.setText(listName);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_saved_recipes);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        adapter = new RecipeAdapter(null);
+        adapter = new RecipeAdapterSaved(new ArrayList<>(), recipe -> {
+            viewModel.removeRecipeFromList(listId, recipe.getRecipeId());
+        });
+
         recyclerView.setAdapter(adapter);
 
         viewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
