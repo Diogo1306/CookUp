@@ -53,6 +53,7 @@ public class SavedListAdapter extends RecyclerView.Adapter<SavedListAdapter.Save
     public void setRecipeContext(int recipeId, List<Integer> recipeListIds) {
         this.recipeId = recipeId;
         this.recipeListIds = recipeListIds;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -65,45 +66,7 @@ public class SavedListAdapter extends RecyclerView.Adapter<SavedListAdapter.Save
     @Override
     public void onBindViewHolder(@NonNull SavedListViewHolder holder, int position) {
         SavedListData list = savedLists.get(position);
-        holder.textName.setText(list.list_name);
-
-        try {
-            holder.container.setBackgroundColor(Color.parseColor(list.color));
-        } catch (Exception e) {
-            holder.container.setBackgroundColor(Color.GRAY);
-        }
-
-        boolean isCreateNew = list.list_id == -1;
-
-        if (isCreateNew) {
-            holder.textName.setText("➕ Criar nova lista");
-            holder.buttonRemove.setVisibility(View.GONE);
-            holder.buttonEdit.setVisibility(View.GONE);
-            holder.itemView.setOnClickListener(v -> clickListener.onListClick(list));
-            return;
-        }
-
-        holder.itemView.setOnClickListener(v -> clickListener.onListClick(list));
-
-        boolean isRecipeInList = recipeListIds.contains(list.list_id);
-
-        if (isRecipeInList) {
-            holder.buttonRemove.setVisibility(View.VISIBLE);
-            holder.buttonRemove.setOnClickListener(v -> {
-                if (removeClickListener != null) {
-                    removeClickListener.onRemoveClick(list.list_id, recipeId);
-                }
-            });
-        } else {
-            holder.buttonRemove.setVisibility(View.GONE);
-        }
-
-        holder.buttonEdit.setVisibility(View.VISIBLE);
-        holder.buttonEdit.setOnClickListener(v -> {
-            if (editClickListener != null) {
-                editClickListener.onEditClick(list);
-            }
-        });
+        holder.bind(list, position);
     }
 
     @Override
@@ -117,7 +80,7 @@ public class SavedListAdapter extends RecyclerView.Adapter<SavedListAdapter.Save
         notifyDataSetChanged();
     }
 
-    static class SavedListViewHolder extends RecyclerView.ViewHolder {
+    class SavedListViewHolder extends RecyclerView.ViewHolder {
         TextView textName;
         LinearLayout container;
         ImageButton buttonRemove, buttonEdit;
@@ -128,6 +91,51 @@ public class SavedListAdapter extends RecyclerView.Adapter<SavedListAdapter.Save
             container = itemView.findViewById(R.id.container_color);
             buttonRemove = itemView.findViewById(R.id.button_remove_recipe);
             buttonEdit = itemView.findViewById(R.id.button_edit_list);
+        }
+
+        public void bind(SavedListData list, int position) {
+            textName.setText(list.list_name);
+
+            try {
+                container.setBackgroundColor(Color.parseColor(list.color));
+            } catch (Exception e) {
+                container.setBackgroundColor(Color.GRAY);
+            }
+
+            boolean isCreateNew = list.list_id == -1;
+
+            if (isCreateNew) {
+                textName.setText("Criar nova lista");
+                buttonRemove.setVisibility(View.GONE);
+                buttonEdit.setVisibility(View.GONE);
+                itemView.setOnClickListener(v -> clickListener.onListClick(list));
+                return;
+            }
+
+            itemView.setOnClickListener(v -> clickListener.onListClick(list));
+
+            boolean isRecipeInList = recipeListIds.contains(list.list_id);
+
+            if (isRecipeInList) {
+                buttonRemove.setVisibility(View.VISIBLE);
+                buttonRemove.setOnClickListener(v -> {
+                    if (removeClickListener != null) {
+                        removeClickListener.onRemoveClick(list.list_id, recipeId);
+                        recipeListIds.remove(Integer.valueOf(list.list_id));
+                        notifyItemChanged(position);
+                    }
+                });
+            } else {
+                buttonRemove.setVisibility(View.GONE);
+            }
+
+            buttonEdit.setVisibility(View.VISIBLE);
+            buttonEdit.setOnClickListener(v -> {
+                if (editClickListener != null) {
+                    editClickListener.onEditClick(list);
+                    notifyItemChanged(position);
+                }
+            });
         }
     }
 }

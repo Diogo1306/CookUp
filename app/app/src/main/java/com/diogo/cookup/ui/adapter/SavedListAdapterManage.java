@@ -2,6 +2,7 @@ package com.diogo.cookup.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +100,7 @@ public class SavedListAdapterManage extends RecyclerView.Adapter<RecyclerView.Vi
         TextView listName;
         LinearLayout container;
         ImageButton editButton, deleteButton;
+        View colorDot;
 
         public ListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,20 +108,33 @@ public class SavedListAdapterManage extends RecyclerView.Adapter<RecyclerView.Vi
             container = itemView.findViewById(R.id.container_color);
             editButton = itemView.findViewById(R.id.button_edit_list);
             deleteButton = itemView.findViewById(R.id.button_remove_list);
+            colorDot = itemView.findViewById(R.id.color_dot);
         }
 
         public void bind(SavedListData list) {
             listName.setText(list.list_name);
+
             try {
-                container.setBackgroundColor(Color.parseColor(list.color));
+                int colorParsed = Color.parseColor(list.color);
+                container.setBackgroundColor(colorParsed);
+
+                GradientDrawable dotGradient = new GradientDrawable(
+                        GradientDrawable.Orientation.TL_BR,
+                        new int[]{colorParsed, Color.WHITE}
+                );
+                dotGradient.setShape(GradientDrawable.OVAL);
+                colorDot.setBackground(dotGradient);
+
             } catch (Exception e) {
                 container.setBackgroundColor(Color.GRAY);
             }
 
             itemView.setOnClickListener(v -> clickListener.onListClick(list));
+
             editButton.setOnClickListener(v -> {
                 if (editClickListener != null) editClickListener.onEditClick(list);
             });
+
             deleteButton.setOnClickListener(v -> {
                 if (deleteClickListener != null) deleteClickListener.onDeleteClick(list);
             });

@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/color_frame"
-    android:background="@color/background"
-    android:layout_width="28dp"
-    android:layout_height="28dp"
-    android:layout_margin="6dp">
-
-    <View
-        android:id="@+id/color_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#CCCCCC"
-        android:layout_gravity="center" />
+    android:layout_width="36dp"
+    android:layout_height="36dp"
+    android:layout_marginStart="@dimen/margin_small">
 
     <View
         android:id="@+id/selection_border"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/selected_border"
-        android:visibility="gone" />
+        android:layout_gravity="center"
+        android:background="@drawable/bg_color_unselected"
+        android:padding="2dp" />
+
+    <View
+        android:id="@+id/color_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 </FrameLayout>

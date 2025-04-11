@@ -81,13 +81,13 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecipeAdapterDefa
 
             itemView.setOnClickListener(v -> itemClickListener.onItemClick(recipe));
 
-            if (savedRecipeIds.contains(recipe.getRecipeId())) {
-                buttonSave.setImageResource(R.drawable.ic_bookmark_selected);
-            } else {
-                buttonSave.setImageResource(R.drawable.ic_bookmark);
-            }
+            boolean isSaved = savedRecipeIds.contains(recipe.getRecipeId());
 
-            buttonSave.setOnClickListener(v -> saveClickListener.onSaveClick(recipe.getRecipeId()));
+            buttonSave.setImageResource(isSaved ? R.drawable.ic_bookmark_selected : R.drawable.ic_bookmark);
+
+            buttonSave.setOnClickListener(v -> {
+                saveClickListener.onSaveClick(recipe.getRecipeId()); // Só abre o BottomSheet
+            });
         }
     }
 

@@ -1,5 +1,7 @@
 package com.diogo.cookup.ui.adapter;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,8 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
     private final OnAddClickListener onAddClick;
     private final OnRemoveClickListener onRemoveClick;
 
-    public SavedListAdapterSelect(int recipeId, List<Integer> listIdsWithRecipe, OnAddClickListener onAddClick, OnRemoveClickListener onRemoveClick) {
+    public SavedListAdapterSelect(int recipeId, List<Integer> listIdsWithRecipe,
+                                  OnAddClickListener onAddClick, OnRemoveClickListener onRemoveClick) {
         this.recipeId = recipeId;
         this.listIdsWithRecipe.addAll(listIdsWithRecipe);
         this.onAddClick = onAddClick;
@@ -46,65 +49,20 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_saved_list_select, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_saved_list_select, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SavedListData list = listData.get(position);
-        holder.bind(list);
+        holder.bind(list, position);
     }
 
     @Override
     public int getItemCount() {
         return listData.size();
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        TextView listName;
-        LinearLayout container;
-        ImageButton removeButton;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            listName = itemView.findViewById(R.id.text_list_name);
-            container = itemView.findViewById(R.id.container_color);
-            removeButton = itemView.findViewById(R.id.button_remove_recipe);
-        }
-
-        public void bind(SavedListData list) {
-            listName.setText(list.list_name);
-
-            try {
-                container.setBackgroundColor(android.graphics.Color.parseColor(list.color));
-            } catch (Exception e) {
-                container.setBackgroundColor(android.graphics.Color.GRAY);
-            }
-
-            itemView.setOnClickListener(null);
-            removeButton.setOnClickListener(null);
-
-            boolean isRecipeInThisList = listIdsWithRecipe.contains(list.list_id);
-            int position = getAdapterPosition();
-
-            if (isRecipeInThisList) {
-                removeButton.setVisibility(View.VISIBLE);
-                removeButton.setOnClickListener(v -> {
-                    onRemoveClick.onRemoveClick(list.list_id, recipeId);
-                    listIdsWithRecipe.remove((Integer) list.list_id);
-                    notifyItemChanged(position);
-                });
-                itemView.setOnClickListener(null);
-            } else {
-                removeButton.setVisibility(View.GONE);
-                itemView.setOnClickListener(v -> {
-                    onAddClick.onAddClick(list.list_id, recipeId);
-                    listIdsWithRecipe.add(list.list_id);
-                    notifyItemChanged(position);
-                });
-            }
-        }
     }
 
     public interface OnAddClickListener {
@@ -113,5 +71,55 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
 
     public interface OnRemoveClickListener {
         void onRemoveClick(int listId, int recipeId);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView listName;
+        LinearLayout container;
+        ImageButton removeButton;
+        View colorCircle;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            listName = itemView.findViewById(R.id.text_list_name);
+            container = itemView.findViewById(R.id.container_color);
+            removeButton = itemView.findViewById(R.id.button_remove_recipe);
+            colorCircle = itemView.findViewById(R.id.color_circle);
+        }
+
+        public void bind(SavedListData list, int position) {
+            listName.setText(list.list_name);
+
+            try {
+                int colorParsed = Color.parseColor(list.color);
+                container.setBackgroundColor(colorParsed);
+
+                GradientDrawable circleGradient = new GradientDrawable(
+                        GradientDrawable.Orientation.TL_BR,
+                        new int[]{colorParsed, Color.WHITE}
+                );
+                circleGradient.setShape(GradientDrawable.OVAL);
+                colorCircle.setBackground(circleGradient);
+            } catch (Exception e) {
+                container.setBackgroundColor(Color.GRAY);
+                colorCircle.setBackgroundColor(Color.GRAY);
+            }
+
+            boolean isRecipeInThisList = listIdsWithRecipe.contains(list.list_id);
+
+            if (isRecipeInThisList) {
+                removeButton.setVisibility(View.VISIBLE);
+                removeButton.setOnClickListener(v -> {
+                    onRemoveClick.onRemoveClick(list.list_id, recipeId);
+                });
+                itemView.setOnClickListener(null);
+            } else {
+                removeButton.setVisibility(View.GONE);
+                itemView.setOnClickListener(v -> {
+                    onAddClick.onAddClick(list.list_id, recipeId);
+                });
+            }
+
+        }
     }
 }
