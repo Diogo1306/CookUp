@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.ui.adapter.RecipeAdapterSaved;
+import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -43,11 +45,14 @@ public class SavedRecipesFragment extends Fragment {
         TextView listNameText = view.findViewById(R.id.text_list_name);
         listNameText.setText(listName);
 
+        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+
         RecyclerView recyclerView = view.findViewById(R.id.recycler_saved_recipes);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         adapter = new RecipeAdapterSaved(new ArrayList<>(), recipe -> {
             viewModel.removeRecipeFromList(listId, recipe.getRecipeId());
+            Toast.makeText(requireContext(), "Receita removida da lista", Toast.LENGTH_SHORT).show();
         });
 
         recyclerView.setAdapter(adapter);

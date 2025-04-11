@@ -30,14 +30,14 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recipe_default, parent, false); // usa o layout correto
+                .inflate(R.layout.item_recipe_default, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeData recipe = recipeList.get(position);
-        holder.bind(recipe);
+        holder.bind(recipe, position);
     }
 
     @Override
@@ -62,10 +62,10 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
             preparationTime = itemView.findViewById(R.id.preparation_time);
             servings = itemView.findViewById(R.id.servings);
             image = itemView.findViewById(R.id.recipe_image);
-            buttonRemove = itemView.findViewById(R.id.button_save_recipe); // usa o botão já no layout
+            buttonRemove = itemView.findViewById(R.id.button_save_recipe);
         }
 
-        public void bind(RecipeData recipe) {
+        public void bind(RecipeData recipe, int position) {
             title.setText(recipe.getTitle());
 
             if (recipe.getPreparationTime() > 0) {
@@ -85,11 +85,12 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
                     .placeholder(R.drawable.placeholder)
                     .into(image);
 
-            buttonRemove.setImageResource(R.drawable.ic_trash); // ícone de remover
+            buttonRemove.setImageResource(R.drawable.ic_trash);
+
             buttonRemove.setOnClickListener(v -> {
-                if (removeClickListener != null) {
-                    removeClickListener.onRemoveClick(recipe);
-                }
+                removeClickListener.onRemoveClick(recipe);
+                recipeList.remove(position);
+                notifyItemRemoved(position);
             });
         }
     }

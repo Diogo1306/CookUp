@@ -1,23 +1,26 @@
 package com.diogo.cookup.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.repository.RecipeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class RecipeViewModel extends ViewModel {
+
     private final RecipeRepository recipeRepository;
     private final MutableLiveData<List<RecipeData>> recipesLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<List<Integer>> savedRecipeIds = new MutableLiveData<>(new ArrayList<>());
-
-    public LiveData<List<Integer>> getSavedRecipeIds() { return savedRecipeIds; }
 
     public RecipeViewModel() {
         recipeRepository = new RecipeRepository();
@@ -31,11 +34,12 @@ public class RecipeViewModel extends ViewModel {
         return errorMessage;
     }
 
-    public void loadRecipes() {
-        recipeRepository.getAllRecipes(recipesLiveData, errorMessage);
+    public LiveData<List<Integer>> getSavedRecipeIds() {
+        return savedRecipeIds;
     }
 
-    public void loadSavedRecipeIds(int userId) {
+    public void loadRecipes() {
+        recipeRepository.getAllRecipes(recipesLiveData, errorMessage);
     }
 
 }

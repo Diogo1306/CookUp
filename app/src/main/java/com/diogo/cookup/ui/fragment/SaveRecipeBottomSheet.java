@@ -1,6 +1,7 @@
 package com.diogo.cookup.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
     private RecyclerView recyclerView;
     private SavedListViewModel viewModel;
     private int userId;
+    private SavedListAdapterSelect adapter;
 
     public static SaveRecipeBottomSheet newInstance(int recipeId) {
         SaveRecipeBottomSheet sheet = new SaveRecipeBottomSheet();
@@ -51,6 +53,7 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
         recipeId = getArguments().getInt("recipe_id");
         recyclerView = view.findViewById(R.id.recycler_lists);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         viewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
 
         UserData currentUser = SharedPrefHelper.getInstance(requireContext()).getUser();
@@ -62,13 +65,16 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
 
         userId = currentUser.getUserId();
 
-        SavedListAdapterSelect adapter = new SavedListAdapterSelect(
+        adapter = new SavedListAdapterSelect(
                 recipeId,
                 new ArrayList<>(),
                 (listId, recipeId1) -> {
                     viewModel.addRecipeToList(listId, recipeId1);
 
-                    viewModel.loadUserSavedRecipeIds(userId);
+                    new Handler().postDelayed(() -> {
+                        viewModel.loadRecipeListIds(recipeId);
+                        viewModel.loadUserSavedRecipeIds(userId);
+                    }, 150);
 
                     Toast toast = Toast.makeText(requireContext(), "Receita adicionada com sucesso", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
@@ -78,7 +84,10 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
                 (listId, recipeId1) -> {
                     viewModel.removeRecipeFromList(listId, recipeId1);
 
-                    viewModel.loadUserSavedRecipeIds(userId);
+                    new Handler().postDelayed(() -> {
+                        viewModel.loadRecipeListIds(recipeId);
+                        viewModel.loadUserSavedRecipeIds(userId);
+                    }, 300);
 
                     Toast toast = Toast.makeText(requireContext(), "Receita removida da lista", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
@@ -88,8 +97,13 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
 
         recyclerView.setAdapter(adapter);
 
-        viewModel.getRecipeListIds().observe(getViewLifecycleOwner(), adapter::updateRecipeListIds);
-        viewModel.getSavedLists().observe(getViewLifecycleOwner(), adapter::submitList);
+        viewModel.getRecipeListIds().observe(getViewLifecycleOwner(), ids -> {
+            adapter.updateRecipeListIds(ids);
+        });
+
+        viewModel.getSavedLists().observe(getViewLifecycleOwner(), lists -> {
+            adapter.submitList(lists);
+        });
 
         viewModel.loadRecipeListIds(recipeId);
         viewModel.loadLists(userId);
@@ -97,7 +111,6 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
         view.findViewById(R.id.button_create_list).setOnClickListener(v -> {
             CreateListDialog.show(requireContext(), (name, color) -> {
                 viewModel.createList(userId, name, color);
-
                 viewModel.loadLists(userId);
             });
         });

@@ -1,52 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginVertical="6dp"
-    android:layout_marginHorizontal="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_height="125dp"
+    android:layout_margin="@dimen/margin_small"
+    app:cardCornerRadius="@dimen/border_radius"
+    app:cardElevation="5dp">
 
     <LinearLayout
         android:id="@+id/container_color"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp">
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_medium">
 
-        <View
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/color_circle" />
-
-        <TextView
-            android:id="@+id/text_list_name"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Nome da Lista"
-            android:textSize="16sp"
-            android:textColor="@color/text_primary" />
+            android:layout_marginBottom="@dimen/margin_large"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/button_edit_list"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_edit"
-            android:contentDescription="Editar lista" />
+            <View
+                android:id="@+id/color_dot"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/color_circle" />
 
-        <ImageButton
-            android:id="@+id/button_remove_list"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_trash"
-            android:contentDescription="Eliminar lista" />
+            <TextView
+                android:id="@+id/text_list_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nome da Lista"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_gravity="bottom">
+
+            <ImageButton
+                android:id="@+id/button_edit_list"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_circle"
+                android:contentDescription="Editar lista"
+                android:src="@drawable/ic_edit"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/button_remove_list"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_circle"
+                android:contentDescription="Eliminar lista"
+                android:src="@drawable/ic_trash"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

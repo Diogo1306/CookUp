@@ -13,6 +13,7 @@
     <dimen name="btn_height">54dp</dimen>
     <dimen name="input_height">52dp</dimen>
 
+    <dimen name="margin_very_small">3dp</dimen>
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">24dp</dimen>

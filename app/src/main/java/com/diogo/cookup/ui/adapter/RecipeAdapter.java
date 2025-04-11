@@ -42,7 +42,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeData recipe = recipeList.get(position);
-        holder.bind(recipe, onItemClickListener, onSaveClickListener, isSavedMode);
+        holder.bind(recipe, position);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title, preparationTime, servings;
         private final ImageView image;
         private final ImageButton buttonSave;
@@ -70,7 +70,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             buttonSave = itemView.findViewById(R.id.button_save_recipe);
         }
 
-        public void bind(RecipeData recipe, OnItemClickListener clickListener, OnSaveClickListener saveClickListener, boolean isSavedMode) {
+        public void bind(RecipeData recipe, int position) {
             title.setText(recipe.getTitle());
 
             int prepTime = recipe.getPreparationTime();
@@ -84,18 +84,27 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                     .placeholder(R.drawable.placeholder)
                     .into(image);
 
-            itemView.setOnClickListener(v -> {
-                if (clickListener != null) clickListener.onItemClick(recipe);
-            });
-
             if (isSavedMode) {
                 buttonSave.setImageResource(R.drawable.ic_trash);
             } else {
                 buttonSave.setImageResource(R.drawable.ic_bookmark_selected);
             }
 
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null) onItemClickListener.onItemClick(recipe);
+            });
+
             buttonSave.setOnClickListener(v -> {
-                if (saveClickListener != null) saveClickListener.onSaveClick(recipe.getRecipeId());
+                if (onSaveClickListener != null) {
+                    onSaveClickListener.onSaveClick(recipe.getRecipeId());
+
+                    if (isSavedMode) {
+                        recipeList.remove(position);
+                        notifyItemRemoved(position);
+                    } else {
+                        notifyItemChanged(position);
+                    }
+                }
             });
         }
     }

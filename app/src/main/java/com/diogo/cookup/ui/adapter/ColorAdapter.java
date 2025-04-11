@@ -1,6 +1,7 @@
 package com.diogo.cookup.ui.adapter;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,13 +44,17 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ColorViewHolder holder, int position) {
-        String color = colorList.get(position);
-        holder.colorView.setBackgroundColor(Color.parseColor(color));
+        String colorHex = colorList.get(position);
+
+        GradientDrawable colorDrawable = new GradientDrawable();
+        colorDrawable.setColor(Color.parseColor(colorHex));
+        colorDrawable.setCornerRadius(20f);
+        holder.colorView.setBackground(colorDrawable);
 
         if (position == selectedPosition) {
-            holder.selectionBorder.setBackgroundColor(Color.BLACK);
+            holder.selectionBorder.setBackgroundResource(R.drawable.bg_color_selected_border);
         } else {
-            holder.selectionBorder.setBackgroundColor(Color.TRANSPARENT);
+            holder.selectionBorder.setBackgroundResource(R.drawable.bg_color_unselected);
         }
 
         holder.itemView.setOnClickListener(v -> {
