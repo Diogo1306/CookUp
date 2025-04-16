@@ -1,6 +1,7 @@
 package com.diogo.cookup.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("HOME_DEBUG", "HomeFragment carregou.");
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_recipes);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -60,9 +62,16 @@ public class HomeFragment extends Fragment {
 
         recipeViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), recipes -> {
             if (recipes != null) {
+                Log.d("HOME_DEBUG", "Receitas carregadas: " + recipes.size());
+                for (RecipeData recipe : recipes) {
+                    Log.d("HOME_DEBUG", "→ " + recipe.getTitle());
+                }
+
                 recipeList.clear();
                 recipeList.addAll(recipes);
                 recipeAdapter.updateData(recipeList, savedRecipeIds);
+            } else {
+                Log.d("HOME_DEBUG", "Lista de receitas veio nula");
             }
         });
 
@@ -81,5 +90,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void openRecipeDetail(RecipeData recipe) {
+        int id = recipe.getRecipeId();
+        Log.d("RECIPE_CLICK", "Abrindo RecipeDetailFragment para ID: " + id);
+
+        Fragment fragment = RecipeDetailFragment.newInstance(id);
+
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+
+        Log.d("RECIPE_CLICK", "Transação de fragmento enviada.");
     }
+
 }

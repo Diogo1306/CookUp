@@ -72,7 +72,7 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecipeAdapterDefa
         public void bind(RecipeData recipe) {
             title.setText(recipe.getTitle());
             preparationTime.setText(recipe.getPreparationTime() > 0 ? recipe.getPreparationTime() + " min." : "Tempo não disponível");
-            servings.setText(recipe.getServings() > 0 ? recipe.getServings() + " doses" : "Quantidade não disponível");
+            servings.setText(recipe.getServings() > 0 ? String.valueOf(recipe.getServings()) : "Quantidade não disponível");
 
             Glide.with(itemView.getContext())
                     .load(recipe.getImage())
@@ -86,7 +86,7 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecipeAdapterDefa
             buttonSave.setImageResource(isSaved ? R.drawable.ic_bookmark_selected : R.drawable.ic_bookmark);
 
             buttonSave.setOnClickListener(v -> {
-                saveClickListener.onSaveClick(recipe.getRecipeId()); // Só abre o BottomSheet
+                saveClickListener.onSaveClick(recipe.getRecipeId());
             });
         }
     }

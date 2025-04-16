@@ -6,6 +6,7 @@
     <dimen name="text_large">20sp</dimen>
     <dimen name="text_extra_large">24sp</dimen>
 
+    <dimen name="icon_size_very_small">16dp</dimen>
     <dimen name="icon_size_small">20dp</dimen>
     <dimen name="icon_size_medium">24dp</dimen>
     <dimen name="icon_size_large">32dp</dimen>
@@ -17,6 +18,7 @@
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">24dp</dimen>
+
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_large">24dp</dimen>
