@@ -57,6 +57,6 @@
     <string name="send_verification">Enviar verificação</string>
     <string name="confirm_change">Confirmar alteração</string>
     <string name="update_email_title">Atualizar email</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recipe_info_format">%1$d min · %2$d porções</string>
+
 </resources>

@@ -35,6 +35,13 @@ public interface ApiService {
             @Query("route") String route
     );
 
+    @GET("api.php")
+    Call<ApiResponse<RecipeData>> getRecipeDetail(
+            @Query("route") String route,
+            @Query("action") String action,
+            @Query("recipe_id") int recipeId
+    );
+
     @FormUrlEncoded
     @POST("api.php")
     Call<ApiResponse<Void>> createList(

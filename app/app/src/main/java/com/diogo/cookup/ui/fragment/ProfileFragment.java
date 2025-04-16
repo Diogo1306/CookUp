@@ -26,8 +26,7 @@ public class ProfileFragment extends Fragment {
         setupListeners(view);
         return view;
     }
-
-
+    
     private void setupListeners(View view) {
         Button btnSettings = view.findViewById(R.id.btn_settings);
 

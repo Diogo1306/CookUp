@@ -21,9 +21,15 @@ public class RecipeViewModel extends ViewModel {
     private final MutableLiveData<List<RecipeData>> recipesLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<List<Integer>> savedRecipeIds = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<RecipeData> recipeDetail = new MutableLiveData<>();
+
 
     public RecipeViewModel() {
         recipeRepository = new RecipeRepository();
+    }
+
+    public LiveData<RecipeData> getRecipeDetailLiveData() {
+        return recipeDetail;
     }
 
     public LiveData<List<RecipeData>> getRecipesLiveData() {
@@ -40,6 +46,10 @@ public class RecipeViewModel extends ViewModel {
 
     public void loadRecipes() {
         recipeRepository.getAllRecipes(recipesLiveData, errorMessage);
+    }
+
+    public void loadRecipeDetail(int recipeId) {
+        recipeRepository.getRecipeDetail(recipeId, recipeDetail, errorMessage);
     }
 
 }
