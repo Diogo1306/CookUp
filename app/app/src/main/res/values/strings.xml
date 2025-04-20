@@ -58,5 +58,5 @@
     <string name="confirm_change">Confirmar alteração</string>
     <string name="update_email_title">Atualizar email</string>
     <string name="recipe_info_format">%1$d min · %2$d porções</string>
-
+    <string name="preparation_time_minutes">%1$d mins</string>
 </resources>

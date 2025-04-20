@@ -90,7 +90,7 @@
                     android:id="@+id/txt_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20 mins"
+                    android:text="NA"
                     android:textColor="@color/text_primary"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="@dimen/text_small"
@@ -115,12 +115,13 @@
                     android:id="@+id/txt_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.9"
+                    android:text="NA"
                     android:textColor="@color/text_primary"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="@dimen/text_small"
                     android:layout_marginStart="6dp"
                     android:layout_gravity="center_vertical"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -140,7 +141,7 @@
                     android:id="@+id/txt_difficulty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fácil"
+                    android:text="NA"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_small"
                     android:layout_marginStart="6dp"
@@ -163,9 +164,7 @@
             android:layout_marginHorizontal="@dimen/margin_large"
             android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_regular"
-            android:textSize="@dimen/text_very_small"
-            android:maxLines="2"
-            android:ellipsize="end"/>
+            android:textSize="@dimen/text_very_small" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ingredients_recycler_view"
@@ -194,5 +193,59 @@
             android:paddingBottom="20dp"
             android:visibility="gone" />
 
+        <Button
+            android:id="@+id/btn_finish_recipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finalizar Receita"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/primary"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/poppins_semibold"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="12dp"
+            android:text="Comentários"
+            android:textSize="@dimen/margin_medium"
+            android:fontFamily="@font/poppins_semibold" />
+
+        <EditText
+            android:id="@+id/input_comment_direct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Escreve um comentário..."
+            android:layout_margin="16dp"
+            android:background="@drawable/input"
+            android:padding="12dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:inputType="textMultiLine"
+            android:minLines="2"/>
+
+        <Button
+            android:id="@+id/btn_send_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentar"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/primary"
+            android:textColor="@android:color/white" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comments_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_comment" />
+
     </LinearLayout>
+
 </ScrollView>

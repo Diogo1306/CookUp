@@ -1,10 +1,11 @@
 package com.diogo.cookup.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class RecipeData implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     private int recipe_id;
     private String title;
@@ -17,6 +18,9 @@ public class RecipeData implements Serializable {
     private String difficulty;
     private String image;
     private List<IngredientData> ingredients;
+    private List<CommentData> comments;
+    @SerializedName("average_rating")
+    private float averageRating;
 
     public RecipeData(int recipe_id, String title, String description, String instructions, String category, int preparation_time, List<String> utensils, int servings, String difficulty, String image) {
         this.recipe_id = recipe_id;
@@ -42,6 +46,10 @@ public class RecipeData implements Serializable {
     public String getDifficulty() { return difficulty; }
     public int getServings() { return servings; }
     public String getImage() { return image; }
+    public List<CommentData> getComments() {
+        return comments;
+    }
+    public float getAverageRating() {return averageRating;}
 
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
@@ -53,4 +61,7 @@ public class RecipeData implements Serializable {
     public void setServings(int servings) { this.servings = servings; }
     public void setImage(String image) { this.image = image; }
     public void setIngredients(List<IngredientData> ingredients) {this.ingredients = ingredients;}
+    public void setComments(List<CommentData> comments) {
+        this.comments = comments;
+    }
 }

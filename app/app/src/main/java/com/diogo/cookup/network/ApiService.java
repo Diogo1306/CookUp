@@ -1,9 +1,12 @@
 package com.diogo.cookup.network;
 
 import com.diogo.cookup.data.model.ApiResponse;
+import com.diogo.cookup.data.model.CommentData;
+import com.diogo.cookup.data.model.CommentRequest;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.model.SavedListData;
 import com.diogo.cookup.data.model.UserData;
+import com.diogo.cookup.data.model.RatingRequest;
 
 import java.util.List;
 
@@ -101,10 +104,35 @@ public interface ApiService {
             @Query("list_id") int listId
     );
 
+
+    @GET("api.php")
+    Call<ApiResponse<Float>> getAverageRating(
+            @Query("route") String route,
+            @Query("recipe_id") int recipeId
+    );
+
     @GET("api.php")
     Call<ApiResponse<List<Integer>>> getSavedRecipeIds(
             @Query("route") String route,
             @Query("user_id") int userId
+    );
+
+    @GET("api.php")
+    Call<ApiResponse<List<CommentData>>> getComments(
+            @Query("route") String route,
+            @Query("recipe_id") int recipeId
+    );
+
+    @POST("api.php")
+    Call<ApiResponse<Void>> submitComment(
+            @Query("route") String route,
+            @Body CommentRequest request
+    );
+
+    @POST("api.php")
+    Call<ApiResponse<Void>> submitRating(
+            @Query("route") String route,
+            @Body RatingRequest request
     );
 
 }
