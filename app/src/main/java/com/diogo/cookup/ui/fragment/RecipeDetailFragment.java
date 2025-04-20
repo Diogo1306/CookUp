@@ -8,10 +8,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.*;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,12 +21,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.RecipeData;
+import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.IngredientData;
+import com.diogo.cookup.ui.adapter.CommentAdapter;
 import com.diogo.cookup.ui.adapter.IngredientAdapter;
+import com.diogo.cookup.ui.dialog.RatingBottomSheet;
+import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.RecipeViewModel;
 
 import java.util.List;
+import java.util.Locale;
 
 public class RecipeDetailFragment extends Fragment {
 
@@ -45,23 +47,17 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-        return view;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_recipe_detail, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d("RECIPE_DETAIL", "onViewCreated() foi chamado!");
-
         if (getArguments() != null && getArguments().containsKey(ARG_RECIPE_ID)) {
             recipeId = getArguments().getInt(ARG_RECIPE_ID);
-            Log.d("RECIPE_DETAIL", "Recebido recipeId: " + recipeId);
         } else {
-            Log.e("RECIPE_DETAIL", "Argumento 'recipe_id' não encontrado!");
             return;
         }
 
@@ -74,49 +70,72 @@ public class RecipeDetailFragment extends Fragment {
         TextView txtTime = view.findViewById(R.id.txt_time);
         TextView txtRating = view.findViewById(R.id.txt_rating);
         TextView txtDifficulty = view.findViewById(R.id.txt_difficulty);
+
+        Button ratingButton = view.findViewById(R.id.btn_finish_recipe);
+        EditText inputComment = view.findViewById(R.id.input_comment_direct);
+        Button btnSendComment = view.findViewById(R.id.btn_send_comment);
+
         RecyclerView ingredientsRecyclerView = view.findViewById(R.id.ingredients_recycler_view);
         ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        viewModel.getRecipeDetailLiveData().observe(getViewLifecycleOwner(), recipe -> {
-            if (recipe == null) {
-                Log.e("RECIPE_DETAIL", "Receita retornada nula do ViewModel");
-                return;
+        RecyclerView commentsRecyclerView = view.findViewById(R.id.comments_recycler_view);
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Clique no botão de comentar diretamente
+        btnSendComment.setOnClickListener(v -> {
+            String comment = inputComment.getText().toString().trim();
+            if (!comment.isEmpty()) {
+                int userId = SharedPrefHelper.getInstance(requireContext()).getUser().getUserId();
+                viewModel.submitRatingAndComment(userId, recipeId, 0, comment);
+            } else {
+                Toast.makeText(requireContext(), "Escreve algo antes de comentar", Toast.LENGTH_SHORT).show();
             }
+        });
 
-            Log.d("RECIPE_DETAIL", "Receita carregada: " + recipe.getTitle());
+        ratingButton.setOnClickListener(v -> {
+            RatingBottomSheet bottomSheet = new RatingBottomSheet((rating, comment) -> {
+                int userId = SharedPrefHelper.getInstance(requireContext()).getUser().getUserId();
+                viewModel.submitRatingAndComment(userId, recipeId, (int) rating, comment);
+            });
+            bottomSheet.show(getParentFragmentManager(), "ratingBottomSheet");
+        });
 
-            Glide.with(requireContext())
-                    .load(recipe.getImage())
+        viewModel.getRecipeDetailLiveData().observe(getViewLifecycleOwner(), recipe -> {
+            if (recipe == null) return;
+
+            Glide.with(requireContext()).load(recipe.getImage())
                     .placeholder(R.drawable.placeholder)
                     .into(recipeImage);
 
             recipeTitle.setText(recipe.getTitle());
-            txtTime.setText(recipe.getPreparationTime() + " mins");
-            txtRating.setText("4.9");
+            txtTime.setText(getString(R.string.preparation_time_minutes, recipe.getPreparationTime()));
             txtDifficulty.setText(recipe.getDifficulty());
 
-            String fullDescription = recipe.getDescription();
-            String introduction = recipe.getInstructions();
+            float average = recipe.getAverageRating();
+            txtRating.setText(average > 0 ? String.format(Locale.getDefault(), "%.1f", average) : "—");
 
-            recipeInstructions.setText(introduction);
+            recipeInstructions.setText(recipe.getInstructions());
             recipeInstructions.setVisibility(View.VISIBLE);
 
+            String fullDescription = recipe.getDescription();
             if (fullDescription != null && !fullDescription.isEmpty()) {
-                recipeDescription.setMaxLines(2);
-                recipeDescription.setEllipsize(TextUtils.TruncateAt.END);
                 recipeDescription.setText(fullDescription);
+                recipeDescription.setMaxLines(Integer.MAX_VALUE);
+                recipeDescription.setEllipsize(null);
 
                 recipeDescription.post(() -> {
                     Layout layout = recipeDescription.getLayout();
-                    if (layout == null || layout.getLineCount() < 2) return;
+                    if (layout == null || layout.getLineCount() <= 2) return;
 
                     int lineEndIndex = layout.getLineEnd(1);
-                    if (lineEndIndex >= fullDescription.length()) return;
-
-                    String trimmed = fullDescription.substring(0, lineEndIndex).trim();
+                    String visibleText = fullDescription.substring(0, Math.min(lineEndIndex, fullDescription.length())).trim();
                     String suffix = "... Ver mais";
-                    String finalText = trimmed + suffix;
 
+                    while ((visibleText + suffix).length() > lineEndIndex && visibleText.length() > 0) {
+                        visibleText = visibleText.substring(0, visibleText.length() - 1);
+                    }
+
+                    String finalText = visibleText + suffix;
                     SpannableString spannable = new SpannableString(finalText);
                     int start = finalText.indexOf("Ver mais");
 
@@ -132,7 +151,6 @@ public class RecipeDetailFragment extends Fragment {
 
                     spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary)),
                             start, finalText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                     spannable.setSpan(new StyleSpan(Typeface.BOLD),
                             start, finalText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -147,8 +165,31 @@ public class RecipeDetailFragment extends Fragment {
                 IngredientAdapter adapter = new IngredientAdapter(ingredients);
                 ingredientsRecyclerView.setAdapter(adapter);
             }
+
+            List<CommentData> comments = recipe.getComments();
+            if (comments != null && !comments.isEmpty()) {
+                CommentAdapter commentAdapter = new CommentAdapter(comments);
+                commentsRecyclerView.setAdapter(commentAdapter);
+            }
+        });
+
+        viewModel.getCommentsLiveData().observe(getViewLifecycleOwner(), comments -> {
+            if (comments != null && !comments.isEmpty()) {
+                CommentAdapter commentAdapter = new CommentAdapter(comments);
+                commentsRecyclerView.setAdapter(commentAdapter);
+            }
+        });
+
+        viewModel.getRatingSuccessLiveData().observe(getViewLifecycleOwner(), success -> {
+            if (success != null && success) {
+                inputComment.setText("");
+                viewModel.loadComments(recipeId);
+                viewModel.loadAverageRating(recipeId);
+            }
         });
 
         viewModel.loadRecipeDetail(recipeId);
+        viewModel.loadComments(recipeId);
+        viewModel.loadAverageRating(recipeId);
     }
 }

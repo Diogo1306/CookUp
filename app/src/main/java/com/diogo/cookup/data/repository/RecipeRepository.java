@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.diogo.cookup.data.model.ApiResponse;
+import com.diogo.cookup.data.model.CommentData;
+import com.diogo.cookup.data.model.CommentRequest;
+import com.diogo.cookup.data.model.RatingRequest;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
@@ -28,23 +31,12 @@ public class RecipeRepository {
         apiService.getAllRecipes("recipe").enqueue(new Callback<ApiResponse<List<RecipeData>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Response<ApiResponse<List<RecipeData>>> response) {
-
                 if (response.isSuccessful() && response.body() != null) {
-
                     if (response.body().isSuccess()) {
-                        List<RecipeData> recipes = response.body().getData();
-
-                        if (recipes != null && !recipes.isEmpty()) {
-                            recipesLiveData.postValue(recipes);
-                        } else {
-                            recipesLiveData.postValue(recipes);
-                        }
-
+                        recipesLiveData.postValue(response.body().getData());
                     } else {
-                        String msg = response.body().getMessage();
-                        errorMessage.postValue(msg);
+                        errorMessage.postValue(response.body().getMessage());
                     }
-
                 } else {
                     errorMessage.postValue("Erro ao buscar receitas. Código: " + response.code());
                 }
@@ -71,21 +63,89 @@ public class RecipeRepository {
                                 recipeData.postValue(response.body().getData());
                                 Log.d("RECIPE_API", "Dados da receita: " + new Gson().toJson(response.body().getData()));
                             } else {
-                                Log.e("RECIPE_API", "API retornou success=false: " + response.body().getMessage());
                                 errorMessage.postValue(response.body().getMessage());
                             }
                         } else {
-                            Log.e("RECIPE_API", "Falha na resposta. Código: " + response.code());
                             errorMessage.postValue("Erro ao buscar detalhes da receita.");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponse<RecipeData>> call, Throwable t) {
-                        Log.e("RECIPE_API", "Erro de rede: " + t.getMessage());
                         errorMessage.postValue("Erro de rede: " + t.getMessage());
                     }
                 });
     }
 
+    public void getComments(int recipeId, MutableLiveData<List<CommentData>> commentsLiveData, MutableLiveData<String> errorLiveData) {
+        apiService.getComments("comment", recipeId).enqueue(new Callback<ApiResponse<List<CommentData>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<List<CommentData>>> call, Response<ApiResponse<List<CommentData>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    commentsLiveData.postValue(response.body().getData());
+                } else {
+                    errorLiveData.postValue("Erro ao buscar comentários.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<CommentData>>> call, Throwable t) {
+                errorLiveData.postValue("Erro de rede: " + t.getMessage());
+            }
+        });
+    }
+
+    public void submitComment(CommentRequest request, MutableLiveData<Boolean> successLiveData, MutableLiveData<String> errorLiveData) {
+        apiService.submitComment("comment", request).enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    successLiveData.postValue(true);
+                } else {
+                    errorLiveData.postValue("Erro ao enviar comentário.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                errorLiveData.postValue("Erro de rede: " + t.getMessage());
+            }
+        });
+    }
+
+    public void submitRating(RatingRequest request, MutableLiveData<Boolean> successLiveData, MutableLiveData<String> errorLiveData) {
+        apiService.submitRating("rating", request).enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    successLiveData.postValue(true);
+                } else {
+                    errorLiveData.postValue("Erro ao enviar avaliação.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                errorLiveData.postValue("Erro de rede: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getAverageRating(int recipeId, MutableLiveData<Float> averageLiveData, MutableLiveData<String> errorLiveData) {
+        apiService.getAverageRating("rating", recipeId).enqueue(new Callback<ApiResponse<Float>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Float>> call, Response<ApiResponse<Float>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    averageLiveData.postValue(response.body().getData());
+                } else {
+                    errorLiveData.postValue("Erro ao buscar média.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Float>> call, Throwable t) {
+                errorLiveData.postValue("Erro de rede: " + t.getMessage());
+            }
+        });
+    }
 }

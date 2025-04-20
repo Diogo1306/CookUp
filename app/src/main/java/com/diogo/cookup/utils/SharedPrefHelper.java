@@ -33,7 +33,6 @@ public class SharedPrefHelper {
     public void saveUser(UserData user) {
         clearUser();
         String json = gson.toJson(user);
-        Log.d("DEBUG_USER", "A guardar utilizador: " + json);
         editor.putString(KEY_USER, json);
         editor.apply();
     }
@@ -41,7 +40,6 @@ public class SharedPrefHelper {
 
     public UserData getUser() {
         String json = sharedPref.getString(KEY_USER, null);
-        Log.d("DEBUG_USER", "Utilizador no SharedPrefs: " + json);
         if (json != null) {
             return gson.fromJson(json, UserData.class);
         }

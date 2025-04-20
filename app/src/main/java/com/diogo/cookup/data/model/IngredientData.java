@@ -2,26 +2,31 @@ package com.diogo.cookup.data.model;
 
 public class IngredientData {
     private String name;
-    private String full_entry;
+    private String quantity;
+    private String image;
 
-    public IngredientData(String name, String full_entry) {
+    public IngredientData(String name, String quantity, String image) {
         this.name = name;
-        this.full_entry = full_entry;
+        this.quantity = quantity;
+        this.image = image;
     }
 
     public String getName() {
         return name;
     }
-
-    public String getFull_entry() {
-        return full_entry;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
-
-    public void setFull_entry(String full_entry) {
-        this.full_entry = full_entry;
+    public String getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+    public String getImage() {
+        return image;
+    }
+    public void setImage(String image) {
+        this.image = image;
     }
 }
