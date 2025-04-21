@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.ui.adapter.RecipeAdapterSaved;
 import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
@@ -50,10 +51,21 @@ public class SavedRecipesFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_saved_recipes);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        adapter = new RecipeAdapterSaved(new ArrayList<>(), recipe -> {
-            viewModel.removeRecipeFromList(listId, recipe.getRecipeId());
-            Toast.makeText(requireContext(), "Receita removida da lista", Toast.LENGTH_SHORT).show();
-        });
+        adapter = new RecipeAdapterSaved(
+                new ArrayList<>(),
+                recipe -> {
+                    viewModel.removeRecipeFromList(listId, recipe.getRecipeId());
+                    Toast.makeText(requireContext(), "Receita removida da lista", Toast.LENGTH_SHORT).show();
+                },
+                recipe -> {
+                    RecipeDetailFragment fragment = RecipeDetailFragment.newInstance(recipe.getRecipeId());
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+        );
 
         recyclerView.setAdapter(adapter);
 

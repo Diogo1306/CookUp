@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        setContentView(R.layout.activity_main);
 
         preferences = getSharedPreferences("app_prefs", MODE_PRIVATE);
         int savedTheme = preferences.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
@@ -111,6 +117,15 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    public void setBottomNavVisibility(boolean visible) {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        if (visible) {
+            bottomNav.setVisibility(View.VISIBLE);
+        } else {
+            bottomNav.setVisibility(View.GONE);
+        }
     }
 
     private void openInitialFragment() {

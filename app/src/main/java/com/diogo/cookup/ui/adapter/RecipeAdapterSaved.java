@@ -20,10 +20,12 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
 
     private final List<RecipeData> recipeList;
     private final OnRemoveClickListener removeClickListener;
+    private final OnRecipeClickListener recipeClickListener;
 
-    public RecipeAdapterSaved(List<RecipeData> recipeList, OnRemoveClickListener removeClickListener) {
+    public RecipeAdapterSaved(List<RecipeData> recipeList, OnRemoveClickListener removeClickListener, OnRecipeClickListener recipeClickListener) {
         this.recipeList = recipeList;
         this.removeClickListener = removeClickListener;
+        this.recipeClickListener = recipeClickListener;
     }
 
     @NonNull
@@ -86,16 +88,23 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
                     .into(image);
 
             buttonRemove.setImageResource(R.drawable.ic_trash);
-
             buttonRemove.setOnClickListener(v -> {
                 removeClickListener.onRemoveClick(recipe);
                 recipeList.remove(position);
                 notifyItemRemoved(position);
+            });
+
+            itemView.setOnClickListener(v -> {
+                recipeClickListener.onRecipeClick(recipe);
             });
         }
     }
 
     public interface OnRemoveClickListener {
         void onRemoveClick(RecipeData recipe);
+    }
+
+    public interface OnRecipeClickListener {
+        void onRecipeClick(RecipeData recipe);
     }
 }

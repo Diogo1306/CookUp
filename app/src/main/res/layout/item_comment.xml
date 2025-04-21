@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="12dp"
     android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:gravity="top">
 
     <ImageView
         android:id="@+id/img_profile"
@@ -25,26 +25,31 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
 
-        <TextView
-            android:id="@+id/txt_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Utilizador"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            <TextView
+                android:id="@+id/txt_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_very_small"
+                android:layout_weight="1"
+                android:text="Utilizador"
+                android:fontFamily="@font/poppins_semibold"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"/>
 
             <RatingBar
                 android:id="@+id/rating_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:stepSize="1"
                 android:numStars="5"
-                android:stepSize="0.5"
+                android:rating="4"
                 android:isIndicator="true"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp" />
+                android:theme="@style/RatingBarYellow"
+                style="?android:attr/ratingBarStyleSmall" />
 
         </LinearLayout>
 
@@ -53,15 +58,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Comentário"
-            android:textColor="@color/text_secondary" />
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:layout_marginBottom="2dp"/>
 
         <TextView
             android:id="@+id/txt_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/text_primary"
             android:textSize="12sp"/>
-
-
     </LinearLayout>
 </LinearLayout>

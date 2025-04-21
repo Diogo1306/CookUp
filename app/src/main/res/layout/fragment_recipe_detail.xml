@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +25,9 @@
             <ImageView
                 android:id="@+id/recipe_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="325dp"
                 android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
                 android:background="@color/primary" />
 
             <View
@@ -154,6 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:text="Descrição"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/margin_medium"
             android:fontFamily="@font/poppins_semibold" />
 
@@ -166,12 +176,22 @@
             android:fontFamily="@font/poppins_regular"
             android:textSize="@dimen/text_very_small" />
 
+        <TextView
+            android:id="@+id/recipe_ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="Ingredients"
+            android:textColor="@color/text_primary"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="@dimen/text_medium" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ingredients_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
-
+            android:layout_margin="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -193,16 +213,6 @@
             android:paddingBottom="20dp"
             android:visibility="gone" />
 
-        <Button
-            android:id="@+id/btn_finish_recipe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Finalizar Receita"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/primary"
-            android:textColor="@android:color/white"
-            android:fontFamily="@font/poppins_semibold"/>
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -215,26 +225,29 @@
 
         <EditText
             android:id="@+id/input_comment_direct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/input"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:hint="Escreve um comentário..."
-            android:layout_margin="16dp"
-            android:background="@drawable/input"
-            android:padding="12dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary"
-            android:inputType="textMultiLine"
-            android:minLines="2"/>
+            android:maxLines="5"
+            android:minLines="1"
+            android:inputType="textMultiLine|textCapSentences"
+            android:textColorHint="@color/text_primary"
+            android:scrollbars="vertical" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_send_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/text_very_small"
+            style="@style/button_primary"
+            android:layout_gravity="right"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="@dimen/text_very_small"
             android:text="Comentar"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="24dp"
-            android:backgroundTint="@color/primary"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comments_recycler_view"
@@ -248,4 +261,26 @@
 
     </LinearLayout>
 
-</ScrollView>
+    </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/bottom_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:background="@drawable/top_fade_background">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_finish_recipe"
+                android:layout_width="180dp"
+                style="@style/button_primary"
+                android:layout_margin="@dimen/margin_small"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_small"
+                android:text="Finalizar Receita"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
