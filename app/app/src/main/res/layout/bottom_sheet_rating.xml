@@ -4,34 +4,41 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@android:color/white">
+    android:background="@drawable/bg_bottom_sheet">
 
     <RatingBar
         android:id="@+id/rating_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:stepSize="1"
+        android:layout_marginLeft="35dp"
         android:numStars="5"
-        android:rating="0"
+        android:stepSize="0.5"
         android:isIndicator="false"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:scaleX="1.7"
+        android:scaleY="1.7"
+        android:theme="@style/RatingBarYellow"
         style="?android:attr/ratingBarStyleSmall" />
 
     <EditText
         android:id="@+id/input_comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/input"
         android:hint="Escreve um comentário (opcional)"
-        android:background="@drawable/input"
-        android:padding="12dp"
-        android:layout_marginTop="12dp" />
+        android:drawablePadding="@dimen/padding_small"
+        android:textColorHint="@color/text_primary"
+        android:layout_marginTop="@dimen/margin_medium" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_submit_rating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/text_very_small"
+        style="@style/button_primary"
+        android:layout_gravity="right"
+        android:fontFamily="@font/poppins_semibold"
+        android:textSize="@dimen/text_very_small"
         android:text="Submeter"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/primary"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/white" />
 </LinearLayout>

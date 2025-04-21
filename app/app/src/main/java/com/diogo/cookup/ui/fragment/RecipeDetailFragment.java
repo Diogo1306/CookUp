@@ -2,6 +2,7 @@ package com.diogo.cookup.ui.fragment;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.*;
 import android.text.method.LinkMovementMethod;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.IngredientData;
+import com.diogo.cookup.ui.activity.MainActivity;
 import com.diogo.cookup.ui.adapter.CommentAdapter;
 import com.diogo.cookup.ui.adapter.IngredientAdapter;
 import com.diogo.cookup.ui.dialog.RatingBottomSheet;
@@ -55,6 +57,10 @@ public class RecipeDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setBottomNavVisibility(false);
+        }
+
         if (getArguments() != null && getArguments().containsKey(ARG_RECIPE_ID)) {
             recipeId = getArguments().getInt(ARG_RECIPE_ID);
         } else {
@@ -81,7 +87,6 @@ public class RecipeDetailFragment extends Fragment {
         RecyclerView commentsRecyclerView = view.findViewById(R.id.comments_recycler_view);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Clique no botão de comentar diretamente
         btnSendComment.setOnClickListener(v -> {
             String comment = inputComment.getText().toString().trim();
             if (!comment.isEmpty()) {
@@ -192,4 +197,13 @@ public class RecipeDetailFragment extends Fragment {
         viewModel.loadComments(recipeId);
         viewModel.loadAverageRating(recipeId);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setBottomNavVisibility(true);
+        }
+    }
+
 }
