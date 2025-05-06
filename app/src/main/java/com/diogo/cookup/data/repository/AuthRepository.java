@@ -1,6 +1,6 @@
 package com.diogo.cookup.data.repository;
 
-import android.media.MediaPlayer;
+import android.util.Log;
 
 import com.diogo.cookup.data.model.UserData;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +35,7 @@ public class AuthRepository {
                         String errorMsg = (task.getException() != null)
                                 ? task.getException().getMessage()
                                 : "Erro desconhecido";
+                        Log.e("AUTH_REPO", "❌ Firebase login falhou: " + errorMsg);
                         callback.onError("Erro ao fazer login: " + errorMsg);
                     }
                 });

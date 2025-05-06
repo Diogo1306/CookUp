@@ -1,34 +1,52 @@
 package com.diogo.cookup.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.RecipeData;
+import com.diogo.cookup.data.model.UserData;
+import com.diogo.cookup.ui.adapter.CategoryAdapter;
 import com.diogo.cookup.ui.adapter.RecipeAdapterDefault;
+import com.diogo.cookup.ui.adapter.RecipeSkeletonAdapter;
 import com.diogo.cookup.utils.SharedPrefHelper;
+import com.diogo.cookup.viewmodel.CategoryViewModel;
+import com.diogo.cookup.viewmodel.HomeFeedViewModel;
 import com.diogo.cookup.viewmodel.RecipeViewModel;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
+import com.diogo.cookup.viewmodel.UserStatsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private RecipeAdapterDefault recipeAdapter;
+    private RecipeAdapterDefault recipeAdapter, adapterWeekly, adapterPopular, adapterCat1, adapterCat2, adapterCat3;
+    private CategoryAdapter categoryAdapter;
+
+    private CategoryViewModel categoryViewModel;
     private RecipeViewModel recipeViewModel;
     private SavedListViewModel savedListViewModel;
+    private UserStatsViewModel userStatsViewModel;
+    private HomeFeedViewModel homeFeedViewModel;
+
+    private RecyclerView recyclerCategories, recyclerRecommended, recyclerWeekly, recyclerPopular, recyclerCat1, recyclerCat2, recyclerCat3;
+    private TextView tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3;
 
     private final List<RecipeData> recipeList = new ArrayList<>();
+    private final List<CategoryData> categoryList = new ArrayList<>();
     private final List<Integer> savedRecipeIds = new ArrayList<>();
 
     @Nullable
@@ -40,68 +58,210 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("HOME_DEBUG", "HomeFragment carregou.");
+        initViewModels();
+        initViews(view);
+        showSkeletons();
 
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_recipes);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        new Handler().postDelayed(() -> {
+            if (!isAdded()) return;
+            initAdapters();
+            setAdapters();
+            observeViewModels();
+            loadInitialData();
+        }, 400);
+    }
 
-        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+    private void initViewModels() {
         savedListViewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
+        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        userStatsViewModel = new ViewModelProvider(this).get(UserStatsViewModel.class);
+        homeFeedViewModel = new ViewModelProvider(this).get(HomeFeedViewModel.class);
+    }
 
-        recipeAdapter = new RecipeAdapterDefault(
+    private void initViews(View view) {
+        recyclerCategories = view.findViewById(R.id.recyclerCategories);
+        recyclerRecommended = view.findViewById(R.id.recyclerRecommended);
+        recyclerWeekly = view.findViewById(R.id.recyclerWeekly);
+        recyclerPopular = view.findViewById(R.id.recyclerPopular);
+        recyclerCat1 = view.findViewById(R.id.recyclerCat1);
+        recyclerCat2 = view.findViewById(R.id.recyclerCat2);
+        recyclerCat3 = view.findViewById(R.id.recyclerCat3);
+
+        tvCategoryTitle1 = view.findViewById(R.id.tvCategoryTitle1);
+        tvCategoryTitle2 = view.findViewById(R.id.tvCategoryTitle2);
+        tvCategoryTitle3 = view.findViewById(R.id.tvCategoryTitle3);
+
+        recyclerCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerRecommended.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerWeekly.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerPopular.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerCat1.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerCat2.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerCat3.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+    }
+
+    private void showSkeletons() {
+        RecipeSkeletonAdapter recipeSkeleton = new RecipeSkeletonAdapter(5);
+        recyclerRecommended.setAdapter(recipeSkeleton);
+        recyclerWeekly.setAdapter(recipeSkeleton);
+        recyclerPopular.setAdapter(recipeSkeleton);
+        recyclerCat1.setAdapter(recipeSkeleton);
+        recyclerCat2.setAdapter(recipeSkeleton);
+        recyclerCat3.setAdapter(recipeSkeleton);
+
+        categoryAdapter = new CategoryAdapter(categoryList, category -> {
+            recipeViewModel.loadRecipesByCategory(category.getCategoryId());
+        });
+        categoryAdapter.setSkeletonMode(true);
+        recyclerCategories.setAdapter(categoryAdapter);
+    }
+
+    private void initAdapters() {
+        recipeAdapter = createRecipeAdapter();
+        adapterWeekly = createRecipeAdapter();
+        adapterPopular = createRecipeAdapter();
+        adapterCat1 = createRecipeAdapter();
+        adapterCat2 = createRecipeAdapter();
+        adapterCat3 = createRecipeAdapter();
+    }
+
+    private RecipeAdapterDefault createRecipeAdapter() {
+        return new RecipeAdapterDefault(
                 new ArrayList<>(),
-                new ArrayList<>(),
-                recipe -> openRecipeDetail(recipe),
-                recipeId -> {
-                    SaveRecipeBottomSheet.newInstance(recipeId)
-                            .show(getChildFragmentManager(), "save_sheet");
-                }
+                savedRecipeIds,
+                this::openRecipeDetail,
+                recipeId -> SaveRecipeBottomSheet.newInstance(recipeId, HomeFragment.this)
+                        .show(requireActivity().getSupportFragmentManager(), "save_sheet")
         );
+    }
 
-        recyclerView.setAdapter(recipeAdapter);
+    private void setAdapters() {
+        recyclerRecommended.setAdapter(recipeAdapter);
+        recyclerWeekly.setAdapter(adapterWeekly);
+        recyclerPopular.setAdapter(adapterPopular);
+        recyclerCat1.setAdapter(adapterCat1);
+        recyclerCat2.setAdapter(adapterCat2);
+        recyclerCat3.setAdapter(adapterCat3);
+    }
 
-        recipeViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), recipes -> {
-            if (recipes != null) {
-                Log.d("HOME_DEBUG", "Receitas carregadas: " + recipes.size());
-                for (RecipeData recipe : recipes) {
-                    Log.d("HOME_DEBUG", "→ " + recipe.getTitle());
-                }
+    private void observeViewModels() {
+        if (!isAdded()) return;
 
+        homeFeedViewModel.getRecommendedRecipes().observe(getViewLifecycleOwner(), list -> {
+            if (list != null && !list.isEmpty()) {
                 recipeList.clear();
-                recipeList.addAll(recipes);
-                recipeAdapter.updateData(recipeList, savedRecipeIds);
-            } else {
-                Log.d("HOME_DEBUG", "Lista de receitas veio nula");
+                recipeList.addAll(list);
+                recipeAdapter.setSkeletonMode(false);
+                recipeAdapter.updateData(list, savedRecipeIds);
             }
         });
 
-        savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), ids -> {
-            savedRecipeIds.clear();
-            savedRecipeIds.addAll(ids);
-            recipeAdapter.updateData(recipeList, savedRecipeIds);
+        savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), savedIds -> {
+            if (savedIds != null) {
+                Log.d("HOME_FORCE", "✅ Lista de receitas salvas atualizada: " + savedIds);
+                setupAllAdapters(savedIds);
+            }
         });
 
-        recipeViewModel.loadRecipes();
+        savedListViewModel.getChangedRecipeId().observe(getViewLifecycleOwner(), recipeId -> {
+            if (recipeId != null) {
+                UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+                if (user != null) {
+                    savedListViewModel.reloadSavedRecipeData(user.getUserId());
+                }
+            }
+        });
 
-        if (SharedPrefHelper.getInstance(requireContext()).getUser() != null) {
-            int userId = SharedPrefHelper.getInstance(requireContext()).getUser().getUserId();
+        homeFeedViewModel.getWeeklyRecipes().observe(getViewLifecycleOwner(), list -> {
+            if (list != null) {
+                adapterWeekly.setSkeletonMode(false);
+                adapterWeekly.updateData(list, savedRecipeIds);
+            }
+        });
+
+        homeFeedViewModel.getPopularRecipes().observe(getViewLifecycleOwner(), list -> {
+            if (list != null) {
+                adapterPopular.setSkeletonMode(false);
+                adapterPopular.updateData(list, savedRecipeIds);
+            }
+        });
+
+        homeFeedViewModel.getCategoryRecipes1().observe(getViewLifecycleOwner(), list -> {
+            if (list != null) {
+                adapterCat1.setSkeletonMode(false);
+                adapterCat1.updateData(list, savedRecipeIds);
+            }
+        });
+
+        homeFeedViewModel.getCategoryRecipes2().observe(getViewLifecycleOwner(), list -> {
+            if (list != null) {
+                adapterCat2.setSkeletonMode(false);
+                adapterCat2.updateData(list, savedRecipeIds);
+            }
+        });
+
+        homeFeedViewModel.getCategoryRecipes3().observe(getViewLifecycleOwner(), list -> {
+            if (list != null) {
+                adapterCat3.setSkeletonMode(false);
+                adapterCat3.updateData(list, savedRecipeIds);
+            }
+        });
+
+        homeFeedViewModel.getCategoryTitle1().observe(getViewLifecycleOwner(), tvCategoryTitle1::setText);
+        homeFeedViewModel.getCategoryTitle2().observe(getViewLifecycleOwner(), tvCategoryTitle2::setText);
+        homeFeedViewModel.getCategoryTitle3().observe(getViewLifecycleOwner(), tvCategoryTitle3::setText);
+
+        categoryViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
+            if (categories != null) {
+                categoryAdapter.setSkeletonMode(false);
+                categoryList.clear();
+                categoryList.addAll(categories);
+                categoryAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void setupAllAdapters(List<Integer> savedIds) {
+        savedRecipeIds.clear();
+        savedRecipeIds.addAll(savedIds);
+        recipeAdapter.updateData(recipeList, savedRecipeIds);
+        updateAllAdapters();
+    }
+
+    private void updateAllAdapters() {
+        adapterWeekly.updateSavedIds(savedRecipeIds);
+        adapterPopular.updateSavedIds(savedRecipeIds);
+        adapterCat1.updateSavedIds(savedRecipeIds);
+        adapterCat2.updateSavedIds(savedRecipeIds);
+        adapterCat3.updateSavedIds(savedRecipeIds);
+        recipeAdapter.updateSavedIds(savedRecipeIds);
+    }
+
+    private void loadInitialData() {
+        UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+        if (user != null && user.getUserId() > 0) {
+            int userId = user.getUserId();
+            Log.d("HOME_USER", "➡️ userId detectado: " + userId);
+            categoryViewModel.loadUserCategories(userId);
+            homeFeedViewModel.loadHomeFeed(userId);
+            savedListViewModel.setUser(user);
             savedListViewModel.loadUserSavedRecipeIds(userId);
+        } else {
+            Log.e("HOME_USER", "⚠️ Utilizador não encontrado ou inválido.");
         }
     }
 
     private void openRecipeDetail(RecipeData recipe) {
-        int id = recipe.getRecipeId();
-        Log.d("RECIPE_CLICK", "Abrindo RecipeDetailFragment para ID: " + id);
-
-        Fragment fragment = RecipeDetailFragment.newInstance(id);
-
+        Fragment fragment = RecipeDetailFragment.newInstance(recipe.getRecipeId());
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-
-        Log.d("RECIPE_CLICK", "Transação de fragmento enviada.");
     }
 
+    public void refreshRecipeIcon(int recipeId) {
+        updateAllAdapters();
+    }
 }

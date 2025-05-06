@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.diogo.cookup'
-    compileSdk 35
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.diogo.cookup"
         minSdk 24
-        targetSdkVersion 34
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -49,6 +49,9 @@ dependencies {
     implementation libs.logging.interceptor
     implementation libs.converter.gson
     implementation libs.okhttp
+
+    // shimmer
+    implementation libs.shimmer
 
     implementation libs.gson
 

@@ -30,7 +30,7 @@
                 android:background="@drawable/color_circle" />
 
             <TextView
-                android:id="@+id/text_list_name"
+                android:id="@+id/list_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -60,7 +60,7 @@
                 tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
-                android:id="@+id/button_remove_list"
+                android:id="@+id/button_delete_list"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="@drawable/bg_circle"

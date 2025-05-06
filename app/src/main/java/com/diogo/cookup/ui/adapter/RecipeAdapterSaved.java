@@ -54,7 +54,7 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title, preparationTime, servings;
+        TextView title, preparationTime, ratingText;
         ImageView image;
         ImageButton buttonRemove;
 
@@ -62,7 +62,7 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
             super(itemView);
             title = itemView.findViewById(R.id.recipe_title);
             preparationTime = itemView.findViewById(R.id.preparation_time);
-            servings = itemView.findViewById(R.id.servings);
+            ratingText = itemView.findViewById(R.id.rating_text);
             image = itemView.findViewById(R.id.recipe_image);
             buttonRemove = itemView.findViewById(R.id.button_save_recipe);
         }
@@ -76,11 +76,8 @@ public class RecipeAdapterSaved extends RecyclerView.Adapter<RecipeAdapterSaved.
                 preparationTime.setText("Tempo não disponível");
             }
 
-            if (recipe.getServings() > 0) {
-                servings.setText(recipe.getServings() + " doses");
-            } else {
-                servings.setText("Quantidade não disponível");
-            }
+            ratingText.setText(String.valueOf(recipe.getAverageRating()));
+
 
             Glide.with(itemView.getContext())
                     .load(recipe.getImage())

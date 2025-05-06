@@ -2,7 +2,6 @@ package com.diogo.cookup.ui.fragment;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.*;
 import android.text.method.LinkMovementMethod;
@@ -16,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +24,8 @@ import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.IngredientData;
+import com.diogo.cookup.data.model.TrackRequest;
+import com.diogo.cookup.data.repository.TrackingRepository;
 import com.diogo.cookup.ui.activity.MainActivity;
 import com.diogo.cookup.ui.adapter.CommentAdapter;
 import com.diogo.cookup.ui.adapter.IngredientAdapter;
@@ -101,6 +103,13 @@ public class RecipeDetailFragment extends Fragment {
             RatingBottomSheet bottomSheet = new RatingBottomSheet((rating, comment) -> {
                 int userId = SharedPrefHelper.getInstance(requireContext()).getUser().getUserId();
                 viewModel.submitRatingAndComment(userId, recipeId, (int) rating, comment);
+
+                com.diogo.cookup.data.repository.TrackingRepository trackingRepository = new com.diogo.cookup.data.repository.TrackingRepository();
+                trackingRepository.sendTracking(new com.diogo.cookup.data.model.TrackRequest(userId, recipeId, "finish"), new MutableLiveData<>());
+
+                Toast toast = Toast.makeText(requireContext(), "Receita finalizada com sucesso!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
+                toast.show();
             });
             bottomSheet.show(getParentFragmentManager(), "ratingBottomSheet");
         });
@@ -196,6 +205,12 @@ public class RecipeDetailFragment extends Fragment {
         viewModel.loadRecipeDetail(recipeId);
         viewModel.loadComments(recipeId);
         viewModel.loadAverageRating(recipeId);
+
+        if (SharedPrefHelper.getInstance(requireContext()).getUser() != null) {
+            int userId = SharedPrefHelper.getInstance(requireContext()).getUser().getUserId();
+            TrackingRepository trackingRepository = new TrackingRepository();
+            trackingRepository.sendTracking(new TrackRequest(userId, recipeId, "view"), new MutableLiveData<>());
+        }
     }
 
     @Override

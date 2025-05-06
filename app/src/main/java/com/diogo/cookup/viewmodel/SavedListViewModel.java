@@ -1,6 +1,7 @@
 package com.diogo.cookup.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -27,34 +28,30 @@ public class SavedListViewModel extends AndroidViewModel {
     private final MutableLiveData<List<RecipeData>> recipesFromList = new MutableLiveData<>();
     private final MutableLiveData<UserData> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Integer>> recipeListIds = new MutableLiveData<>();
-    private final MutableLiveData<List<Integer>> savedRecipeIds = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Integer>> savedRecipeIds = new MutableLiveData<>();
+    private final MutableLiveData<Integer> changedRecipeId = new MutableLiveData<>();
 
     public SavedListViewModel(Application application) {
         super(application);
-    }
-
-    public LiveData<List<SavedListData>> getSavedLists() {
-        return savedLists;
-    }
-
-    public LiveData<List<RecipeData>> getRecipesFromList() {
-        return recipesFromList;
-    }
-
-    public LiveData<List<Integer>> getRecipeListIds() {
-        return recipeListIds;
     }
 
     public LiveData<List<Integer>> getSavedRecipeIds() {
         return savedRecipeIds;
     }
 
-    public LiveData<UserData> getUserLiveData() {
-        return userLiveData;
-    }
+    public LiveData<List<SavedListData>> getSavedLists() { return savedLists; }
+    public LiveData<List<RecipeData>> getRecipesFromList() { return recipesFromList; }
+    public LiveData<List<Integer>> getRecipeListIds() { return recipeListIds; }
+    public LiveData<UserData> getUserLiveData() { return userLiveData; }
+
+    public LiveData<Integer> getChangedRecipeId() { return changedRecipeId; }
 
     public void setUser(UserData user) {
         userLiveData.setValue(user);
+    }
+
+    public void notifyRecipeChanged(int recipeId) {
+        changedRecipeId.postValue(recipeId);
     }
 
     public void loadLists(int userId) {
@@ -67,8 +64,7 @@ public class SavedListViewModel extends AndroidViewModel {
             }
 
             @Override
-            public void onFailure(Call<ApiResponse<List<SavedListData>>> call, Throwable t) {
-            }
+            public void onFailure(Call<ApiResponse<List<SavedListData>>> call, Throwable t) {}
         });
     }
 
@@ -80,10 +76,8 @@ public class SavedListViewModel extends AndroidViewModel {
                     loadLists(userId);
                 }
             }
-
             @Override
-            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-            }
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {}
         });
     }
 
@@ -97,10 +91,8 @@ public class SavedListViewModel extends AndroidViewModel {
                     }
                 }
             }
-
             @Override
-            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-            }
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {}
         });
     }
 
@@ -114,10 +106,8 @@ public class SavedListViewModel extends AndroidViewModel {
                     }
                 }
             }
-
             @Override
-            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-            }
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {}
         });
     }
 
@@ -129,10 +119,8 @@ public class SavedListViewModel extends AndroidViewModel {
                     recipesFromList.postValue(response.body().getData());
                 }
             }
-
             @Override
-            public void onFailure(Call<ApiResponse<List<RecipeData>>> call, Throwable t) {
-            }
+            public void onFailure(Call<ApiResponse<List<RecipeData>>> call, Throwable t) {}
         });
     }
 
@@ -140,12 +128,10 @@ public class SavedListViewModel extends AndroidViewModel {
         repository.addRecipeToList(listId, recipeId, new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
-                reloadSavedRecipeData();
+                reloadSavedRecipes();
             }
-
             @Override
-            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-            }
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {}
         });
     }
 
@@ -153,13 +139,10 @@ public class SavedListViewModel extends AndroidViewModel {
         repository.removeRecipeFromList(listId, recipeId, new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
-                loadRecipesFromList(listId);
-                reloadSavedRecipeData();
+                reloadSavedRecipes();
             }
-
             @Override
-            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-            }
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {}
         });
     }
 
@@ -180,26 +163,40 @@ public class SavedListViewModel extends AndroidViewModel {
     }
 
     public void loadUserSavedRecipeIds(int userId) {
+        Log.d("VIEWMODEL", "🔥 CHAMOU loadUserSavedRecipeIds com userId=" + userId);
+
         repository.getUserSavedRecipeIds(userId, new Callback<ApiResponse<List<Integer>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Integer>>> call, Response<ApiResponse<List<Integer>>> response) {
+                Log.d("VIEWMODEL", "📡 RESPOSTA RECEBIDA");
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    savedRecipeIds.postValue(response.body().getData());
+                    List<Integer> data = response.body().getData();
+                    Log.d("VIEWMODEL", "✅ RECEBIDO DO BACKEND: " + data);
+                    savedRecipeIds.setValue(data);
                 } else {
-                    savedRecipeIds.postValue(new ArrayList<>());
+                    Log.e("VIEWMODEL", "❌ RESPOSTA INVÁLIDA");
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<List<Integer>>> call, Throwable t) {
-                savedRecipeIds.postValue(new ArrayList<>());
+                Log.e("VIEWMODEL", "❌ ERRO NA REDE: " + t.getMessage());
             }
         });
     }
 
-    private void reloadSavedRecipeData() {
-        if (userLiveData.getValue() != null) {
-            loadUserSavedRecipeIds(userLiveData.getValue().getUserId());
+    public void reloadSavedRecipeData(int userId) {
+        if (userId > 0) {
+            Log.d("VIEWMODEL", "🔁 reloadSavedRecipeData(userId=" + userId + ")");
+            loadUserSavedRecipeIds(userId);
+        }
+    }
+
+    private void reloadSavedRecipes() {
+        if (userLiveData.getValue() != null && userLiveData.getValue().getUserId() > 0) {
+            int id = userLiveData.getValue().getUserId();
+            Log.d("VIEWMODEL", "🔁 reloadSavedRecipes para userId: " + id);
+            loadUserSavedRecipeIds(id);
         }
     }
 }
