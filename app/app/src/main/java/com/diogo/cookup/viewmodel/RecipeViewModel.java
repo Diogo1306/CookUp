@@ -64,6 +64,14 @@ public class RecipeViewModel extends ViewModel {
         recipeRepository.getRecipeDetail(recipeId, recipeDetail, errorMessage);
     }
 
+    public void loadRecipesByCategory(int categoryId) {
+        recipeRepository.getRecipesByCategory(categoryId, recipesLiveData, errorMessage);
+    }
+
+    public void loadRecommendedRecipes() {
+        recipeRepository.getRecommendedRecipes(recipesLiveData, errorMessage);
+    }
+
     public void loadComments(int recipeId) {
         recipeRepository.getComments(recipeId, commentsLiveData, errorMessage);
     }

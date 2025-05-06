@@ -16,6 +16,7 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
+import com.diogo.cookup.viewmodel.UserViewModel;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -59,6 +60,7 @@ public class SignupActivity extends AppCompatActivity {
     private void setupObservers() {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
+                new ViewModelProvider(this).get(UserViewModel.class).loadUser(firebaseUser.getUid());
                 new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });

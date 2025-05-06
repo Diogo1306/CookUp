@@ -77,19 +77,16 @@
         <ImageView
             android:layout_width="@dimen/icon_size_small"
             android:layout_height="@dimen/icon_size_small"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/ic_people"
-            android:tint="@color/primary"
-            tools:ignore="UseAppTint" />
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_star" />
 
         <TextView
-            android:id="@+id/servings"
+            android:id="@+id/rating_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="6"
-            android:textSize="@dimen/text_small"
-            android:textColor="@color/text_primary"
-            android:paddingStart="4dp"/>
+            android:text="4.9"
+            android:paddingStart="4dp"
+            android:textColor="@color/text_primary" />
     </LinearLayout>
 
 </LinearLayout>

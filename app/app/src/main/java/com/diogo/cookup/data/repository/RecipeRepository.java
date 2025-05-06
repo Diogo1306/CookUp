@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.diogo.cookup.data.model.ApiResponse;
+import com.diogo.cookup.data.model.ApiResponseWithFilled;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.CommentRequest;
 import com.diogo.cookup.data.model.RatingRequest;
@@ -30,21 +31,59 @@ public class RecipeRepository {
     public void getAllRecipes(MutableLiveData<List<RecipeData>> recipesLiveData, MutableLiveData<String> errorMessage) {
         apiService.getAllRecipes("recipe").enqueue(new Callback<ApiResponse<List<RecipeData>>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Response<ApiResponse<List<RecipeData>>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    if (response.body().isSuccess()) {
-                        recipesLiveData.postValue(response.body().getData());
-                    } else {
-                        errorMessage.postValue(response.body().getMessage());
-                    }
+            public void onResponse(Call<ApiResponse<List<RecipeData>>> call, Response<ApiResponse<List<RecipeData>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    recipesLiveData.postValue(response.body().getData());
                 } else {
-                    errorMessage.postValue("Erro ao buscar receitas. Código: " + response.code());
+                    errorMessage.postValue(response.body() != null ? response.body().getMessage() : "Erro ao buscar receitas.");
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Throwable t) {
-                errorMessage.postValue("Erro de conexão: " + t.getMessage());
+            public void onFailure(Call<ApiResponse<List<RecipeData>>> call, Throwable t) {
+                errorMessage.postValue("Erro de rede: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getRecipesByCategory(int categoryId, MutableLiveData<List<RecipeData>> recipesLiveData, MutableLiveData<String> errorMessage) {
+        apiService.getRecipesByCategory("recipes_by_category", categoryId)
+                .enqueue(new Callback<ApiResponseWithFilled<List<RecipeData>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponseWithFilled<List<RecipeData>>> call, Response<ApiResponseWithFilled<List<RecipeData>>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            recipesLiveData.postValue(response.body().getData());
+                        } else {
+                            errorMessage.postValue("Erro ao carregar receitas da categoria.");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponseWithFilled<List<RecipeData>>> call, Throwable t) {
+                        errorMessage.postValue("Erro de rede: " + t.getMessage());
+                    }
+                });
+    }
+
+    public void loadWeeklyRecipes(MutableLiveData<List<RecipeData>> liveData, MutableLiveData<String> error) {
+        Log.d("HOME_FEED", "Chamando API: weekly");
+
+        apiService.getWeeklyRecipes("weekly").enqueue(new Callback<ApiResponseWithFilled<List<RecipeData>>>() {
+            @Override
+            public void onResponse(Call<ApiResponseWithFilled<List<RecipeData>>> call, Response<ApiResponseWithFilled<List<RecipeData>>> response) {
+                Log.d("HOME_FEED", "Resposta weekly recebida: " + (response.body() != null ? response.body().getData().size() : "null"));
+
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    liveData.postValue(response.body().getData());
+                } else {
+                    error.postValue("Erro ao buscar receitas da semana.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseWithFilled<List<RecipeData>>> call, Throwable t) {
+                error.postValue("Falha: " + t.getMessage());
+                Log.e("HOME_FEED", "Falha weekly: " + t.getMessage());
             }
         });
     }
@@ -73,6 +112,26 @@ public class RecipeRepository {
                     @Override
                     public void onFailure(Call<ApiResponse<RecipeData>> call, Throwable t) {
                         errorMessage.postValue("Erro de rede: " + t.getMessage());
+                    }
+                });
+    }
+
+    public void getRecommendedRecipes(MutableLiveData<List<RecipeData>> recipesLiveData, MutableLiveData<String> errorMessage) {
+        apiService.getRecommendedRecipes("recommended")
+                .enqueue(new Callback<ApiResponse<List<RecipeData>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<List<RecipeData>>> call,
+                                           Response<ApiResponse<List<RecipeData>>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            recipesLiveData.postValue(response.body().getData());
+                        } else {
+                            errorMessage.postValue("Erro ao carregar recomendados.");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<List<RecipeData>>> call, Throwable t) {
+                        errorMessage.postValue("Falha: " + t.getMessage());
                     }
                 });
     }

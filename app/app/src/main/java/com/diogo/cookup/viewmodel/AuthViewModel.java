@@ -59,20 +59,42 @@ public class AuthViewModel extends AndroidViewModel {
     }
 
     public void login(String email, String password) {
+        Log.d("AUTH", "🧪 login() chegou até aqui, tentando login Firebase");
         authRepository.login(email, password, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess(FirebaseUser firebaseUser) {
                 userLiveData.postValue(firebaseUser);
 
-                userRepository.getUser(firebaseUser.getUid(), new UserRepository.UserCallback() {
+                String uid = firebaseUser.getUid();
+                if (uid == null || uid.isEmpty()) {
+                    Log.e("AUTH", "❌ UID inválido, cancelando getUser.");
+                    return;
+                }
+
+                Log.d("AUTH", "✅ Login Firebase OK: " + uid);
+
+                userRepository.getUser(uid, new UserRepository.UserCallback() {
                     @Override
                     public void onSuccess(UserData user, String message) {
+                        Log.d("AUTH", "✅ Utilizador recebido do backend: " + user.getUserId());
                         sharedPrefHelper.saveUser(user);
                     }
 
                     @Override
                     public void onError(String msg) {
-                        errorMessage.postValue(msg);
+                        Log.e("AUTH", "❌ Erro ao obter utilizador do backend: " + msg);
+
+                        FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if (fbUser != null) {
+                            UserData fallback = new UserData(
+                                    fbUser.getUid(),
+                                    fbUser.getDisplayName() != null ? fbUser.getDisplayName() : "Utilizador",
+                                    fbUser.getEmail(),
+                                    fbUser.getPhotoUrl() != null ? fbUser.getPhotoUrl().toString() : ""
+                            );
+                            sharedPrefHelper.saveUser(fallback);
+                            Log.w("AUTH", "⚠️ Fallback: utilizador salvo manualmente");
+                        }
                     }
                 });
             }
@@ -85,6 +107,7 @@ public class AuthViewModel extends AndroidViewModel {
             @Override
             public void onError(String msg) {
                 errorMessage.postValue(msg);
+                Log.e("AUTH", "❌ Erro no login Firebase: " + msg);
             }
         });
     }

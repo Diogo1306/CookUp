@@ -1,8 +1,6 @@
 package com.diogo.cookup.ui.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,36 +9,35 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.SavedListData;
-import com.diogo.cookup.data.model.UserData;
-import com.diogo.cookup.ui.dialog.CreateListDialog;
-import com.diogo.cookup.utils.SharedPrefHelper;
-import com.diogo.cookup.viewmodel.SavedListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SavedListAdapterManage extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int TYPE_ADD = 0;
+    private static final int TYPE_LIST = 1;
+
     private final List<SavedListData> listData = new ArrayList<>();
-    private final OnListClickListener clickListener;
-    private OnEditClickListener editClickListener;
-    private OnDeleteClickListener deleteClickListener;
+    private final OnListClickListener onListClickListener;
+    private OnAddClickListener onAddClickListener;
+    private OnEditClickListener onEditClickListener;
+    private OnDeleteClickListener onDeleteClickListener;
 
-    private static final int TYPE_LIST = 0;
-    private static final int TYPE_ADD = 1;
-
-    public SavedListAdapterManage(OnListClickListener clickListener) {
-        this.clickListener = clickListener;
+    public SavedListAdapterManage(OnListClickListener onListClickListener) {
+        this.onListClickListener = onListClickListener;
     }
 
     public interface OnListClickListener {
         void onListClick(SavedListData list);
+    }
+
+    public interface OnAddClickListener {
+        void onAddClick();
     }
 
     public interface OnEditClickListener {
@@ -51,43 +48,49 @@ public class SavedListAdapterManage extends RecyclerView.Adapter<RecyclerView.Vi
         void onDeleteClick(SavedListData list);
     }
 
+    public void setOnAddClickListener(OnAddClickListener listener) {
+        this.onAddClickListener = listener;
+    }
+
     public void setOnEditClickListener(OnEditClickListener listener) {
-        this.editClickListener = listener;
+        this.onEditClickListener = listener;
     }
 
     public void setOnDeleteClickListener(OnDeleteClickListener listener) {
-        this.deleteClickListener = listener;
+        this.onDeleteClickListener = listener;
     }
 
     public void submitList(List<SavedListData> newLists) {
         listData.clear();
-        listData.addAll(newLists);
+        if (newLists != null) {
+            listData.addAll(newLists);
+        }
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position == listData.size() ? TYPE_ADD : TYPE_LIST;
+        return position == 0 ? TYPE_ADD : TYPE_LIST;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_ADD) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_saved_list_add, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_saved_list_add, parent, false);
             return new AddViewHolder(view);
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_saved_list_manage, parent, false);
-            return new ListViewHolder(view);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_saved_list_manage, parent, false);
+            return new ManageViewHolder(view);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ListViewHolder) {
-            ((ListViewHolder) holder).bind(listData.get(position));
-        } else if (holder instanceof AddViewHolder) {
-            ((AddViewHolder) holder).bind();
+        if (holder instanceof ManageViewHolder) {
+            ((ManageViewHolder) holder).bind(listData.get(position - 1));
         }
     }
 
@@ -96,69 +99,54 @@ public class SavedListAdapterManage extends RecyclerView.Adapter<RecyclerView.Vi
         return listData.size() + 1;
     }
 
-    class ListViewHolder extends RecyclerView.ViewHolder {
-        TextView listName;
-        LinearLayout container;
-        ImageButton editButton, deleteButton;
-        View colorDot;
-
-        public ListViewHolder(@NonNull View itemView) {
+    class AddViewHolder extends RecyclerView.ViewHolder {
+        public AddViewHolder(@NonNull View itemView) {
             super(itemView);
-            listName = itemView.findViewById(R.id.text_list_name);
-            container = itemView.findViewById(R.id.container_color);
-            editButton = itemView.findViewById(R.id.button_edit_list);
-            deleteButton = itemView.findViewById(R.id.button_remove_list);
-            colorDot = itemView.findViewById(R.id.color_dot);
-        }
-
-        public void bind(SavedListData list) {
-            listName.setText(list.list_name);
-
-            try {
-                int colorParsed = Color.parseColor(list.color);
-                container.setBackgroundColor(colorParsed);
-
-                GradientDrawable dotGradient = new GradientDrawable(
-                        GradientDrawable.Orientation.TL_BR,
-                        new int[]{colorParsed, Color.WHITE}
-                );
-                dotGradient.setShape(GradientDrawable.OVAL);
-                colorDot.setBackground(dotGradient);
-
-            } catch (Exception e) {
-                container.setBackgroundColor(Color.GRAY);
-            }
-
-            itemView.setOnClickListener(v -> clickListener.onListClick(list));
-
-            editButton.setOnClickListener(v -> {
-                if (editClickListener != null) editClickListener.onEditClick(list);
-            });
-
-            deleteButton.setOnClickListener(v -> {
-                if (deleteClickListener != null) deleteClickListener.onDeleteClick(list);
+            itemView.setOnClickListener(v -> {
+                if (onAddClickListener != null) {
+                    onAddClickListener.onAddClick();
+                }
             });
         }
     }
 
-    class AddViewHolder extends RecyclerView.ViewHolder {
-        public AddViewHolder(@NonNull View itemView) {
+    class ManageViewHolder extends RecyclerView.ViewHolder {
+        TextView listName;
+        LinearLayout container;
+        ImageButton editButton, deleteButton;
+
+        public ManageViewHolder(@NonNull View itemView) {
             super(itemView);
+            listName = itemView.findViewById(R.id.list_name);
+            container = itemView.findViewById(R.id.container_color);
+            editButton = itemView.findViewById(R.id.button_edit_list);
+            deleteButton = itemView.findViewById(R.id.button_delete_list);
         }
 
-        public void bind() {
+        public void bind(SavedListData list) {
+            listName.setText(list.list_name != null ? list.list_name : "Lista sem nome");
+
+            try {
+                if (list.color != null && !list.color.isEmpty()) {
+                    int colorParsed = Color.parseColor(list.color);
+                    container.setBackgroundColor(colorParsed);
+                } else {
+                    container.setBackgroundColor(Color.LTGRAY);
+                }
+            } catch (Exception e) {
+                container.setBackgroundColor(Color.LTGRAY);
+            }
+
             itemView.setOnClickListener(v -> {
-                Context context = itemView.getContext();
-                CreateListDialog.show(context, (name, color) -> {
-                    if (context instanceof FragmentActivity) {
-                        FragmentActivity activity = (FragmentActivity) context;
-                        SavedListViewModel viewModel = new ViewModelProvider(activity).get(SavedListViewModel.class);
-                        UserData user = SharedPrefHelper.getInstance(context).getUser();
-                        if (user != null) {
-                            viewModel.createList(user.getUserId(), name, color);
-                        }
-                    }
-                });
+                if (onListClickListener != null) onListClickListener.onListClick(list);
+            });
+
+            editButton.setOnClickListener(v -> {
+                if (onEditClickListener != null) onEditClickListener.onEditClick(list);
+            });
+
+            deleteButton.setOnClickListener(v -> {
+                if (onDeleteClickListener != null) onDeleteClickListener.onDeleteClick(list);
             });
         }
     }

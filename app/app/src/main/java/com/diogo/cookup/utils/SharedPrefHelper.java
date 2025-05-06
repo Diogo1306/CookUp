@@ -34,12 +34,13 @@ public class SharedPrefHelper {
         clearUser();
         String json = gson.toJson(user);
         editor.putString(KEY_USER, json);
-        editor.apply();
+        editor.commit();
     }
 
 
     public UserData getUser() {
         String json = sharedPref.getString(KEY_USER, null);
+        Log.d("SHARED_PREF", "🔍 Dados do utilizador: " + json);
         if (json != null) {
             return gson.fromJson(json, UserData.class);
         }
@@ -48,7 +49,7 @@ public class SharedPrefHelper {
 
     public void clearUser() {
         editor.remove(KEY_USER);
-        editor.apply();
+        editor.commit();
     }
 }
 

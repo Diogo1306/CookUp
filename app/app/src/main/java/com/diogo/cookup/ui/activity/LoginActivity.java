@@ -24,8 +24,8 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.ui.fragment.ForgotPasswordFragment;
 import com.diogo.cookup.ui.fragment.WelcomeFragment;
 import com.diogo.cookup.utils.MessageUtils;
-import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
+import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
@@ -101,9 +101,11 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 MessageUtils.showSnackbar(findViewById(android.R.id.content), "Login bem-sucedido!", Color.GREEN);
+                new ViewModelProvider(this).get(UserViewModel.class).loadUser(firebaseUser.getUid());
                 new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });
+
 
         authViewModel.getSuccessMessage().observe(this, success -> {
             if (success != null) {

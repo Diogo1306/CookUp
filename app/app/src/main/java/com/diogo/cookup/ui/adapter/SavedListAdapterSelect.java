@@ -2,6 +2,7 @@ package com.diogo.cookup.ui.adapter;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.SavedListData;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapterSelect.ViewHolder> {
@@ -46,6 +48,11 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
         notifyDataSetChanged();
     }
 
+    public void removeRecipeFromVisual(int listId) {
+        listIdsWithRecipe.remove(Integer.valueOf(listId));
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,7 +64,7 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SavedListData list = listData.get(position);
-        holder.bind(list, position);
+        holder.bind(list);
     }
 
     @Override
@@ -87,8 +94,10 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
             colorCircle = itemView.findViewById(R.id.color_circle);
         }
 
-        public void bind(SavedListData list, int position) {
+        public void bind(SavedListData list) {
             listName.setText(list.list_name);
+
+            Log.d("SELECT_ADAPTER", "Lista: " + list.list_name + ", contém receita? " + listIdsWithRecipe.contains(list.list_id));
 
             try {
                 int colorParsed = Color.parseColor(list.color);
@@ -105,21 +114,19 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
                 colorCircle.setBackgroundColor(Color.GRAY);
             }
 
-            boolean isRecipeInThisList = listIdsWithRecipe.contains(list.list_id);
+            boolean isRecipeInList = listIdsWithRecipe.contains(list.list_id);
 
-            if (isRecipeInThisList) {
+            if (isRecipeInList) {
                 removeButton.setVisibility(View.VISIBLE);
                 removeButton.setOnClickListener(v -> {
                     onRemoveClick.onRemoveClick(list.list_id, recipeId);
+                    removeRecipeFromVisual(list.list_id);
                 });
                 itemView.setOnClickListener(null);
             } else {
                 removeButton.setVisibility(View.GONE);
-                itemView.setOnClickListener(v -> {
-                    onAddClick.onAddClick(list.list_id, recipeId);
-                });
+                itemView.setOnClickListener(v -> onAddClick.onAddClick(list.list_id, recipeId));
             }
-
         }
     }
 }
