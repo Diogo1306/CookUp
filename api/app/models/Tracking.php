@@ -8,14 +8,17 @@ class Tracking
     {
         $conn = Database::connect();
 
-        $stmt = $conn->prepare("SELECT category_id FROM recipes WHERE recipe_id = ?");
+        $stmt = $conn->prepare("SELECT category_id FROM recipe_category WHERE recipe_id = ?");
         $stmt->bind_param("i", $recipeId);
         $stmt->execute();
         $result = $stmt->get_result();
-        $category = $result->fetch_assoc();
-        $categoryId = $category ? $category['category_id'] : null;
 
-        if (!$categoryId) return false;
+        $categoryIds = [];
+        while ($row = $result->fetch_assoc()) {
+            $categoryIds[] = $row['category_id'];
+        }
+
+        if (empty($categoryIds)) return false;
 
         switch ($type) {
             case 'view':
@@ -23,15 +26,17 @@ class Tracking
                 $stmt->bind_param("ii", $userId, $recipeId);
                 $stmt->execute();
 
-                $conn->query("UPDATE recipes SET views_count = views_count + 1 WHERE recipe_id = $recipeId");
-
-                self::updateUserCategoryStats($conn, $userId, $categoryId, 'views_count');
+                foreach ($categoryIds as $categoryId) {
+                    self::updateUserCategoryStats($conn, $userId, $categoryId, 'views_count');
+                }
                 break;
 
             case 'favorite':
                 $conn->query("UPDATE recipes SET favorites_count = favorites_count + 1 WHERE recipe_id = $recipeId");
 
-                self::updateUserCategoryStats($conn, $userId, $categoryId, 'favorites_count');
+                foreach ($categoryIds as $categoryId) {
+                    self::updateUserCategoryStats($conn, $userId, $categoryId, 'favorites_count');
+                }
                 break;
 
             case 'finish':
@@ -39,7 +44,9 @@ class Tracking
                 $stmt->bind_param("ii", $userId, $recipeId);
                 $stmt->execute();
 
-                self::updateUserCategoryStats($conn, $userId, $categoryId, 'finished_count');
+                foreach ($categoryIds as $categoryId) {
+                    self::updateUserCategoryStats($conn, $userId, $categoryId, 'finished_count');
+                }
                 break;
 
             default:
@@ -51,22 +58,39 @@ class Tracking
 
     private static function updateUserCategoryStats($conn, $userId, $categoryId, $field)
     {
-        $check = $conn->prepare("SELECT * FROM user_category_stats WHERE user_id = ? AND category_id = ?");
-        $check->bind_param("ii", $userId, $categoryId);
-        $check->execute();
-        $result = $check->get_result();
+        $base = ['views_count' => 0, 'favorites_count' => 0, 'finished_count' => 0];
+        $base[$field] = 1;
 
-        if ($result->num_rows > 0) {
-            $conn->query("UPDATE user_category_stats SET $field = $field + 1 WHERE user_id = $userId AND category_id = $categoryId");
-        } else {
-            $base = ['views_count' => 0, 'favorites_count' => 0, 'finished_count' => 0];
-            $base[$field] = 1;
-            $stmt = $conn->prepare("
-                INSERT INTO user_category_stats (user_id, category_id, views_count, favorites_count, finished_count)
-                VALUES (?, ?, ?, ?, ?)
-            ");
-            $stmt->bind_param("iiiii", $userId, $categoryId, $base['views_count'], $base['favorites_count'], $base['finished_count']);
-            $stmt->execute();
+        $updateSql = "";
+        switch ($field) {
+            case 'views_count':
+                $updateSql = "views_count = views_count + 1";
+                break;
+            case 'favorites_count':
+                $updateSql = "favorites_count = favorites_count + 1";
+                break;
+            case 'finished_count':
+                $updateSql = "finished_count = finished_count + 1";
+                break;
+            default:
+                return;
         }
+
+        $sql = "
+            INSERT INTO user_category_stats (user_id, category_id, views_count, favorites_count, finished_count)
+            VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE $updateSql
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param(
+            "iiiii",
+            $userId,
+            $categoryId,
+            $base['views_count'],
+            $base['favorites_count'],
+            $base['finished_count']
+        );
+        $stmt->execute();
     }
 }

@@ -34,29 +34,34 @@ class UserStats
     public static function getRecommendedByUserId($userId, $excludeIds = [])
     {
         $db = Database::connect();
-        $sql = "SELECT r.*, c.category_name FROM recipes r
-                JOIN user_category_stats ucs ON ucs.category_id = r.category_id
-                LEFT JOIN categories c ON r.category_id = c.category_id
+
+        $sql = "SELECT r.*, GROUP_CONCAT(c.category_name) AS category_names
+                FROM recipes r
+                JOIN recipe_category rc ON r.recipe_id = rc.recipe_id
+                JOIN user_category_stats ucs ON ucs.category_id = rc.category_id
+                LEFT JOIN categories c ON rc.category_id = c.category_id
                 WHERE ucs.user_id = ?";
 
         if (!empty($excludeIds)) {
             $sql .= " AND r.recipe_id NOT IN (" . implode(',', array_map('intval', $excludeIds)) . ")";
         }
 
-        $sql .= " ORDER BY (ucs.views_count * 1.5 + ucs.favorites_count * 3 + ucs.finished_count * 5) DESC,
-                         (r.favorites_count * 2 + r.views_count) DESC LIMIT 10";
+        $sql .= " GROUP BY r.recipe_id
+                  ORDER BY (ucs.views_count * 1.5 + ucs.favorites_count * 3 + ucs.finished_count * 5) DESC,
+                           (r.favorites_count * 2 + r.views_count) DESC LIMIT 10";
 
         $stmt = $db->prepare($sql);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
-        $recipes = [];
 
+        $recipes = [];
         while ($row = $result->fetch_assoc()) {
             $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
+            $row['categories'] = explode(',', $row['category_names']);
+            unset($row['category_names']);
             $recipes[] = $row;
         }
-
         return $recipes;
     }
 }

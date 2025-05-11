@@ -27,14 +27,12 @@ class Category
     public static function getPopularCategories()
     {
         $conn = Database::connect();
-        $stmt = $conn->prepare("
-            SELECT c.*, COUNT(r.recipe_id) AS total
+        $stmt = $conn->prepare("SELECT c.*, COUNT(rc.recipe_id) AS total
             FROM categories c
-            LEFT JOIN recipes r ON r.category_id = c.category_id
+            LEFT JOIN recipe_category rc ON rc.category_id = c.category_id
             GROUP BY c.category_id
             ORDER BY total DESC
-            LIMIT 10
-        ");
+            LIMIT 10");
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -54,15 +52,13 @@ class Category
     {
         $conn = Database::connect();
 
-        $stmt = $conn->prepare("
-            SELECT c.category_id, c.category_name, c.image_url,
+        $stmt = $conn->prepare("SELECT c.category_id, c.category_name, c.image_url,
                    (ucs.views_count + ucs.favorites_count * 2 + ucs.finished_count * 3) AS score
             FROM user_category_stats ucs
             JOIN categories c ON ucs.category_id = c.category_id
             WHERE ucs.user_id = ?
             ORDER BY score DESC
-            LIMIT ?
-        ");
+            LIMIT ?");
         $stmt->bind_param("ii", $userId, $limit);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -79,12 +75,10 @@ class Category
         if (count($categories) < $limit) {
             $fetchedIds = array_column($categories, 'category_id');
 
-            $query = "
-                SELECT c.category_id, c.category_name, c.image_url,
-                       COUNT(r.recipe_id) AS total
+            $query = "SELECT c.category_id, c.category_name, c.image_url,
+                       COUNT(rc.recipe_id) AS total
                 FROM categories c
-                LEFT JOIN recipes r ON r.category_id = c.category_id
-                ";
+                LEFT JOIN recipe_category rc ON rc.category_id = c.category_id ";
 
             if (!empty($fetchedIds)) {
                 $placeholders = implode(',', array_fill(0, count($fetchedIds), '?'));
@@ -94,7 +88,6 @@ class Category
             $query .= "GROUP BY c.category_id ORDER BY total DESC LIMIT ?";
 
             $stmt2 = $conn->prepare($query);
-
             $types = str_repeat('i', count($fetchedIds)) . 'i';
             $params = array_merge($fetchedIds, [$limit - count($categories)]);
             $stmt2->bind_param($types, ...$params);
@@ -112,6 +105,22 @@ class Category
         }
 
         return $categories;
+    }
+
+    public static function getCategoriesByRecipeId($recipeId)
+    {
+        $conn = Database::connect();
+
+        $stmt = $conn->prepare("
+        SELECT c.category_id, c.category_name
+        FROM recipe_category rc
+        JOIN categories c ON rc.category_id = c.category_id
+        WHERE rc.recipe_id = ?
+    ");
+        $stmt->execute([$recipeId]);
+
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public static function getCategoryName($categoryId)

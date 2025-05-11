@@ -3,10 +3,19 @@
 require_once __DIR__ . '/../models/HomeFeed.php';
 require_once __DIR__ . '/../models/Recipe.php';
 require_once __DIR__ . '/../models/UserStats.php';
-require_once __DIR__ . '/../models/Category.php'; // Para o getCategoryName
+require_once __DIR__ . '/../models/Category.php';
 
 class HomeFeedController
 {
+
+    private function attachCategoryObjects(&$recipes)
+    {
+        foreach ($recipes as &$recipe) {
+            $recipeId = $recipe['recipe_id'];
+            $recipe['categories'] = Category::getCategoriesByRecipeId($recipeId);
+        }
+    }
+
     public function getHomeFeed()
     {
         if (!isset($_GET['user_id'])) {
@@ -22,6 +31,7 @@ class HomeFeedController
 
         // RECOMMENDED
         $recommended = UserStats::getRecommendedByUserId($userId, $shownIds);
+        $this->attachCategoryObjects($recommended);
         foreach ($recommended as $r) $shownIds[] = $r['recipe_id'];
 
         if (count($recommended) < 10) {
@@ -32,6 +42,7 @@ class HomeFeedController
 
         // WEEKLY
         $weekly = HomeFeed::getWeeklyRecipes($shownIds);
+        $this->attachCategoryObjects($weekly);
         foreach ($weekly as $r) $shownIds[] = $r['recipe_id'];
 
         if (count($weekly) < 10) {
@@ -42,6 +53,7 @@ class HomeFeedController
 
         // POPULAR
         $popular = HomeFeed::getPopularRecipesFiltered($shownIds);
+        $this->attachCategoryObjects($popular);
         foreach ($popular as $r) $shownIds[] = $r['recipe_id'];
 
         if (count($popular) < 10) {
@@ -51,24 +63,21 @@ class HomeFeedController
         }
 
         // CATEGORIAS PERSONALIZADAS
-        $categories = HomeFeed::getTopUserCategories($userId);
+        $categories = Category::getTopCategoriesByUser($userId, 3);
         $catRecipes = [];
         for ($i = 0; $i < 3; $i++) {
-            $catId = $categories[$i] ?? null;
+            $catId = $categories[$i]['category_id'] ?? null;
             if ($catId) {
                 $recipes = HomeFeed::getByCategory($catId, $shownIds);
+                $this->attachCategoryObjects($recipes);
+                foreach ($recipes as $r) $shownIds[] = $r['recipe_id'];
 
                 if (count($recipes) < 10) {
-                    $extras = HomeFeed::getByCategory($catId, []);
-                    foreach ($extras as $extra) {
-                        if (!in_array($extra['recipe_id'], array_column($recipes, 'recipe_id'))) {
-                            $recipes[] = $extra;
-                            if (count($recipes) >= 10) break;
-                        }
-                    }
+                    $fill = 10 - count($recipes);
+                    $fallback = HomeFeed::getFallbackRecipes($fill, $shownIds);
+                    foreach ($fallback as $r) $shownIds[] = $r['recipe_id'];
+                    $recipes = array_merge($recipes, $fallback);
                 }
-
-                foreach ($recipes as $r) $shownIds[] = $r['recipe_id'];
 
                 $categoryName = Category::getCategoryName($catId);
 

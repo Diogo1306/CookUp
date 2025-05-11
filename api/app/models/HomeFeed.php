@@ -53,51 +53,26 @@ class HomeFeed
         return $recipes;
     }
 
-    public static function getTopUserCategories($userId)
-    {
-        $conn = Database::connect();
-
-        $stmt = $conn->prepare("SELECT category_id FROM user_category_stats WHERE user_id = ? ORDER BY (views_count + favorites_count * 2 + finished_count * 3) DESC LIMIT 3");
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $categories = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $categories[] = $row['category_id'];
-        }
-
-        if (count($categories) < 3) {
-            $idsString = implode(",", $categories ?: [0]);
-            $limit = 3 - count($categories);
-
-            $stmt2 = $conn->prepare("SELECT category_id FROM recipes WHERE category_id NOT IN ($idsString) GROUP BY category_id ORDER BY COUNT(*) DESC LIMIT $limit");
-            $stmt2->execute();
-            $result2 = $stmt2->get_result();
-
-            while ($row = $result2->fetch_assoc()) {
-                $categories[] = $row['category_id'];
-            }
-        }
-
-        return $categories;
-    }
-
     public static function getByCategory($categoryId, $excludeIds = [])
     {
         $db = Database::connect();
-        $sql = "SELECT * FROM recipes WHERE category_id = " . intval($categoryId);
+        $sql = "SELECT r.* FROM recipes r
+                JOIN recipe_category rc ON r.recipe_id = rc.recipe_id
+                WHERE rc.category_id = ?";
 
         if (!empty($excludeIds)) {
             $safeIds = implode(',', array_map('intval', $excludeIds));
-            $sql .= " AND recipe_id NOT IN ($safeIds)";
+            $sql .= " AND r.recipe_id NOT IN ($safeIds)";
         }
 
-        $sql .= " ORDER BY (favorites_count * 2 + views_count) DESC LIMIT 10";
+        $sql .= " ORDER BY (r.favorites_count * 2 + r.views_count) DESC LIMIT 10";
 
-        $result = $db->query($sql);
+        $stmt = $db->prepare($sql);
+        $stmt->bind_param("i", $categoryId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         $recipes = [];
-
         while ($row = $result->fetch_assoc()) {
             $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
             $recipes[] = $row;

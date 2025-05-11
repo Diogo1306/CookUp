@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2025 at 07:13 PM
+-- Generation Time: May 11, 2025 at 03:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,34 +30,46 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `category_id` int(11) NOT NULL,
   `category_name` varchar(100) NOT NULL,
-  `image_url` varchar(255) DEFAULT NULL
+  `image_url` varchar(255) DEFAULT NULL,
+  `color_hex` varchar(7) DEFAULT '#EEEEEE'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`category_id`, `category_name`, `image_url`) VALUES
-(1, 'Carnes', 'vegetables.png'),
-(2, 'Peixes e Mariscos', NULL),
-(3, 'Massas', NULL),
-(4, 'Saladas', NULL),
-(5, 'Sopas e Caldos', NULL),
-(6, 'Sobremesas', NULL),
-(7, 'Lanches', NULL),
-(8, 'Bebidas', NULL),
-(9, 'Vegetariano', NULL),
-(10, 'Vegano', NULL),
-(11, 'Sem Glúten', NULL),
-(12, 'Sem Lactose', NULL),
-(13, 'Culinária Internacional', NULL),
-(14, 'Fitness e Saudável', NULL),
-(15, 'Rápido e Fácil', NULL),
-(16, 'Café da Manhã', NULL),
-(17, 'Churrasco', NULL),
-(18, 'Comida de Rua', NULL),
-(19, 'Receitas Tradicionais', NULL),
-(20, 'Receitas Gourmet', NULL);
+INSERT INTO `categories` (`category_id`, `category_name`, `image_url`, `color_hex`) VALUES
+(21, 'Carnes', 'meat.png', '#E53935'),
+(22, 'Mariscos', 'fish.png', '#039BE5'),
+(23, 'Massas', 'pasta.png', '#FB8C00'),
+(24, 'Saladas', 'salad.png', '#43A047'),
+(25, 'Sopas', 'soup.png', '#7E57C2'),
+(26, 'Sobremesas', 'desserts.png', '#D81B60'),
+(27, 'Lanches', 'lunch.png', '#6D4C41'),
+(28, 'Bebidas', 'drink.png', '#00897B'),
+(29, 'Vegetariano', 'vegetarian.png', '#2E7D32'),
+(30, 'Vegano', 'vegan.png', '#00695C'),
+(31, 'Sem Glúten', 'gluten-free.png', '#8E24AA'),
+(32, 'Sem Lactose', 'lactose-free.png', '#5D4037'),
+(33, 'Fitness', 'healthy-food.png', '#689F38'),
+(35, 'Fast Food', 'fast-food.png', '#F4511E'),
+(36, 'Comida de Rua', 'food-cart.png', '#795548'),
+(37, 'Caseiras', 'earth.png', '#4E342E'),
+(38, 'Gourmet', 'gourmet.png', '#3F51B5'),
+(39, 'Portuguesa', 'portugal.png', '#1A237E'),
+(40, 'Brasileira', 'brazil.png', '#0097A7'),
+(41, 'Italiana', 'italy.png', '#B71C1C'),
+(42, 'Japonesa', 'japan.png', '#C62828'),
+(43, 'Chinesa', 'china.png', '#AD1457'),
+(44, 'Indiana', 'india.png', '#EF6C00'),
+(45, 'Mexicana', 'mexico.png', '#C2185B'),
+(46, 'Árabe', 'arabic.png', '#4A148C'),
+(47, 'Francesa', 'france.png', '#283593'),
+(48, 'Americana', 'united-states.png', '#37474F'),
+(49, 'Espanhola', 'spain.png', '#512DA8'),
+(50, 'Café da Manhã', 'breakfast.png', '#3E2723'),
+(52, 'Churrasco', 'barbecue.png', '#BF360C'),
+(55, 'Rápidos', 'cooked.png', '#D84315');
 
 -- --------------------------------------------------------
 
@@ -83,7 +95,15 @@ INSERT INTO `comments` (`comment_id`, `user_id`, `recipe_id`, `comment`, `create
 (14, 1, 3, 'comida boaa', '2025-04-21 21:44:59'),
 (15, 1, 3, 'Ola', '2025-04-21 21:45:07'),
 (16, 1, 18, 'nvg', '2025-04-26 11:58:38'),
-(17, 1, 3, 'ola', '2025-05-03 15:16:29');
+(17, 1, 3, 'ola', '2025-05-03 15:16:29'),
+(18, 1, 3, 'Ola', '2025-05-06 18:02:13'),
+(19, 1, 3, 'Adeus', '2025-05-06 18:02:15'),
+(20, 1, 3, 'Gay', '2025-05-07 21:07:05'),
+(21, 1, 40, 'top', '2025-05-07 23:23:55'),
+(22, 1, 21, 'muito fixe', '2025-05-07 23:25:39'),
+(23, 1, 19, 'top', '2025-05-07 23:27:32'),
+(24, 1, 20, 'top', '2025-05-07 23:27:51'),
+(25, 13, 3, 'nao gostei', '2025-05-08 12:33:00');
 
 -- --------------------------------------------------------
 
@@ -191,11 +211,11 @@ CREATE TABLE `ratings` (
 
 INSERT INTO `ratings` (`rating_id`, `user_id`, `recipe_id`, `rating`, `created_at`) VALUES
 (1, 1, 3, 5, '2025-05-03 15:20:07'),
-(4, 13, 3, 5, '2025-04-20 19:20:45'),
+(4, 13, 3, 1, '2025-05-08 12:33:00'),
 (19, 1, 18, 4, '2025-05-03 15:20:07'),
-(21, 1, 19, 5, '2025-05-03 15:20:07'),
-(22, 1, 20, 3, '2025-05-03 15:20:07'),
-(23, 1, 21, 4, '2025-05-03 15:20:07'),
+(21, 1, 19, 5, '2025-05-07 23:27:32'),
+(22, 1, 20, 3, '2025-05-07 23:27:51'),
+(23, 1, 21, 1, '2025-05-07 23:25:39'),
 (24, 1, 22, 2, '2025-05-03 15:20:07'),
 (25, 1, 23, 5, '2025-05-03 15:20:07'),
 (26, 1, 24, 4, '2025-05-03 15:20:07'),
@@ -207,7 +227,8 @@ INSERT INTO `ratings` (`rating_id`, `user_id`, `recipe_id`, `rating`, `created_a
 (32, 1, 35, 4, '2025-05-03 15:20:07'),
 (33, 1, 36, 2, '2025-05-03 15:20:07'),
 (34, 1, 37, 5, '2025-05-03 15:20:07'),
-(35, 1, 38, 4, '2025-05-03 15:20:07');
+(35, 1, 38, 4, '2025-05-03 15:20:07'),
+(36, 1, 40, 5, '2025-05-07 23:23:55');
 
 -- --------------------------------------------------------
 
@@ -228,54 +249,82 @@ CREATE TABLE `recipes` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `favorites_count` int(11) DEFAULT 0,
-  `views_count` int(11) DEFAULT 0,
-  `category_id` int(11) DEFAULT NULL
+  `views_count` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `recipes`
 --
 
-INSERT INTO `recipes` (`recipe_id`, `author_id`, `title`, `description`, `instructions`, `difficulty`, `preparation_time`, `servings`, `image`, `created_at`, `updated_at`, `favorites_count`, `views_count`, `category_id`) VALUES
-(3, 13, 'Churros Recheados', 'Churros crocantes por fora e macios por dentro, recheados com diversos sabores como Nutella, doce de leite e baunilha.ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', '1. Aqueça a água com manteiga, açúcar e sal.\n2. Adicione a farinha e mexa até formar uma massa homogênea.\n3. Deixe esfriar e misture o ovo.\n4. Modele com bico de confeitar e frite até dourar.\n5. Passe no açúcar e canela.\n6. Recheie com Nutella, doce de leite, creme de baunilha ou geleia.\n7. Sirva quente e aproveite!', 'dificil', 30, 6, 'https://static.itdg.com.br/images/640-440/b0a2d7797c9b1174ec771c88d64d2322/324392-original.jpg', '2025-04-25 17:56:39', '2025-05-03 15:16:37', 3, 72, 1),
-(18, 13, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-05-04 12:48:06', 26, 154, 2),
-(19, 13, 'Pizza Caseira', 'Pizza caseira com molho de tomate e queijo.', '1. Prepara a massa... 2. Acrescenta os ingredientes e leva ao forno...', NULL, 50, 4, 'https://images.mrcook.app/recipe-image/01932b85-f423-78fc-aeb1-dc2e3c50f40c?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-04-26 11:56:22', 0, 2, 2),
-(20, 13, 'Salada Caesar', 'Salada clássica com molho Caesar.', '1. Junta a alface, o frango grelhado e os croutons... 2. Mistura o molho e serve...', NULL, 10, 2, 'https://cdn.okchef.com/recipes/01j98qy4vamemvk9d964k15hdd/01jaqcwsn1rg9vy3byy2yf8n8y.jpg', '2025-02-19 00:26:47', '2025-05-02 03:08:05', 0, 8, 2),
-(21, 13, 'Tacos Mexicanos', 'Tacos recheados com carne temperada e guacamole.', '1. Cozinha a carne com os temperos... 2. Preenche as tortilhas e adiciona os acompanhamentos...', NULL, 25, 3, 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2022/03/15/672899432-aprenda-como-fazer-tacos-mexicanos-em-casa-fonte-my-quiet-kitchen-500x500.jpg', '2025-02-19 00:26:47', '2025-04-26 11:48:37', 0, 6, 1),
-(22, 13, 'Sushi Tradicional', 'Sushi japonês feito com arroz e peixe fresco.', '1. Cozinha o arroz com vinagre de arroz... 2. Enrola com a alga e corta em pedaços...', NULL, 50, 4, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_1RcR6sp-afOKD4L5OcZ-pUb5rumF9f2NGQ&s', '2025-02-19 00:26:47', '2025-04-26 11:56:08', 0, 2, 3),
-(23, 13, 'Esparguete à Bolonhesa', 'Massa italiana com molho de carne e tomate.', '1. Cozinha a massa em água a ferver... 2. Prepara o molho de carne e mistura...', NULL, 35, 5, 'https://images.mrcook.app/recipe-image/0192a1c0-4f98-7c74-b4de-251935c92401?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-04-25 18:58:24', 0, 0, 3),
-(24, 13, 'Hambúrguer Artesanal', 'Hambúrguer caseiro com carne suculenta e pão brioche.', '1. Molda os hambúrgueres... 2. Grelha até ficar dourado...', NULL, 20, 2, 'https://aseguirniteroi.com.br/wp-content/uploads/2023/05/hamburguer-deck-7.jpg', '2025-02-19 00:26:47', '2025-05-03 16:30:51', 0, 6, 3),
-(30, 1, 'Bolo', 'Um fofo e delicioso.', 'Pré-aqueça o forno a 180°C. Misture ovos e mexa bem. Leve ao forno por 35 minutos.', 'Médio', 50, 8, 'https://exemplo.com/bolo.jpg', '2025-04-12 13:53:27', '2025-04-25 23:00:39', 0, 2, 2),
-(31, 1, 'Aspernatur', 'Repudiandae ipsum veniam repellendus aspernatur.', '1. Eius ad fugit occaecati tempora provident.\r\n2. Voluptas adipisci laudantium tempora sed ea.', 'Fácil', 41, 3, 'aspernatur.jpg', '2025-04-25 17:56:39', '2025-04-25 17:56:39', 23, 31, 8),
-(32, 1, 'Magni dolores', 'Natus est aperiam cupiditate quos error expedita non.', '1. Voluptate cum numquam excepturi temporibus distinctio reprehenderit neque.\r\n2. Cum quasi fugit iste.', NULL, 68, 1, 'magni_dolores.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3, 2, 16),
-(33, 1, 'Sapiente reprehenderit', 'Quod quasi assumenda iusto. Nemo ratione possimus ex voluptatum repellendus sit.', '1. Eos minus ipsum sed ratione eum totam.\r\n2. Et a eveniet dignissimos hic deserunt cumque.', NULL, 52, 7, 'sapiente_reprehenderit.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 19, 41, 17),
-(34, 1, 'Iure similique', 'Soluta quasi quos. Labore voluptatum consequatur accusamus exercitationem odio voluptatem nostrum.', '1. Quae officiis eius dolorum aperiam dolores minima.\r\n2. Minima praesentium aperiam vero porro.', 'Fácil', 27, 3, 'iure_similique.jpg', '0000-00-00 00:00:00', '2025-04-26 00:01:01', 27, 11, 14),
-(35, 1, 'Cupiditate non nihil', 'Asperiores aut sed facilis dolorem officiis adipisci.', '1. Officiis voluptas molestias aspernatur sequi consectetur deserunt.\r\n2. Eos modi eligendi hic voluptatem.', 'Difícil', 39, 2, 'cupiditate_non_nihil.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 34, 79, 8),
-(36, 1, 'Omnis assumenda', 'Iure sit beatae veritatis sequi provident blanditiis.', '1. Sapiente veniam eum necessitatibus cumque praesentium doloribus.\r\n2. Tempora in vero illo rerum tempore quod.', 'Difícil', 83, 2, 'omnis_assumenda.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 19, 161, 19),
-(37, 1, 'Blanditiis debitis', 'Quibusdam beatae perferendis repellat vero atque illo.', '1. Molestiae odit officia quam ad sed fuga.\r\n2. Laboriosam saepe non nisi itaque odio totam.', 'Fácil', 48, 4, 'blanditiis_debitis.jpg', '2025-04-25 17:56:39', '2025-04-26 12:00:01', 17, 202, 1),
-(38, 1, 'Ad hic dicta', 'Unde sed accusamus quae. Natus iure ipsam.', '1. Quaerat perspiciatis perspiciatis ipsum at in nam.\r\n2. Possimus ullam temporibus necessitatibus.', NULL, 86, 8, 'ad_hic_dicta.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 16, 21, 5),
-(39, 1, 'Voluptas autem', 'Vel deserunt consequuntur nulla odit eaque.', '1. Aliquam libero vitae assumenda quia inventore.\r\n2. Aperiam itaque unde labore.', 'Médio', 76, 7, 'voluptas_autem.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 40, 6, 7),
-(40, 1, 'Voluptatum sint', 'Impedit atque excepturi.', '1. Animi iure doloremque error.\r\n2. Ducimus aliquid corporis et et suscipit aliquam.', NULL, 18, 5, 'voluptatum_sint.jpg', '0000-00-00 00:00:00', '2025-05-02 03:06:16', 24, 143, 3),
-(41, 1, 'Sed odio doloremque', 'Minima nihil voluptatibus cupiditate error cumque quos. In aliquam porro impedit pariatur.', '1. Explicabo aliquid nesciunt cumque.\r\n2. Magni accusamus facilis soluta cupiditate voluptatum.', 'Fácil', 74, 6, 'sed_odio_doloremque.jpg', '2025-04-25 17:56:39', '2025-04-25 20:01:25', 2, 138, 3),
-(42, 1, 'A unde numquam', 'Possimus totam exercitationem reprehenderit doloribus.', '1. Sunt rem aliquid.\r\n2. Hic quia doloribus eos quas fuga ex.', 'Médio', 66, 6, 'a_unde_numquam.jpg', '0000-00-00 00:00:00', '2025-04-26 00:01:02', 47, 193, 12),
-(43, 1, 'Fugit sapiente', 'Nobis dolorum delectus ullam a nemo odio. Eaque pariatur non facere cupiditate.', '1. Maxime quasi sunt dicta illo dolores nisi.\r\n2. Laborum amet possimus fuga non recusandae.', 'Médio', 30, 2, 'fugit_sapiente.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 32, 28, 11),
-(44, 1, 'Iusto vero delectus', 'Doloremque facilis quas ducimus illo. Molestias occaecati amet.', '1. Tempore ullam facere error expedita dignissimos cum quia.\r\n2. Praesentium aut aliquam.', 'Médio', 10, 3, 'iusto_vero_delectus.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 24, 96, 5),
-(45, 1, 'Nostrum consequatur a', 'Excepturi dicta praesentium doloremque quaerat et.', '1. Doloremque nam perspiciatis ea laborum.\r\n2. Pariatur possimus asperiores perspiciatis itaque magnam hic.', 'Fácil', 17, 3, 'nostrum_consequatur_a.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 127, 17),
-(46, 1, 'Necessitatibus minima velit', 'Rem nesciunt asperiores earum.', '1. Accusamus sequi doloremque nisi incidunt beatae eos.\r\n2. Voluptas sint dignissimos aut quod molestiae eos.', 'Fácil', 56, 5, 'necessitatibus_minima_velit.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 33, 96, 10),
-(47, 1, 'Dolorum alias natus', 'Odio dignissimos maxime soluta.', '1. Qui culpa neque dolore.\r\n2. Beatae reiciendis doloremque dolor odio a asperiores.', 'Fácil', 69, 5, 'dolorum_alias_natus.jpg', '0000-00-00 00:00:00', '2025-05-05 16:36:00', 41, 188, 2),
-(48, 1, 'Quod unde provident', 'Sed eius facere quam. Ratione consectetur maxime ea.', '1. Aut suscipit quam soluta maxime illum ex.\r\n2. Repellat illo repellat hic tenetur eos commodi.', 'Difícil', 38, 6, 'quod_unde_provident.jpg', '2025-04-25 17:56:39', '2025-05-01 15:30:18', 50, 50, 3),
-(49, 1, 'Tenetur accusamus', 'Sit culpa architecto consequuntur debitis. Dolores impedit fugit a cupiditate pariatur dolorum explicabo.', '1. Placeat ratione asperiores autem.\r\n2. Ex cumque rem inventore dolorum dolorum hic.', 'Médio', 59, 3, 'tenetur_accusamus.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 34, 167, 20),
-(50, 1, 'Amet iusto', 'Nesciunt mollitia sit alias fugit. Rerum nostrum ipsam vel neque quasi cupiditate.', '1. Fugit aut saepe veritatis temporibus amet labore dicta.\r\n2. Ad pariatur maiores accusamus quidem voluptas dolores hic.', 'Médio', 36, 7, 'amet_iusto.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 15, 159, 9),
-(51, 1, 'Ratione inventore rerum', 'Voluptatum illum error.', '1. Corrupti autem quae aperiam.\r\n2. Distinctio ipsa quo ut hic.', 'Difícil', 52, 3, 'ratione_inventore_rerum.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 44, 179, 18),
-(52, 1, 'Consequuntur aliquam blanditiis', 'Facere necessitatibus totam corrupti ab ad.', '1. Nihil dolorum molestias blanditiis atque sapiente hic quae.\r\n2. Officia modi distinctio aut modi nostrum iste.', 'Difícil', 49, 8, 'consequuntur_aliquam_blanditiis.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3, 174, 4),
-(53, 1, 'Porro quas nobis', 'Ipsum voluptas illo iure assumenda quo. Aut nisi quia.', '1. Sapiente sed exercitationem iusto.\r\n2. Rem occaecati unde voluptate.', 'Médio', 42, 4, 'porro_quas_nobis.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 35, 171, 9),
-(54, 1, 'Unde recusandae', 'Excepturi tempora animi debitis. Officia incidunt et non.', '1. Praesentium odio reprehenderit officiis corporis minima.\r\n2. Doloremque quam nulla vel assumenda asperiores quia.', 'Médio', 60, 3, 'unde_recusandae.jpg', '0000-00-00 00:00:00', '2025-05-05 12:59:37', 17, 200, 18),
-(55, 1, 'Reiciendis ratione corporis', 'Error aut qui soluta.', '1. Minus nesciunt non quae.\r\n2. Impedit reprehenderit dolore assumenda quis.', 'Difícil', 76, 8, 'reiciendis_ratione_corporis.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 47, 101, 13),
-(56, 1, 'Quia delectus eos', 'Possimus rem officiis hic. Earum harum deleniti saepe repellat ullam.', '1. Eos tempore voluptas ea beatae quibusdam.\r\n2. Repellat ipsa consequuntur corrupti sequi cum corrupti quas.', 'Fácil', 33, 3, 'quia_delectus_eos.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 21, 138, 7),
-(57, 1, 'Inventore exercitationem', 'Nihil dicta quidem voluptate aspernatur magni veniam.', '1. Sapiente voluptatum aperiam expedita ex ratione suscipit adipisci.\r\n2. Quo excepturi possimus eveniet officiis facilis dolorem.', NULL, 50, 7, 'inventore_exercitationem.jpg', '0000-00-00 00:00:00', '2025-05-01 17:21:36', 0, 175, 17),
-(58, 1, 'Deserunt reiciendis', 'Quasi excepturi esse natus iusto. Repudiandae dicta minus porro.', '1. Doloribus odio repudiandae.\r\n2. Porro ducimus blanditiis dolorum eius neque.', NULL, 75, 2, 'deserunt_reiciendis.jpg', '0000-00-00 00:00:00', '2025-05-05 16:44:13', 31, 126, 1),
-(59, 1, 'Dolorem quo', 'Mollitia earum cum pariatur. Corrupti quod iste mollitia atque.', '1. Ab architecto enim molestiae quae eius.\r\n2. Fuga suscipit explicabo magnam.', 'Médio', 62, 6, 'dolorem_quo.jpg', '0000-00-00 00:00:00', '2025-04-26 11:56:02', 3, 78, 15),
-(60, 1, 'Illo eos', 'Accusantium nostrum illo. Voluptatum est ratione facilis aliquam commodi.', '1. Amet quis velit aspernatur exercitationem reiciendis.\r\n2. Dolorum dolor ab laboriosam exercitationem rerum repudiandae.', 'Fácil', 21, 7, 'illo_eos.jpg', '0000-00-00 00:00:00', '2025-05-02 03:06:37', 23, 122, 12);
+INSERT INTO `recipes` (`recipe_id`, `author_id`, `title`, `description`, `instructions`, `difficulty`, `preparation_time`, `servings`, `image`, `created_at`, `updated_at`, `favorites_count`, `views_count`) VALUES
+(3, 13, 'Churros Recheados', 'Churros crocantes por fora e macios por dentro, recheados com diversos sabores como Nutella, doce de leite e baunilha.ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', '1. Aqueça a água com manteiga, açúcar e sal.\n2. Adicione a farinha e mexa até formar uma massa homogênea.\n3. Deixe esfriar e misture o ovo.\n4. Modele com bico de confeitar e frite até dourar.\n5. Passe no açúcar e canela.\n6. Recheie com Nutella, doce de leite, creme de baunilha ou geleia.\n7. Sirva quente e aproveite!', 'dificil', 30, 6, 'https://static.itdg.com.br/images/640-440/b0a2d7797c9b1174ec771c88d64d2322/324392-original.jpg', '2025-04-25 17:56:39', '2025-05-06 21:08:35', 3, 80),
+(18, 13, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-05-06 20:41:41', 26, 164),
+(19, 13, 'Pizza Caseira', 'Pizza caseira com molho de tomate e queijo.', '1. Prepara a massa... 2. Acrescenta os ingredientes e leva ao forno...', NULL, 50, 4, 'https://images.mrcook.app/recipe-image/01932b85-f423-78fc-aeb1-dc2e3c50f40c?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-05-06 21:12:23', 0, 6),
+(20, 13, 'Salada Caesar', 'Salada clássica com molho Caesar.', '1. Junta a alface, o frango grelhado e os croutons... 2. Mistura o molho e serve...', NULL, 10, 2, 'https://cdn.okchef.com/recipes/01j98qy4vamemvk9d964k15hdd/01jaqcwsn1rg9vy3byy2yf8n8y.jpg', '2025-02-19 00:26:47', '2025-05-06 21:12:20', 0, 10),
+(21, 13, 'Tacos Mexicanos', 'Tacos recheados com carne temperada e guacamole.', '1. Cozinha a carne com os temperos... 2. Preenche as tortilhas e adiciona os acompanhamentos...', NULL, 25, 3, 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2022/03/15/672899432-aprenda-como-fazer-tacos-mexicanos-em-casa-fonte-my-quiet-kitchen-500x500.jpg', '2025-02-19 00:26:47', '2025-04-26 11:48:37', 0, 6),
+(22, 13, 'Sushi Tradicional', 'Sushi japonês feito com arroz e peixe fresco.', '1. Cozinha o arroz com vinagre de arroz... 2. Enrola com a alga e corta em pedaços...', NULL, 50, 4, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_1RcR6sp-afOKD4L5OcZ-pUb5rumF9f2NGQ&s', '2025-02-19 00:26:47', '2025-05-06 21:08:40', 0, 6),
+(23, 13, 'Esparguete à Bolonhesa', 'Massa italiana com molho de carne e tomate.', '1. Cozinha a massa em água a ferver... 2. Prepara o molho de carne e mistura...', NULL, 35, 5, 'https://images.mrcook.app/recipe-image/0192a1c0-4f98-7c74-b4de-251935c92401?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-04-25 18:58:24', 0, 0),
+(24, 13, 'Hambúrguer Artesanal', 'Hambúrguer caseiro com carne suculenta e pão brioche.', '1. Molda os hambúrgueres... 2. Grelha até ficar dourado...', NULL, 20, 2, 'https://aseguirniteroi.com.br/wp-content/uploads/2023/05/hamburguer-deck-7.jpg', '2025-02-19 00:26:47', '2025-05-03 16:30:51', 0, 6),
+(30, 1, 'Bolo', 'Um fofo e delicioso.', 'Pré-aqueça o forno a 180°C. Misture ovos e mexa bem. Leve ao forno por 35 minutos.', 'Médio', 50, 8, 'https://exemplo.com/bolo.jpg', '2025-04-12 13:53:27', '2025-04-25 23:00:39', 0, 2),
+(31, 1, 'Aspernatur', 'Repudiandae ipsum veniam repellendus aspernatur.', '1. Eius ad fugit occaecati tempora provident.\r\n2. Voluptas adipisci laudantium tempora sed ea.', 'Fácil', 41, 3, 'aspernatur.jpg', '2025-04-25 17:56:39', '2025-05-06 21:08:43', 23, 33),
+(32, 1, 'Magni dolores', 'Natus est aperiam cupiditate quos error expedita non.', '1. Voluptate cum numquam excepturi temporibus distinctio reprehenderit neque.\r\n2. Cum quasi fugit iste.', NULL, 68, 1, 'magni_dolores.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3, 2),
+(33, 1, 'Sapiente reprehenderit', 'Quod quasi assumenda iusto. Nemo ratione possimus ex voluptatum repellendus sit.', '1. Eos minus ipsum sed ratione eum totam.\r\n2. Et a eveniet dignissimos hic deserunt cumque.', NULL, 52, 7, 'sapiente_reprehenderit.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 19, 41),
+(34, 1, 'Iure similique', 'Soluta quasi quos. Labore voluptatum consequatur accusamus exercitationem odio voluptatem nostrum.', '1. Quae officiis eius dolorum aperiam dolores minima.\r\n2. Minima praesentium aperiam vero porro.', 'Fácil', 27, 3, 'iure_similique.jpg', '0000-00-00 00:00:00', '2025-04-26 00:01:01', 27, 11),
+(35, 1, 'Cupiditate non nihil', 'Asperiores aut sed facilis dolorem officiis adipisci.', '1. Officiis voluptas molestias aspernatur sequi consectetur deserunt.\r\n2. Eos modi eligendi hic voluptatem.', 'Difícil', 39, 2, 'cupiditate_non_nihil.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 34, 79),
+(36, 1, 'Omnis assumenda', 'Iure sit beatae veritatis sequi provident blanditiis.', '1. Sapiente veniam eum necessitatibus cumque praesentium doloribus.\r\n2. Tempora in vero illo rerum tempore quod.', 'Difícil', 83, 2, 'omnis_assumenda.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 19, 161),
+(37, 1, 'Blanditiis debitis', 'Quibusdam beatae perferendis repellat vero atque illo.', '1. Molestiae odit officia quam ad sed fuga.\r\n2. Laboriosam saepe non nisi itaque odio totam.', 'Fácil', 48, 4, 'blanditiis_debitis.jpg', '2025-04-25 17:56:39', '2025-04-26 12:00:01', 17, 202),
+(38, 1, 'Ad hic dicta', 'Unde sed accusamus quae. Natus iure ipsam.', '1. Quaerat perspiciatis perspiciatis ipsum at in nam.\r\n2. Possimus ullam temporibus necessitatibus.', NULL, 86, 8, 'ad_hic_dicta.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 16, 21),
+(39, 1, 'Voluptas autem', 'Vel deserunt consequuntur nulla odit eaque.', '1. Aliquam libero vitae assumenda quia inventore.\r\n2. Aperiam itaque unde labore.', 'Médio', 76, 7, 'voluptas_autem.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 40, 6),
+(40, 1, 'Voluptatum sint', 'Impedit atque excepturi.', '1. Animi iure doloremque error.\r\n2. Ducimus aliquid corporis et et suscipit aliquam.', NULL, 18, 5, 'voluptatum_sint.jpg', '0000-00-00 00:00:00', '2025-05-02 03:06:16', 24, 143),
+(41, 1, 'Sed odio doloremque', 'Minima nihil voluptatibus cupiditate error cumque quos. In aliquam porro impedit pariatur.', '1. Explicabo aliquid nesciunt cumque.\r\n2. Magni accusamus facilis soluta cupiditate voluptatum.', 'Fácil', 74, 6, 'sed_odio_doloremque.jpg', '2025-04-25 17:56:39', '2025-05-06 21:12:32', 2, 140),
+(42, 1, 'A unde numquam', 'Possimus totam exercitationem reprehenderit doloribus.', '1. Sunt rem aliquid.\r\n2. Hic quia doloribus eos quas fuga ex.', 'Médio', 66, 6, 'a_unde_numquam.jpg', '0000-00-00 00:00:00', '2025-05-06 21:12:34', 47, 195),
+(43, 1, 'Fugit sapiente', 'Nobis dolorum delectus ullam a nemo odio. Eaque pariatur non facere cupiditate.', '1. Maxime quasi sunt dicta illo dolores nisi.\r\n2. Laborum amet possimus fuga non recusandae.', 'Médio', 30, 2, 'fugit_sapiente.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 32, 28),
+(44, 1, 'Iusto vero delectus', 'Doloremque facilis quas ducimus illo. Molestias occaecati amet.', '1. Tempore ullam facere error expedita dignissimos cum quia.\r\n2. Praesentium aut aliquam.', 'Médio', 10, 3, 'iusto_vero_delectus.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 24, 96),
+(45, 1, 'Nostrum consequatur a', 'Excepturi dicta praesentium doloremque quaerat et.', '1. Doloremque nam perspiciatis ea laborum.\r\n2. Pariatur possimus asperiores perspiciatis itaque magnam hic.', 'Fácil', 17, 3, 'nostrum_consequatur_a.jpg', '0000-00-00 00:00:00', '2025-05-06 21:12:39', 0, 129),
+(46, 1, 'Necessitatibus minima velit', 'Rem nesciunt asperiores earum.', '1. Accusamus sequi doloremque nisi incidunt beatae eos.\r\n2. Voluptas sint dignissimos aut quod molestiae eos.', 'Fácil', 56, 5, 'necessitatibus_minima_velit.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 33, 96),
+(47, 1, 'Dolorum alias natus', 'Odio dignissimos maxime soluta.', '1. Qui culpa neque dolore.\r\n2. Beatae reiciendis doloremque dolor odio a asperiores.', 'Fácil', 69, 5, 'dolorum_alias_natus.jpg', '0000-00-00 00:00:00', '2025-05-06 21:08:41', 41, 196),
+(48, 1, 'Quod unde provident', 'Sed eius facere quam. Ratione consectetur maxime ea.', '1. Aut suscipit quam soluta maxime illum ex.\r\n2. Repellat illo repellat hic tenetur eos commodi.', 'Difícil', 38, 6, 'quod_unde_provident.jpg', '2025-04-25 17:56:39', '2025-05-01 15:30:18', 50, 50),
+(49, 1, 'Tenetur accusamus', 'Sit culpa architecto consequuntur debitis. Dolores impedit fugit a cupiditate pariatur dolorum explicabo.', '1. Placeat ratione asperiores autem.\r\n2. Ex cumque rem inventore dolorum dolorum hic.', 'Médio', 59, 3, 'tenetur_accusamus.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 34, 167),
+(50, 1, 'Amet iusto', 'Nesciunt mollitia sit alias fugit. Rerum nostrum ipsam vel neque quasi cupiditate.', '1. Fugit aut saepe veritatis temporibus amet labore dicta.\r\n2. Ad pariatur maiores accusamus quidem voluptas dolores hic.', 'Médio', 36, 7, 'amet_iusto.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 15, 159),
+(51, 1, 'Ratione inventore rerum', 'Voluptatum illum error.', '1. Corrupti autem quae aperiam.\r\n2. Distinctio ipsa quo ut hic.', 'Difícil', 52, 3, 'ratione_inventore_rerum.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 44, 179),
+(52, 1, 'Consequuntur aliquam blanditiis', 'Facere necessitatibus totam corrupti ab ad.', '1. Nihil dolorum molestias blanditiis atque sapiente hic quae.\r\n2. Officia modi distinctio aut modi nostrum iste.', 'Difícil', 49, 8, 'consequuntur_aliquam_blanditiis.jpg', '0000-00-00 00:00:00', '2025-05-06 21:12:36', 3, 176),
+(53, 1, 'Porro quas nobis', 'Ipsum voluptas illo iure assumenda quo. Aut nisi quia.', '1. Sapiente sed exercitationem iusto.\r\n2. Rem occaecati unde voluptate.', 'Médio', 42, 4, 'porro_quas_nobis.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 35, 171),
+(54, 1, 'Unde recusandae', 'Excepturi tempora animi debitis. Officia incidunt et non.', '1. Praesentium odio reprehenderit officiis corporis minima.\r\n2. Doloremque quam nulla vel assumenda asperiores quia.', 'Médio', 60, 3, 'unde_recusandae.jpg', '0000-00-00 00:00:00', '2025-05-06 18:36:30', 17, 206),
+(55, 1, 'Reiciendis ratione corporis', 'Error aut qui soluta.', '1. Minus nesciunt non quae.\r\n2. Impedit reprehenderit dolore assumenda quis.', 'Difícil', 76, 8, 'reiciendis_ratione_corporis.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 47, 101),
+(56, 1, 'Quia delectus eos', 'Possimus rem officiis hic. Earum harum deleniti saepe repellat ullam.', '1. Eos tempore voluptas ea beatae quibusdam.\r\n2. Repellat ipsa consequuntur corrupti sequi cum corrupti quas.', 'Fácil', 33, 3, 'quia_delectus_eos.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 21, 138),
+(57, 1, 'Inventore exercitationem', 'Nihil dicta quidem voluptate aspernatur magni veniam.', '1. Sapiente voluptatum aperiam expedita ex ratione suscipit adipisci.\r\n2. Quo excepturi possimus eveniet officiis facilis dolorem.', NULL, 50, 7, 'inventore_exercitationem.jpg', '0000-00-00 00:00:00', '2025-05-01 17:21:36', 0, 175),
+(58, 1, 'Deserunt reiciendis', 'Quasi excepturi esse natus iusto. Repudiandae dicta minus porro.', '1. Doloribus odio repudiandae.\r\n2. Porro ducimus blanditiis dolorum eius neque.', NULL, 75, 2, 'deserunt_reiciendis.jpg', '0000-00-00 00:00:00', '2025-05-05 16:44:13', 31, 126),
+(59, 1, 'Dolorem quo', 'Mollitia earum cum pariatur. Corrupti quod iste mollitia atque.', '1. Ab architecto enim molestiae quae eius.\r\n2. Fuga suscipit explicabo magnam.', 'Médio', 62, 6, 'dolorem_quo.jpg', '0000-00-00 00:00:00', '2025-04-26 11:56:02', 3, 78),
+(60, 1, 'Illo eos', 'Accusantium nostrum illo. Voluptatum est ratione facilis aliquam commodi.', '1. Amet quis velit aspernatur exercitationem reiciendis.\r\n2. Dolorum dolor ab laboriosam exercitationem rerum repudiandae.', 'Fácil', 21, 7, 'illo_eos.jpg', '0000-00-00 00:00:00', '2025-05-02 03:06:37', 23, 122);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recipe_category`
+--
+
+CREATE TABLE `recipe_category` (
+  `recipe_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `recipe_category`
+--
+
+INSERT INTO `recipe_category` (`recipe_id`, `category_id`) VALUES
+(3, 23),
+(3, 41),
+(18, 22),
+(18, 33),
+(18, 42),
+(19, 21),
+(19, 37),
+(19, 40),
+(20, 21),
+(20, 36),
+(20, 52),
+(21, 50);
 
 -- --------------------------------------------------------
 
@@ -383,7 +432,17 @@ INSERT INTO `recipe_views` (`view_id`, `user_id`, `recipe_id`, `viewed_at`) VALU
 (82, 1, 18, '2025-05-04 13:48:06'),
 (83, 1, 54, '2025-05-05 13:59:37'),
 (84, 1, 47, '2025-05-05 17:36:00'),
-(85, 1, 58, '2025-05-05 17:44:13');
+(85, 1, 58, '2025-05-05 17:44:13'),
+(86, 1, 18, '2025-05-06 18:39:02'),
+(87, 1, 54, '2025-05-06 18:39:06'),
+(88, 1, 3, '2025-05-06 19:02:06'),
+(89, 1, 3, '2025-05-06 19:02:22'),
+(90, 1, 18, '2025-05-06 19:02:33'),
+(91, 1, 47, '2025-05-06 19:02:36'),
+(92, 1, 47, '2025-05-06 19:02:39'),
+(93, 1, 18, '2025-05-06 19:20:52'),
+(94, 1, 54, '2025-05-06 19:20:54'),
+(95, 1, 18, '2025-05-06 19:20:56');
 
 --
 -- Triggers `recipe_views`
@@ -418,10 +477,8 @@ CREATE TABLE `saved_lists` (
 INSERT INTO `saved_lists` (`list_id`, `user_id`, `list_name`, `created_at`, `color`) VALUES
 (35, 1, 'sobre', '2025-04-11 13:40:31', '#FFF0F5'),
 (50, 1, 'heheufjhf', '2025-04-11 20:18:03', '#E6FFE9'),
-(53, 105, 'ol', '2025-04-26 17:51:05', '#E0BBE4'),
-(55, 105, 'knbb', '2025-04-26 18:09:30', '#F0EAD6'),
-(57, 106, 'hbg', '2025-04-29 14:09:13', '#FFF9DB'),
-(63, 13, 'ola', '2025-04-30 22:29:23', '#FFF0F5');
+(63, 13, 'ola', '2025-04-30 22:29:23', '#FFF0F5'),
+(66, 13, 'hdh', '2025-05-09 15:20:50', '#FAD6A5');
 
 -- --------------------------------------------------------
 
@@ -441,27 +498,23 @@ CREATE TABLE `saved_recipes` (
 --
 
 INSERT INTO `saved_recipes` (`saved_id`, `list_id`, `recipe_id`, `added_at`) VALUES
-(187, 35, 3, '2025-04-20 15:47:43'),
-(189, 35, 19, '2025-04-25 16:07:19'),
-(193, 53, 54, '2025-04-26 17:51:12'),
-(195, 53, 47, '2025-04-26 17:56:41'),
-(196, 53, 3, '2025-04-26 17:56:48'),
-(197, 53, 21, '2025-04-26 17:56:49'),
-(199, 55, 18, '2025-04-26 18:09:34'),
-(200, 55, 47, '2025-04-26 18:22:36'),
-(201, 55, 58, '2025-04-26 18:22:39'),
-(202, 53, 23, '2025-04-26 18:22:41'),
-(203, 53, 18, '2025-04-26 18:50:02'),
-(218, 57, 54, '2025-04-30 17:40:54'),
-(225, 57, 48, '2025-04-30 22:24:37'),
-(226, 57, 18, '2025-04-30 22:28:43'),
 (238, 63, 37, '2025-04-30 23:36:41'),
 (254, 63, 58, '2025-05-01 14:27:22'),
-(255, 63, 18, '2025-05-01 14:34:37'),
-(258, 63, 41, '2025-05-01 15:30:22'),
-(259, 63, 3, '2025-05-01 15:30:25'),
-(272, 35, 40, '2025-05-02 03:06:20'),
-(288, 35, 47, '2025-05-05 14:14:33');
+(289, 35, 22, '2025-05-06 17:05:18'),
+(290, 35, 23, '2025-05-06 17:05:22'),
+(291, 35, 24, '2025-05-06 17:18:55'),
+(296, 35, 31, '2025-05-06 17:35:28'),
+(298, 35, 41, '2025-05-06 17:35:35'),
+(303, 35, 21, '2025-05-06 18:35:18'),
+(315, 35, 3, '2025-05-07 18:19:08'),
+(316, 35, 50, '2025-05-07 23:23:44'),
+(319, 63, 20, '2025-05-08 12:39:25'),
+(322, 63, 18, '2025-05-08 13:16:23'),
+(323, 63, 30, '2025-05-09 15:21:44'),
+(324, 63, 47, '2025-05-09 15:26:19'),
+(326, 66, 22, '2025-05-09 16:03:20'),
+(327, 63, 24, '2025-05-09 16:03:23'),
+(328, 63, 23, '2025-05-10 16:23:11');
 
 -- --------------------------------------------------------
 
@@ -485,7 +538,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `firebase_uid`, `username`, `email`, `profile_picture`, `created_at`, `updated_at`) VALUES
 (1, 'ZA3PDVCrOrPzQKA2lST3lQVU1c23', 'admin', 'admin@gmail.com', '', '2025-04-05 12:56:27', '2025-04-05 12:56:37'),
-(13, 'ngl7Ux7HDlRsW3Xe0MpVzl37Pwf2', 'sayo santos', 'sayo.santos1306@gmail.com', 'https://lh3.googleusercontent.com/a/ACg8ocL9ANhIPt5cXYQkxgBQrH4v-61VDx_IbjNWgZfDaJxuiHZLu2M=s96-c', '2025-03-31 14:33:20', '2025-05-01 15:30:08');
+(13, 'ngl7Ux7HDlRsW3Xe0MpVzl37Pwf2', 'sayo santos', 'sayo.santos1306@gmail.com', 'https://lh3.googleusercontent.com/a/ACg8ocL9ANhIPt5cXYQkxgBQrH4v-61VDx_IbjNWgZfDaJxuiHZLu2M=s96-c', '2025-03-31 14:33:20', '2025-05-08 12:32:39');
 
 -- --------------------------------------------------------
 
@@ -500,23 +553,6 @@ CREATE TABLE `user_category_stats` (
   `favorites_count` int(11) DEFAULT 0,
   `finished_count` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `user_category_stats`
---
-
-INSERT INTO `user_category_stats` (`user_id`, `category_id`, `views_count`, `favorites_count`, `finished_count`) VALUES
-(1, 1, 27, 5, 4),
-(1, 2, 45, 4, 3),
-(1, 3, 11, 1, 0),
-(1, 4, 3, 0, 0),
-(1, 12, 1, 0, 0),
-(1, 15, 1, 0, 0),
-(1, 17, 1, 0, 0),
-(1, 18, 1, 0, 0),
-(13, 1, 10, 3, 2),
-(13, 3, 4, 0, 1),
-(13, 16, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -589,8 +625,14 @@ ALTER TABLE `ratings`
 --
 ALTER TABLE `recipes`
   ADD PRIMARY KEY (`recipe_id`),
-  ADD KEY `idx_recipe_author` (`author_id`),
-  ADD KEY `fk_category` (`category_id`);
+  ADD KEY `idx_recipe_author` (`author_id`);
+
+--
+-- Indexes for table `recipe_category`
+--
+ALTER TABLE `recipe_category`
+  ADD PRIMARY KEY (`recipe_id`,`category_id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `recipe_ingredients`
@@ -612,7 +654,8 @@ ALTER TABLE `recipe_views`
 -- Indexes for table `saved_lists`
 --
 ALTER TABLE `saved_lists`
-  ADD PRIMARY KEY (`list_id`);
+  ADD PRIMARY KEY (`list_id`),
+  ADD KEY `fk_savedlists_user` (`user_id`);
 
 --
 -- Indexes for table `saved_recipes`
@@ -653,13 +696,13 @@ ALTER TABLE `user_recipe_finished`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `ingredients`
@@ -677,7 +720,7 @@ ALTER TABLE `ingredient_categories`
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `recipes`
@@ -695,25 +738,25 @@ ALTER TABLE `recipe_ingredients`
 -- AUTO_INCREMENT for table `recipe_views`
 --
 ALTER TABLE `recipe_views`
-  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT for table `saved_lists`
 --
 ALTER TABLE `saved_lists`
-  MODIFY `list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `saved_recipes`
 --
 ALTER TABLE `saved_recipes`
-  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=289;
+  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=329;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- Constraints for dumped tables
@@ -743,8 +786,14 @@ ALTER TABLE `ratings`
 -- Constraints for table `recipes`
 --
 ALTER TABLE `recipes`
-  ADD CONSTRAINT `fk_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `recipes_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `recipe_category`
+--
+ALTER TABLE `recipe_category`
+  ADD CONSTRAINT `recipe_category_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`recipe_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `recipe_category_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `recipe_ingredients`
@@ -759,6 +808,12 @@ ALTER TABLE `recipe_ingredients`
 ALTER TABLE `recipe_views`
   ADD CONSTRAINT `recipe_views_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `recipe_views_ibfk_2` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`recipe_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `saved_lists`
+--
+ALTER TABLE `saved_lists`
+  ADD CONSTRAINT `fk_savedlists_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `saved_recipes`

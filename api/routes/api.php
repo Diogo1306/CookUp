@@ -35,7 +35,6 @@ Router::add('GET',  'recommended',             [$recipeController, 'getRecommend
 
 // Categories
 Router::add('GET', 'categories',         [$categoryController, 'getAll']);
-Router::add('GET', 'user_categories', [$categoryController, 'getUserCategories']);
 Router::add('GET', 'popular_categories', [$categoryController, 'getPopular']);
 
 // Comments
@@ -49,7 +48,7 @@ Router::add('POST', 'track_interaction', [$trackingController, 'trackInteraction
 Router::add('GET', 'home_feed',               [$homeFeedController, 'getHomeFeed']);
 Router::add('GET', 'week_recipes',            [$homeFeedController, 'getWeekly']);
 Router::add('GET', 'popular_home_recipes',    [$homeFeedController, 'getPopular']);
-Router::add('GET', 'top_user_categories',     [$homeFeedController, 'getTopUserCategories']);
+Router::add('GET', 'user_categories', [$categoryController, 'getUserCategories']);
 Router::add('GET', 'recipes_by_category',     [$homeFeedController, 'getRecipesByCategory']);
 
 // Ratings

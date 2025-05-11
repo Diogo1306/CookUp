@@ -8,15 +8,15 @@ class TrackingController
 {
     public function trackInteraction()
     {
-        $input = json_decode(file_get_contents("php://input"), true);
-        $userId = $input['user_id'] ?? null;
-        $recipeId = $input['recipe_id'] ?? null;
-        $type = $input['type'] ?? null;
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        if (!$userId || !$recipeId || !$type) {
-            Response::json(["success" => false, "message" => "Parâmetros em falta."]);
-            return;
+        if (!isset($data['user_id'], $data['recipe_id'], $data['interaction_type'])) {
+            Response::json(false, 'Parâmetros em falta.');
         }
+
+        $userId = (int) $data['user_id'];
+        $recipeId = (int) $data['recipe_id'];
+        $type = $data['interaction_type'];
 
         $success = Tracking::registerInteraction($userId, $recipeId, $type);
 
