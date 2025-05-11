@@ -19,9 +19,10 @@
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">24dp</dimen>
 
+    <dimen name="padding_very_small">3dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_large">24dp</dimen>
 
-    <dimen name="border_radius">16dp</dimen>
+    <dimen name="border_radius">12dp</dimen>
 </resources>

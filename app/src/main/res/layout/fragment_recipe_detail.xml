@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -37,7 +38,7 @@
                 android:background="@drawable/fade_bottom" />
 
             <ImageButton
-                android:id="@+id/button_back"
+                android:id="@+id/arrow_back"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="top|start"
@@ -158,6 +159,18 @@
             </LinearLayout>
         </LinearLayout>
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            app:singleLine="false"
+            app:singleSelection="false"
+            app:chipSpacingHorizontal="4dp"
+            app:chipSpacingVertical="2dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -191,7 +204,12 @@
             android:id="@+id/ingredients_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            tools:listitem="@layout/item_ingredient" />
+
 
         <TextView
             android:layout_width="wrap_content"

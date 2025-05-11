@@ -12,12 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.data.model.TrackRequest;
 import com.diogo.cookup.data.model.UserData;
+import com.diogo.cookup.data.repository.TrackingRepository;
 import com.diogo.cookup.ui.adapter.SavedListAdapterSelect;
 import com.diogo.cookup.ui.dialog.CreateListDialog;
 import com.diogo.cookup.utils.UserManager;
@@ -81,6 +84,11 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
                 new ArrayList<>(),
                 (listId, recipeId1) -> {
                     viewModel.addRecipeToList(listId, recipeId1);
+                    TrackingRepository trackingRepository = new TrackingRepository();
+                    trackingRepository.sendTracking(
+                            new TrackRequest(userId, recipeId, "favorite"),
+                            new MutableLiveData<>()
+                    );
 
                     new Handler().postDelayed(() -> {
                         viewModel.reloadSavedRecipeData(userId);
@@ -123,14 +131,4 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
             });
         });
     }
-
-    private void refreshHomeIcon(int recipeId) {
-        if (parentFragment instanceof HomeFragment) {
-            ((HomeFragment) parentFragment).refreshRecipeIcon(recipeId);
-            Log.d("SAVE_SHEET", "Chamando refreshRecipeIcon para ID: " + recipeId);
-        } else {
-            Log.e("SAVE_SHEET", "parentFragment não é HomeFragment");
-        }
-    }
-
 }
