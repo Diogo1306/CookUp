@@ -4,23 +4,28 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="8dp">
+    android:gravity="center_horizontal"
+    android:padding="@dimen/padding_small"
+    android:layout_marginEnd="8dp">
 
     <ImageView
         android:id="@+id/imgCategoryIcon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:background="@drawable/category_bg"
-        android:padding="10dp"
+        android:padding="@dimen/padding_small"
         android:scaleType="centerInside" />
 
     <TextView
         android:id="@+id/tvCategoryLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_very_small"
         android:text="Almoço"
-        android:textSize="12sp"
-        android:layout_marginTop="4dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:textSize="@dimen/text_very_small"
+        android:gravity="center"
+        android:textAlignment="center"
         android:textColor="@color/text_primary" />
+
 </LinearLayout>

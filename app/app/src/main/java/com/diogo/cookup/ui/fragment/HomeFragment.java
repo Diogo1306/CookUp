@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -41,9 +42,10 @@ public class HomeFragment extends Fragment {
     private SavedListViewModel savedListViewModel;
     private UserStatsViewModel userStatsViewModel;
     private HomeFeedViewModel homeFeedViewModel;
+    private boolean firstLoad = true;
 
     private RecyclerView recyclerCategories, recyclerRecommended, recyclerWeekly, recyclerPopular, recyclerCat1, recyclerCat2, recyclerCat3;
-    private TextView tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3;
+    private TextView tvNameHome , tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3, seeMoreCat1, seeMoreCat2, seeMoreCat3;
 
     private final List<RecipeData> recipeList = new ArrayList<>();
     private final List<CategoryData> categoryList = new ArrayList<>();
@@ -68,7 +70,7 @@ public class HomeFragment extends Fragment {
             setAdapters();
             observeViewModels();
             loadInitialData();
-        }, 400);
+        }, 450);
     }
 
     private void initViewModels() {
@@ -91,6 +93,17 @@ public class HomeFragment extends Fragment {
         tvCategoryTitle1 = view.findViewById(R.id.tvCategoryTitle1);
         tvCategoryTitle2 = view.findViewById(R.id.tvCategoryTitle2);
         tvCategoryTitle3 = view.findViewById(R.id.tvCategoryTitle3);
+        seeMoreCat1 = view.findViewById(R.id.see_more_cat1);
+        seeMoreCat2 = view.findViewById(R.id.see_more_cat2);
+        seeMoreCat3 = view.findViewById(R.id.see_more_cat3);
+        tvNameHome = view.findViewById(R.id.tvNameHome);
+
+        UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+        if (user != null) {
+            String name = user.getUsername();
+            String greeting = "Olá, " + name + " 👋";
+            tvNameHome.setText(greeting);
+        }
 
         recyclerCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerRecommended.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -150,16 +163,15 @@ public class HomeFragment extends Fragment {
 
         homeFeedViewModel.getRecommendedRecipes().observe(getViewLifecycleOwner(), list -> {
             if (list != null && !list.isEmpty()) {
+                recipeAdapter.setSkeletonMode(false);
                 recipeList.clear();
                 recipeList.addAll(list);
-                recipeAdapter.setSkeletonMode(false);
                 recipeAdapter.updateData(list, savedRecipeIds);
             }
         });
 
         savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), savedIds -> {
             if (savedIds != null) {
-                Log.d("HOME_FORCE", "✅ Lista de receitas salvas atualizada: " + savedIds);
                 setupAllAdapters(savedIds);
             }
         });
@@ -168,7 +180,9 @@ public class HomeFragment extends Fragment {
             if (recipeId != null) {
                 UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
                 if (user != null) {
-                    savedListViewModel.reloadSavedRecipeData(user.getUserId());
+                    int userId = user.getUserId();
+                    savedListViewModel.reloadSavedRecipeData(userId);
+                    homeFeedViewModel.loadHomeFeed(userId);
                 }
             }
         });
@@ -188,21 +202,36 @@ public class HomeFragment extends Fragment {
         });
 
         homeFeedViewModel.getCategoryRecipes1().observe(getViewLifecycleOwner(), list -> {
-            if (list != null) {
+            boolean hasData = list != null && !list.isEmpty();
+            tvCategoryTitle1.setVisibility(hasData ? View.VISIBLE : View.GONE);
+            recyclerCat1.setVisibility(hasData ? View.VISIBLE : View.GONE);
+            seeMoreCat1.setVisibility(hasData ? View.VISIBLE : View.GONE);
+
+            if (hasData) {
                 adapterCat1.setSkeletonMode(false);
                 adapterCat1.updateData(list, savedRecipeIds);
             }
         });
 
         homeFeedViewModel.getCategoryRecipes2().observe(getViewLifecycleOwner(), list -> {
-            if (list != null) {
+            boolean hasData = list != null && !list.isEmpty();
+            tvCategoryTitle2.setVisibility(hasData ? View.VISIBLE : View.GONE);
+            recyclerCat2.setVisibility(hasData ? View.VISIBLE : View.GONE);
+            seeMoreCat2.setVisibility(hasData ? View.VISIBLE : View.GONE);
+
+            if (hasData) {
                 adapterCat2.setSkeletonMode(false);
                 adapterCat2.updateData(list, savedRecipeIds);
             }
         });
 
         homeFeedViewModel.getCategoryRecipes3().observe(getViewLifecycleOwner(), list -> {
-            if (list != null) {
+            boolean hasData = list != null && !list.isEmpty();
+            tvCategoryTitle3.setVisibility(hasData ? View.VISIBLE : View.GONE);
+            recyclerCat3.setVisibility(hasData ? View.VISIBLE : View.GONE);
+            seeMoreCat3.setVisibility(hasData ? View.VISIBLE : View.GONE);
+
+            if (hasData) {
                 adapterCat3.setSkeletonMode(false);
                 adapterCat3.updateData(list, savedRecipeIds);
             }
@@ -213,7 +242,14 @@ public class HomeFragment extends Fragment {
         homeFeedViewModel.getCategoryTitle3().observe(getViewLifecycleOwner(), tvCategoryTitle3::setText);
 
         categoryViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
-            if (categories != null) {
+            if (categories != null && isAdded()) {
+                if (categoryAdapter == null) {
+                    categoryAdapter = new CategoryAdapter(categoryList, category -> {
+                        recipeViewModel.loadRecipesByCategory(category.getCategoryId());
+                    });
+                    recyclerCategories.setAdapter(categoryAdapter);
+                }
+
                 categoryAdapter.setSkeletonMode(false);
                 categoryList.clear();
                 categoryList.addAll(categories);
@@ -261,7 +297,24 @@ public class HomeFragment extends Fragment {
                 .commit();
     }
 
-    public void refreshRecipeIcon(int recipeId) {
-        updateAllAdapters();
+    private void animateRecycler(RecyclerView recyclerView) {
+        if (recyclerView.getAdapter() != null && recyclerView.getItemAnimator() == null) {
+            recyclerView.setLayoutAnimation(
+                    AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_animation_fade_slide_up)
+            );
+            recyclerView.scheduleLayoutAnimation();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+        if (user != null && user.getUserId() > 0) {
+            int userId = user.getUserId();
+            savedListViewModel.reloadSavedRecipeData(userId);
+            homeFeedViewModel.loadHomeFeed(userId);
+        }
     }
 }

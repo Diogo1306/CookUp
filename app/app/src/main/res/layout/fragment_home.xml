@@ -5,171 +5,325 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_large"
-    android:fillViewport="true"
-    android:padding="16dp">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:padding="@dimen/padding_small"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:orientation="vertical"
             android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvNameHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Olá, xxxxxx 👋"
+                android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_medium" />
 
             <TextView
                 android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Olá, Chef! 👩‍🍳"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:text="O que vais cozinhar hoje?"
+                android:fontFamily="@font/poppins_semibold"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_large" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:background="@drawable/input"
-            android:paddingHorizontal="12dp"
+        <EditText
+            android:id="@+id/input_email"
+            style="@style/input"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:autofillHints="emailAddress"
+            android:drawableStart="@drawable/ic_search"
+            android:layout_marginTop="@dimen/margin_small"
+            android:drawablePadding="@dimen/padding_small"
+            android:ellipsize="end"
             android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                android:contentDescription="Pesquisar" />
-
-            <TextView
-                android:id="@+id/tvSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Procurar receitas..."
-                android:textColor="#888"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="@color/gray" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
             android:text="Categorias"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp" />
+            android:fontFamily="@font/poppins_semibold"
+            android:includeFontPadding="false"
+            android:textSize="@dimen/text_medium"
+            android:layout_marginTop="@dimen/margin_medium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            />
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+            android:layout_marginTop="@dimen/margin_very_small"
+            android:orientation="horizontal" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recomendado para ti"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/margin_very_small"
+            android:paddingStart="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_medium">
+
+            <TextView
+                android:id="@+id/title_recommended"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:includeFontPadding="false"
+                android:text="Recomendado para ti"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_medium"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/see_more_recommended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver mais"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_very_small"
+                android:textColor="@color/primary"
+                android:fontFamily="@font/poppins_semibold"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerRecommended"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            />
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+            android:layout_marginTop="@dimen/margin_very_small"
+            android:orientation="horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:paddingStart="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium">
 
         <TextView
+            android:id="@+id/title_section_week"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:includeFontPadding="false"
+            android:text="Receitas da semana"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="@dimen/text_medium"
+            android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/see_more_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Receitas da semana"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp" />
+            android:text="Ver mais"
+            android:includeFontPadding="false"
+            android:textSize="@dimen/text_very_small"
+            android:textColor="@color/primary"
+            android:fontFamily="@font/poppins_semibold"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerWeekly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+            android:layout_marginTop="@dimen/margin_very_small"
             android:overScrollMode="never"
             android:scrollbars="none"
             android:nestedScrollingEnabled="false" />
 
-        <!-- POPULARES -->
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Populares"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:paddingStart="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_medium">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:includeFontPadding="false"
+                android:text="Ver Populares"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_medium"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/see_more_popular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver mais"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_very_small"
+                android:textColor="@color/primary"
+                android:fontFamily="@font/poppins_semibold"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerPopular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+            android:layout_marginTop="@dimen/margin_very_small"
             android:orientation="horizontal"
             android:nestedScrollingEnabled="false" />
 
-        <!-- BASEADO NO QUE CURTES -->
-        <TextView
-            android:id="@+id/tvCategoryTitle1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sugestão personalizada"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:paddingStart="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_medium">
+
+            <TextView
+                android:id="@+id/tvCategoryTitle1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:includeFontPadding="false"
+                android:text="Sugestão personalizada"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_medium"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/see_more_cat1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver mais"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_very_small"
+                android:textColor="@color/primary"
+                android:fontFamily="@font/poppins_semibold"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerCat1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+            android:layout_marginTop="@dimen/margin_very_small"
             android:orientation="horizontal"
             android:nestedScrollingEnabled="false" />
 
-        <TextView
-            android:id="@+id/tvCategoryTitle2"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Também vais gostar de"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:paddingStart="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_medium">
+
+            <TextView
+                android:id="@+id/tvCategoryTitle2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:includeFontPadding="false"
+                android:text="Também vais gostar de"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_medium"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/see_more_cat2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver mais"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_very_small"
+                android:textColor="@color/primary"
+                android:fontFamily="@font/poppins_semibold"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerCat2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+            android:layout_marginTop="@dimen/margin_very_small"
             android:orientation="horizontal"
             android:nestedScrollingEnabled="false" />
 
-        <TextView
-            android:id="@+id/tvCategoryTitle3"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Talvez te agrade"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:paddingStart="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_medium">
+
+            <TextView
+                android:id="@+id/tvCategoryTitle3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:includeFontPadding="false"
+                android:text="Talvez te agrade"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_medium"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/see_more_cat3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver mais"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/text_very_small"
+                android:textColor="@color/primary"
+                android:fontFamily="@font/poppins_semibold"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerCat3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+            android:layout_marginTop="@dimen/margin_very_small"
             android:orientation="horizontal"
             android:nestedScrollingEnabled="false" />
 

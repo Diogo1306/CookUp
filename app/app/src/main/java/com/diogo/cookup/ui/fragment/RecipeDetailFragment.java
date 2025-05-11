@@ -1,5 +1,6 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
+import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.IngredientData;
 import com.diogo.cookup.data.model.TrackRequest;
@@ -32,6 +35,9 @@ import com.diogo.cookup.ui.adapter.IngredientAdapter;
 import com.diogo.cookup.ui.dialog.RatingBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.RecipeViewModel;
+import com.diogo.cookup.viewmodel.SavedListViewModel;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +47,7 @@ public class RecipeDetailFragment extends Fragment {
     private static final String ARG_RECIPE_ID = "recipe_id";
     private int recipeId = -1;
     private RecipeViewModel viewModel;
+    private RecyclerView ingredientsRecyclerView;
 
     public static RecipeDetailFragment newInstance(int recipeId) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
@@ -78,13 +85,19 @@ public class RecipeDetailFragment extends Fragment {
         TextView txtTime = view.findViewById(R.id.txt_time);
         TextView txtRating = view.findViewById(R.id.txt_rating);
         TextView txtDifficulty = view.findViewById(R.id.txt_difficulty);
+        ChipGroup chipGroup = view.findViewById(R.id.chip_group_categories);
+        ImageButton btnBack = view.findViewById(R.id.arrow_back);
+        ImageButton btnFavorite = view.findViewById(R.id.button_favorite);
 
         Button ratingButton = view.findViewById(R.id.btn_finish_recipe);
         EditText inputComment = view.findViewById(R.id.input_comment_direct);
         Button btnSendComment = view.findViewById(R.id.btn_send_comment);
 
-        RecyclerView ingredientsRecyclerView = view.findViewById(R.id.ingredients_recycler_view);
+        ingredientsRecyclerView = view.findViewById(R.id.ingredients_recycler_view);
         ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ingredientsRecyclerView.setNestedScrollingEnabled(false);
+
+        btnBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         RecyclerView commentsRecyclerView = view.findViewById(R.id.comments_recycler_view);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -104,8 +117,8 @@ public class RecipeDetailFragment extends Fragment {
                 int userId = SharedPrefHelper.getInstance(requireContext()).getUser().getUserId();
                 viewModel.submitRatingAndComment(userId, recipeId, (int) rating, comment);
 
-                com.diogo.cookup.data.repository.TrackingRepository trackingRepository = new com.diogo.cookup.data.repository.TrackingRepository();
-                trackingRepository.sendTracking(new com.diogo.cookup.data.model.TrackRequest(userId, recipeId, "finish"), new MutableLiveData<>());
+                TrackingRepository trackingRepository = new TrackingRepository();
+                trackingRepository.sendTracking(new TrackRequest(userId, recipeId, "finish"), new MutableLiveData<>());
 
                 Toast toast = Toast.makeText(requireContext(), "Receita finalizada com sucesso!", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
@@ -127,6 +140,39 @@ public class RecipeDetailFragment extends Fragment {
 
             float average = recipe.getAverageRating();
             txtRating.setText(average > 0 ? String.format(Locale.getDefault(), "%.1f", average) : "—");
+
+            chipGroup.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(requireContext());
+            List<CategoryData> categories = recipe.getCategories();
+            if (categories != null && !categories.isEmpty()) {
+                for (CategoryData category : categories) {
+                    Chip chip = (Chip) inflater.inflate(R.layout.item_category_tag, chipGroup, false);
+                    chip.setText(category.getCategoryName());
+
+                    String hexColor = category.getColor() != null ? category.getColor() : "#EEEEEE";
+                    try {
+                        chip.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor(hexColor)));
+                    } catch (IllegalArgumentException e) {
+                        chip.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor("#EEEEEE")));
+                    }
+                    chip.setTextColor(Color.WHITE);
+                    chip.setCloseIconVisible(false);
+                    chip.setCloseIcon(null);
+                    chipGroup.addView(chip);
+                }
+            }
+
+            List<IngredientData> ingredients = recipe.getIngredients();
+            if (ingredients != null && !ingredients.isEmpty()) {
+                IngredientAdapter adapter = new IngredientAdapter(ingredients);
+                ingredientsRecyclerView.setAdapter(adapter);
+
+                ingredientsRecyclerView.post(() -> {
+                    adapter.notifyDataSetChanged();
+                    ingredientsRecyclerView.getLayoutParams().height = adapter.getItemCount() * dpToPx(60);
+                    ingredientsRecyclerView.requestLayout();
+                });
+            }
 
             recipeInstructions.setText(recipe.getInstructions());
             recipeInstructions.setVisibility(View.VISIBLE);
@@ -174,17 +220,26 @@ public class RecipeDetailFragment extends Fragment {
                 });
             }
 
-            List<IngredientData> ingredients = recipe.getIngredients();
-            if (ingredients != null && !ingredients.isEmpty()) {
-                IngredientAdapter adapter = new IngredientAdapter(ingredients);
-                ingredientsRecyclerView.setAdapter(adapter);
-            }
-
             List<CommentData> comments = recipe.getComments();
             if (comments != null && !comments.isEmpty()) {
                 CommentAdapter commentAdapter = new CommentAdapter(comments);
                 commentsRecyclerView.setAdapter(commentAdapter);
             }
+        });
+
+        SavedListViewModel savedListViewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
+        LiveData<List<Integer>> savedIdsLiveData = savedListViewModel.getSavedRecipeIds();
+
+        savedIdsLiveData.observe(getViewLifecycleOwner(), savedIds -> {
+            if (savedIds != null) {
+                boolean isSaved = savedIds.contains(recipeId);
+                btnFavorite.setImageResource(isSaved ? R.drawable.ic_bookmark_selected : R.drawable.ic_bookmark);
+            }
+        });
+
+        btnFavorite.setOnClickListener(v -> {
+            SaveRecipeBottomSheet.newInstance(recipeId, this)
+                    .show(requireActivity().getSupportFragmentManager(), "save_sheet");
         });
 
         viewModel.getCommentsLiveData().observe(getViewLifecycleOwner(), comments -> {
@@ -213,6 +268,11 @@ public class RecipeDetailFragment extends Fragment {
         }
     }
 
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -220,5 +280,4 @@ public class RecipeDetailFragment extends Fragment {
             ((MainActivity) getActivity()).setBottomNavVisibility(true);
         }
     }
-
 }

@@ -5,6 +5,7 @@ compiler = "4.15.1"
 converterGson = "2.9.0"
 firebaseAuthVersion = "23.2.0"
 firebaseBom = "33.7.0"
+flexbox = "3.0.0"
 glide = "4.15.1"
 googleServices = "4.4.2"
 gradle = "8.8.1"
@@ -34,6 +35,7 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth-v2320 = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuthVersion" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+flexbox = { group = "com.google.android", name = "flexbox", version.ref = "flexbox" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
@@ -56,6 +58,6 @@ lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-view
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 
 [plugins]
-android-application = { id = "com.android.application", version = "8.9.2" }
+android-application = { id = "com.android.application", version = "8.10.0" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

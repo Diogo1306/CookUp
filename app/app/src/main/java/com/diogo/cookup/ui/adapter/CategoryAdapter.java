@@ -55,7 +55,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             View view = inflater.inflate(R.layout.item_category_skeleton, parent, false);
             return new SkeletonViewHolder(view);
         } else {
-            View view = inflater.inflate(R.layout.item_home_category, parent, false);
+            View view = inflater.inflate(R.layout.item_category_default, parent, false);
             return new CategoryViewHolder(view);
         }
     }

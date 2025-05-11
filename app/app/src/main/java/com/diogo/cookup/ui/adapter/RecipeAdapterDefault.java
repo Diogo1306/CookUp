@@ -52,7 +52,6 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecipeAdapterDefa
         savedRecipeIdSet.addAll(newSavedIds);
 
         if (skeletonMode) {
-            // Evita flicker: atraso de 50ms para deixar o RecyclerView assentar
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 skeletonMode = false;
                 notifyItemRangeChanged(0, recipeList.size());
