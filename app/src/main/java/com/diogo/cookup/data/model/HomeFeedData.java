@@ -8,7 +8,7 @@ public class HomeFeedData {
     private List<RecipeData> recommended;
     private List<RecipeData> weekly;
     private List<RecipeData> popular;
-    private Map<String, CategoryData> categories;
+    private Map<String, RecipeCategoryData> categories;
 
     public List<RecipeData> getRecommended() {
         return recommended;
@@ -22,7 +22,7 @@ public class HomeFeedData {
         return popular;
     }
 
-    public Map<String, CategoryData> getCategories() {
+    public Map<String, RecipeCategoryData> getCategories() {
         return categories;
     }
 }

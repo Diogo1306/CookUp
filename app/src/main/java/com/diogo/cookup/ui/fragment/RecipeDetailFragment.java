@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.CategoryData;
+import com.diogo.cookup.data.model.RecipeCategoryData;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.IngredientData;
 import com.diogo.cookup.data.model.TrackRequest;
@@ -47,6 +47,7 @@ public class RecipeDetailFragment extends Fragment {
     private static final String ARG_RECIPE_ID = "recipe_id";
     private int recipeId = -1;
     private RecipeViewModel viewModel;
+    private IngredientAdapter ingredientAdapter;
     private RecyclerView ingredientsRecyclerView;
 
     public static RecipeDetailFragment newInstance(int recipeId) {
@@ -143,9 +144,9 @@ public class RecipeDetailFragment extends Fragment {
 
             chipGroup.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(requireContext());
-            List<CategoryData> categories = recipe.getCategories();
+            List<RecipeCategoryData> categories = recipe.getCategories();
             if (categories != null && !categories.isEmpty()) {
-                for (CategoryData category : categories) {
+                for (RecipeCategoryData category : categories) {
                     Chip chip = (Chip) inflater.inflate(R.layout.item_category_tag, chipGroup, false);
                     chip.setText(category.getCategoryName());
 
@@ -164,12 +165,12 @@ public class RecipeDetailFragment extends Fragment {
 
             List<IngredientData> ingredients = recipe.getIngredients();
             if (ingredients != null && !ingredients.isEmpty()) {
-                IngredientAdapter adapter = new IngredientAdapter(ingredients);
-                ingredientsRecyclerView.setAdapter(adapter);
+                ingredientAdapter = new IngredientAdapter(ingredients, requireContext());
+                ingredientsRecyclerView.setAdapter(ingredientAdapter);
 
                 ingredientsRecyclerView.post(() -> {
-                    adapter.notifyDataSetChanged();
-                    ingredientsRecyclerView.getLayoutParams().height = adapter.getItemCount() * dpToPx(60);
+                    ingredientAdapter.notifyDataSetChanged();
+                    ingredientsRecyclerView.getLayoutParams().height = ingredientAdapter.getItemCount() * dpToPx(60);
                     ingredientsRecyclerView.requestLayout();
                 });
             }

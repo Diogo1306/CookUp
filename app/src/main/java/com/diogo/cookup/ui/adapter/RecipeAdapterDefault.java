@@ -2,6 +2,7 @@ package com.diogo.cookup.ui.adapter;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,6 +153,19 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecipeAdapterDefa
             image.setImageResource(R.drawable.skeleton_background);
             saveButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void setData(List<RecipeData> newList) {
+        recipeList.clear();
+        recipeList.addAll(newList);
+        skeletonMode = false;
+        notifyDataSetChanged();
+    }
+
+
+    public void clearList() {
+        recipeList.clear();
+        notifyDataSetChanged();
     }
 
     public interface OnItemClickListener {
