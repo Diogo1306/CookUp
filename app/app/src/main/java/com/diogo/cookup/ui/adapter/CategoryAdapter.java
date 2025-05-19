@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.CategoryData;
+import com.diogo.cookup.data.model.RecipeCategoryData;
 
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<CategoryData> categoryList;
+    private final List<RecipeCategoryData> categoryList;
     private final OnCategoryClickListener listener;
     private boolean skeletonMode = true;
 
@@ -25,21 +25,27 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_NORMAL = 1;
 
     public interface OnCategoryClickListener {
-        void onCategoryClick(CategoryData category);
+        void onCategoryClick(RecipeCategoryData category);
     }
 
-    public CategoryAdapter(List<CategoryData> categoryList, OnCategoryClickListener listener) {
+    public CategoryAdapter(List<RecipeCategoryData> categoryList, OnCategoryClickListener listener) {
         this.categoryList = categoryList;
         this.listener = listener;
     }
 
     public void setSkeletonMode(boolean skeletonMode) {
         this.skeletonMode = skeletonMode;
-        notifyItemRangeChanged(0, getItemCount());
+        notifyDataSetChanged();
     }
 
     public boolean isSkeletonMode() {
         return skeletonMode;
+    }
+
+    public void setData(List<RecipeCategoryData> list) {
+        categoryList.clear();
+        categoryList.addAll(list);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -62,11 +68,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (skeletonMode) {
-
-        } else {
-            CategoryViewHolder categoryHolder = (CategoryViewHolder) holder;
-            categoryHolder.bind(categoryList.get(position));
+        if (!skeletonMode && holder instanceof CategoryViewHolder) {
+            ((CategoryViewHolder) holder).bind(categoryList.get(position));
         }
     }
 
@@ -91,7 +94,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             label = itemView.findViewById(R.id.tvCategoryLabel);
         }
 
-        public void bind(CategoryData category) {
+        public void bind(RecipeCategoryData category) {
             String name = category.getCategoryName();
             label.setText(name != null && !name.trim().isEmpty() ? name : "Sem Nome");
 

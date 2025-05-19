@@ -1,8 +1,10 @@
 package com.diogo.cookup.ui.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,28 +20,17 @@ import java.util.List;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
 
     private final List<IngredientData> ingredients;
+    private final Context context;
 
-    public IngredientAdapter(List<IngredientData> ingredients) {
+    public IngredientAdapter(List<IngredientData> ingredients, Context context) {
         this.ingredients = ingredients;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView ingredientImage;
-        TextView ingredientName, ingredientQuantity;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ingredientImage = itemView.findViewById(R.id.ingredient_image);
-            ingredientName = itemView.findViewById(R.id.ingredient_name);
-            ingredientQuantity = itemView.findViewById(R.id.ingredient_quantity);
-        }
+        this.context = context;
     }
 
     @NonNull
     @Override
     public IngredientAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_ingredient, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_ingredient, parent, false);
         return new ViewHolder(view);
     }
 
@@ -48,9 +39,15 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         IngredientData ingredient = ingredients.get(position);
 
         holder.ingredientName.setText(ingredient.getName());
-        holder.ingredientQuantity.setText(ingredient.getQuantity());
 
-        Glide.with(holder.itemView.getContext())
+        if (ingredient.getQuantity() != null && !ingredient.getQuantity().isEmpty()) {
+            holder.ingredientQuantity.setText(ingredient.getQuantity());
+            holder.ingredientQuantity.setVisibility(View.VISIBLE);
+        } else {
+            holder.ingredientQuantity.setVisibility(View.GONE);
+        }
+
+        Glide.with(context)
                 .load(ingredient.getImage())
                 .placeholder(R.drawable.placeholder_ingredient)
                 .into(holder.ingredientImage);
@@ -59,5 +56,17 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     @Override
     public int getItemCount() {
         return ingredients.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView ingredientName, ingredientQuantity;
+        ImageView ingredientImage;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ingredientName = itemView.findViewById(R.id.ingredient_name);
+            ingredientQuantity = itemView.findViewById(R.id.ingredient_quantity);
+            ingredientImage = itemView.findViewById(R.id.ingredient_image);
+        }
     }
 }

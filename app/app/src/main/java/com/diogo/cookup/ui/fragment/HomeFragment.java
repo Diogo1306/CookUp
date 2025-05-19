@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.CategoryData;
+import com.diogo.cookup.data.model.RecipeCategoryData;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.adapter.CategoryAdapter;
@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
     private TextView tvNameHome , tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3, seeMoreCat1, seeMoreCat2, seeMoreCat3;
 
     private final List<RecipeData> recipeList = new ArrayList<>();
-    private final List<CategoryData> categoryList = new ArrayList<>();
+    private final List<RecipeCategoryData> categoryList = new ArrayList<>();
     private final List<Integer> savedRecipeIds = new ArrayList<>();
 
     @Nullable
