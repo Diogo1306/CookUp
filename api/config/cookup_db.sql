@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2025 at 03:32 PM
+-- Generation Time: May 17, 2025 at 03:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -90,20 +90,13 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`comment_id`, `user_id`, `recipe_id`, `comment`, `created_at`) VALUES
-(12, 1, 18, 'Top', '2025-04-21 18:17:43'),
-(13, 1, 3, 'N c', '2025-04-21 19:20:08'),
-(14, 1, 3, 'comida boaa', '2025-04-21 21:44:59'),
-(15, 1, 3, 'Ola', '2025-04-21 21:45:07'),
-(16, 1, 18, 'nvg', '2025-04-26 11:58:38'),
-(17, 1, 3, 'ola', '2025-05-03 15:16:29'),
-(18, 1, 3, 'Ola', '2025-05-06 18:02:13'),
-(19, 1, 3, 'Adeus', '2025-05-06 18:02:15'),
-(20, 1, 3, 'Gay', '2025-05-07 21:07:05'),
-(21, 1, 40, 'top', '2025-05-07 23:23:55'),
-(22, 1, 21, 'muito fixe', '2025-05-07 23:25:39'),
-(23, 1, 19, 'top', '2025-05-07 23:27:32'),
-(24, 1, 20, 'top', '2025-05-07 23:27:51'),
-(25, 13, 3, 'nao gostei', '2025-05-08 12:33:00');
+(32, 1, 3, 'Fixe', '2025-05-11 18:40:24'),
+(33, 1, 3, 'gostei muito', '2025-05-11 18:40:37'),
+(34, 1, 18, 'Top', '2025-05-11 18:41:44'),
+(35, 1, 3, 'top', '2025-05-11 18:49:55'),
+(36, 1, 3, 'Acrecente mais sal se nao gosta do peixe', '2025-05-11 18:50:11'),
+(37, 1, 3, 'top', '2025-05-11 19:00:30'),
+(38, 1, 3, 'Gostei', '2025-05-11 19:00:35');
 
 -- --------------------------------------------------------
 
@@ -123,62 +116,62 @@ CREATE TABLE `ingredients` (
 --
 
 INSERT INTO `ingredients` (`ingredient_id`, `ingredient_name`, `category_id`, `image_url`) VALUES
-(169, 'Sal', NULL, 'http://localhost/PAP/CookUp_Core/uploads/sal.png'),
-(170, 'Açúcar', NULL, 'http://localhost/PAP/CookUp_Core/uploads/acucar.png'),
-(171, 'Pimenta', NULL, 'http://localhost/PAP/CookUp_Core/uploads/pimenta.png'),
-(172, 'Alho', NULL, 'http://localhost/PAP/CookUp_Core/uploads/alho.png'),
-(173, 'Cebola', NULL, 'http://localhost/PAP/CookUp_Core/uploads/cebola.png'),
-(174, 'Tomate', NULL, 'http://localhost/PAP/CookUp_Core/uploads/tomate.png'),
-(175, 'Ovos', NULL, 'http://localhost/PAP/CookUp_Core/uploads/ovos.png'),
-(176, 'Leite', NULL, 'http://localhost/PAP/CookUp_Core/uploads/leite.png'),
-(177, 'Manteiga', NULL, 'http://localhost/PAP/CookUp_Core/uploads/manteiga.png'),
-(178, 'Queijo', NULL, 'http://localhost/PAP/CookUp_Core/uploads/queijo.png'),
-(179, 'Farinha de trigo', NULL, 'http://localhost/PAP/CookUp_Core/uploads/farinha_de_trigo.png'),
-(180, 'Fermento', NULL, 'http://localhost/PAP/CookUp_Core/uploads/fermento.png'),
-(181, 'Óleo de oliva', NULL, 'http://localhost/PAP/CookUp_Core/uploads/oleo_de_oliva.png'),
-(182, 'Vinagre', NULL, 'http://localhost/PAP/CookUp_Core/uploads/vinagre.png'),
-(183, 'Carne de frango', NULL, 'http://localhost/PAP/CookUp_Core/uploads/carne_de_frango.png'),
-(184, 'Carne de vaca', NULL, 'carnedevaca.png'),
-(185, 'Carne de porco', NULL, 'http://localhost/PAP/CookUp_Core/uploads/carne_de_porco.png'),
-(186, 'Peixe', NULL, 'http://localhost/PAP/CookUp_Core/uploads/peixe.png'),
-(187, 'Camarão', NULL, 'http://localhost/PAP/CookUp_Core/uploads/camarao.png'),
-(188, 'Lula', NULL, 'http://localhost/PAP/CookUp_Core/uploads/lula.png'),
-(189, 'Bacalhau', NULL, 'http://localhost/PAP/CookUp_Core/uploads/bacalhau.png'),
-(190, 'Arroz', NULL, 'http://localhost/PAP/CookUp_Core/uploads/arroz.png'),
-(191, 'Feijão', NULL, 'http://localhost/PAP/CookUp_Core/uploads/feijao.png'),
-(192, 'Macarrão', NULL, 'http://localhost/PAP/CookUp_Core/uploads/macarrao.png'),
-(193, 'Batata', NULL, 'http://localhost/PAP/CookUp_Core/uploads/batata.png'),
-(194, 'Cenoura', NULL, 'http://localhost/PAP/CookUp_Core/uploads/cenoura.png'),
-(195, 'Espinafre', NULL, 'http://localhost/PAP/CookUp_Core/uploads/espinafre.png'),
-(196, 'Brócolos', NULL, 'http://localhost/PAP/CookUp_Core/uploads/brocolos.png'),
-(197, 'Abobrinha', NULL, 'http://localhost/PAP/CookUp_Core/uploads/abobrinha.png'),
-(198, 'Cogumelos', NULL, 'http://localhost/PAP/CookUp_Core/uploads/cogumelos.png'),
-(199, 'Maçã', NULL, 'http://localhost/PAP/CookUp_Core/uploads/maca.png'),
-(200, 'Banana', NULL, 'http://localhost/PAP/CookUp_Core/uploads/banana.png'),
-(201, 'Laranja', NULL, 'http://localhost/PAP/CookUp_Core/uploads/laranja.png'),
-(202, 'Manga', NULL, 'http://localhost/PAP/CookUp_Core/uploads/manga.png'),
-(203, 'Morango', NULL, 'http://localhost/PAP/CookUp_Core/uploads/morango.png'),
-(204, 'Melancia', NULL, 'http://localhost/PAP/CookUp_Core/uploads/melancia.png'),
-(205, 'Uvas', NULL, 'http://localhost/PAP/CookUp_Core/uploads/uvas.png'),
-(206, 'Castanhas', NULL, 'http://localhost/PAP/CookUp_Core/uploads/castanhas.png'),
-(207, 'Nozes', NULL, 'http://localhost/PAP/CookUp_Core/uploads/nozes.png'),
-(208, 'Amêndoas', NULL, 'http://localhost/PAP/CookUp_Core/uploads/amendoas.png'),
-(209, 'Mel', NULL, 'http://localhost/PAP/CookUp_Core/uploads/mel.png'),
-(210, 'Chocolate', NULL, 'http://localhost/PAP/CookUp_Core/uploads/chocolate.png'),
-(211, 'Creme de leite', NULL, 'http://localhost/PAP/CookUp_Core/uploads/creme_de_leite.png'),
-(212, 'Iogurte natural', NULL, 'http://localhost/PAP/CookUp_Core/uploads/iogurte_natural.png'),
-(213, 'Pão', NULL, 'http://localhost/PAP/CookUp_Core/uploads/pao.png'),
-(214, 'Tofu', NULL, 'http://localhost/PAP/CookUp_Core/uploads/tofu.png'),
-(215, 'Grão-de-bico', NULL, 'http://localhost/PAP/CookUp_Core/uploads/grao_de_bico.png'),
-(216, 'Lentilha', NULL, 'http://localhost/PAP/CookUp_Core/uploads/lentilha.png'),
-(217, 'Soja', NULL, 'http://localhost/PAP/CookUp_Core/uploads/soja.png'),
-(218, 'Molho de soja', NULL, 'http://localhost/PAP/CookUp_Core/uploads/molho_de_soja.png'),
-(219, 'Curry', NULL, 'http://localhost/PAP/CookUp_Core/uploads/curry.png'),
-(220, 'Canela', NULL, 'http://localhost/PAP/CookUp_Core/uploads/canela.png'),
-(221, 'Gengibre', NULL, 'http://localhost/PAP/CookUp_Core/uploads/gengibre.png'),
-(222, 'Coentros', NULL, 'http://localhost/PAP/CookUp_Core/uploads/coentros.png'),
-(223, 'Manjericão', NULL, 'http://localhost/PAP/CookUp_Core/uploads/manjericao.png'),
-(224, 'Orégãos', NULL, 'http://localhost/PAP/CookUp_Core/uploads/oregaos.png');
+(169, 'Sal', 1, 'http://localhost/PAP/CookUp_Core/uploads/sal.png'),
+(170, 'Açúcar', 1, 'http://localhost/PAP/CookUp_Core/uploads/acucar.png'),
+(171, 'Pimenta', 1, 'http://localhost/PAP/CookUp_Core/uploads/pimenta.png'),
+(172, 'Alho', 2, 'http://localhost/PAP/CookUp_Core/uploads/alho.png'),
+(173, 'Cebola', 2, 'http://localhost/PAP/CookUp_Core/uploads/cebola.png'),
+(174, 'Tomate', 2, 'http://localhost/PAP/CookUp_Core/uploads/tomate.png'),
+(175, 'Ovos', 14, 'http://localhost/PAP/CookUp_Core/uploads/ovos.png'),
+(176, 'Leite', 4, 'http://localhost/PAP/CookUp_Core/uploads/leite.png'),
+(177, 'Manteiga', 4, 'http://localhost/PAP/CookUp_Core/uploads/manteiga.png'),
+(178, 'Queijo', 4, 'http://localhost/PAP/CookUp_Core/uploads/queijo.png'),
+(179, 'Farinha de trigo', 7, 'http://localhost/PAP/CookUp_Core/uploads/farinha_de_trigo.png'),
+(180, 'Fermento', 10, 'http://localhost/PAP/CookUp_Core/uploads/fermento.png'),
+(181, 'Óleo de oliva', 12, 'http://localhost/PAP/CookUp_Core/uploads/oleo_de_oliva.png'),
+(182, 'Vinagre', 12, 'http://localhost/PAP/CookUp_Core/uploads/vinagre.png'),
+(183, 'Carne de frango', 5, 'http://localhost/PAP/CookUp_Core/uploads/carne_de_frango.png'),
+(184, 'Carne de vaca', 5, 'carnedevaca.png'),
+(185, 'Carne de porco', 5, 'http://localhost/PAP/CookUp_Core/uploads/carne_de_porco.png'),
+(186, 'Peixe', 6, 'http://localhost/PAP/CookUp_Core/uploads/peixe.png'),
+(187, 'Camarão', 6, 'http://localhost/PAP/CookUp_Core/uploads/camarao.png'),
+(188, 'Lula', 6, 'http://localhost/PAP/CookUp_Core/uploads/lula.png'),
+(189, 'Bacalhau', 6, 'http://localhost/PAP/CookUp_Core/uploads/bacalhau.png'),
+(190, 'Arroz', 7, 'http://localhost/PAP/CookUp_Core/uploads/arroz.png'),
+(191, 'Feijão', 8, 'http://localhost/PAP/CookUp_Core/uploads/feijao.png'),
+(192, 'Macarrão', 7, 'http://localhost/PAP/CookUp_Core/uploads/macarrao.png'),
+(193, 'Batata', 2, 'http://localhost/PAP/CookUp_Core/uploads/batata.png'),
+(194, 'Cenoura', 2, 'http://localhost/PAP/CookUp_Core/uploads/cenoura.png'),
+(195, 'Espinafre', 2, 'http://localhost/PAP/CookUp_Core/uploads/espinafre.png'),
+(196, 'Brócolos', 2, 'http://localhost/PAP/CookUp_Core/uploads/brocolos.png'),
+(197, 'Abobrinha', 2, 'http://localhost/PAP/CookUp_Core/uploads/abobrinha.png'),
+(198, 'Cogumelos', 2, 'http://localhost/PAP/CookUp_Core/uploads/cogumelos.png'),
+(199, 'Maçã', 3, 'http://localhost/PAP/CookUp_Core/uploads/maca.png'),
+(200, 'Banana', 3, 'http://localhost/PAP/CookUp_Core/uploads/banana.png'),
+(201, 'Laranja', 3, 'http://localhost/PAP/CookUp_Core/uploads/laranja.png'),
+(202, 'Manga', 3, 'http://localhost/PAP/CookUp_Core/uploads/manga.png'),
+(203, 'Morango', 3, 'http://localhost/PAP/CookUp_Core/uploads/morango.png'),
+(204, 'Melancia', 3, 'http://localhost/PAP/CookUp_Core/uploads/melancia.png'),
+(205, 'Uvas', 3, 'http://localhost/PAP/CookUp_Core/uploads/uvas.png'),
+(206, 'Castanhas', 9, 'http://localhost/PAP/CookUp_Core/uploads/castanhas.png'),
+(207, 'Nozes', 9, 'http://localhost/PAP/CookUp_Core/uploads/nozes.png'),
+(208, 'Amêndoas', 9, 'http://localhost/PAP/CookUp_Core/uploads/amendoas.png'),
+(209, 'Mel', 10, 'http://localhost/PAP/CookUp_Core/uploads/mel.png'),
+(210, 'Chocolate', 10, 'http://localhost/PAP/CookUp_Core/uploads/chocolate.png'),
+(211, 'Creme de leite', 4, 'http://localhost/PAP/CookUp_Core/uploads/creme_de_leite.png'),
+(212, 'Iogurte natural', 4, 'http://localhost/PAP/CookUp_Core/uploads/iogurte_natural.png'),
+(213, 'Pão', 11, 'http://localhost/PAP/CookUp_Core/uploads/pao.png'),
+(214, 'Tofu', 13, 'http://localhost/PAP/CookUp_Core/uploads/tofu.png'),
+(215, 'Grão-de-bico', 8, 'http://localhost/PAP/CookUp_Core/uploads/grao_de_bico.png'),
+(216, 'Lentilha', 8, 'http://localhost/PAP/CookUp_Core/uploads/lentilha.png'),
+(217, 'Soja', 8, 'http://localhost/PAP/CookUp_Core/uploads/soja.png'),
+(218, 'Molho de soja', 12, 'http://localhost/PAP/CookUp_Core/uploads/molho_de_soja.png'),
+(219, 'Curry', 1, 'http://localhost/PAP/CookUp_Core/uploads/curry.png'),
+(220, 'Canela', 1, 'http://localhost/PAP/CookUp_Core/uploads/canela.png'),
+(221, 'Gengibre', 1, 'http://localhost/PAP/CookUp_Core/uploads/gengibre.png'),
+(222, 'Coentros', 1, 'http://localhost/PAP/CookUp_Core/uploads/coentros.png'),
+(223, 'Manjericão', 1, 'http://localhost/PAP/CookUp_Core/uploads/manjericao.png'),
+(224, 'Orégãos', 1, 'http://localhost/PAP/CookUp_Core/uploads/oregaos.png');
 
 -- --------------------------------------------------------
 
@@ -190,6 +183,26 @@ CREATE TABLE `ingredient_categories` (
   `category_id` int(11) NOT NULL,
   `category_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ingredient_categories`
+--
+
+INSERT INTO `ingredient_categories` (`category_id`, `category_name`) VALUES
+(5, 'Carnes'),
+(7, 'Cereais e Massas'),
+(10, 'Doces e Sobremesas'),
+(3, 'Frutas'),
+(9, 'Frutos Secos'),
+(4, 'Laticínios'),
+(8, 'Leguminosas'),
+(12, 'Molhos'),
+(14, 'Outros'),
+(11, 'Pães e Derivados'),
+(6, 'Peixes e Mariscos'),
+(1, 'Temperos'),
+(13, 'Tofu e Derivados de Soja'),
+(2, 'Vegetais');
 
 -- --------------------------------------------------------
 
@@ -210,25 +223,8 @@ CREATE TABLE `ratings` (
 --
 
 INSERT INTO `ratings` (`rating_id`, `user_id`, `recipe_id`, `rating`, `created_at`) VALUES
-(1, 1, 3, 5, '2025-05-03 15:20:07'),
-(4, 13, 3, 1, '2025-05-08 12:33:00'),
-(19, 1, 18, 4, '2025-05-03 15:20:07'),
-(21, 1, 19, 5, '2025-05-07 23:27:32'),
-(22, 1, 20, 3, '2025-05-07 23:27:51'),
-(23, 1, 21, 1, '2025-05-07 23:25:39'),
-(24, 1, 22, 2, '2025-05-03 15:20:07'),
-(25, 1, 23, 5, '2025-05-03 15:20:07'),
-(26, 1, 24, 4, '2025-05-03 15:20:07'),
-(27, 1, 30, 4, '2025-05-03 15:20:07'),
-(28, 1, 31, 5, '2025-05-03 15:20:07'),
-(29, 1, 32, 3, '2025-05-03 15:20:07'),
-(30, 1, 33, 4, '2025-05-03 15:20:07'),
-(31, 1, 34, 5, '2025-05-03 15:20:07'),
-(32, 1, 35, 4, '2025-05-03 15:20:07'),
-(33, 1, 36, 2, '2025-05-03 15:20:07'),
-(34, 1, 37, 5, '2025-05-03 15:20:07'),
-(35, 1, 38, 4, '2025-05-03 15:20:07'),
-(36, 1, 40, 5, '2025-05-07 23:23:55');
+(51, 1, 3, 4, '2025-05-11 19:00:30'),
+(52, 1, 18, 3, '2025-05-11 18:41:48');
 
 -- --------------------------------------------------------
 
@@ -257,8 +253,8 @@ CREATE TABLE `recipes` (
 --
 
 INSERT INTO `recipes` (`recipe_id`, `author_id`, `title`, `description`, `instructions`, `difficulty`, `preparation_time`, `servings`, `image`, `created_at`, `updated_at`, `favorites_count`, `views_count`) VALUES
-(3, 13, 'Churros Recheados', 'Churros crocantes por fora e macios por dentro, recheados com diversos sabores como Nutella, doce de leite e baunilha.ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', '1. Aqueça a água com manteiga, açúcar e sal.\n2. Adicione a farinha e mexa até formar uma massa homogênea.\n3. Deixe esfriar e misture o ovo.\n4. Modele com bico de confeitar e frite até dourar.\n5. Passe no açúcar e canela.\n6. Recheie com Nutella, doce de leite, creme de baunilha ou geleia.\n7. Sirva quente e aproveite!', 'dificil', 30, 6, 'https://static.itdg.com.br/images/640-440/b0a2d7797c9b1174ec771c88d64d2322/324392-original.jpg', '2025-04-25 17:56:39', '2025-05-06 21:08:35', 3, 80),
-(18, 13, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-05-06 20:41:41', 26, 164),
+(3, 13, 'Churros Recheados', 'Churros crocantes por fora e macios por dentro, recheados com diversos sabores como Nutella, doce de leite e baunilha.ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', '1. Aqueça a água com manteiga, açúcar e sal.\n2. Adicione a farinha e mexa até formar uma massa homogênea.\n3. Deixe esfriar e misture o ovo.\n4. Modele com bico de confeitar e frite até dourar.\n5. Passe no açúcar e canela.\n6. Recheie com Nutella, doce de leite, creme de baunilha ou geleia.\n7. Sirva quente e aproveite!', 'dificil', 30, 6, 'https://static.itdg.com.br/images/640-440/b0a2d7797c9b1174ec771c88d64d2322/324392-original.jpg', '2025-04-25 17:56:39', '2025-05-11 19:00:51', 29, 124),
+(18, 13, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-05-17 12:46:42', 39, 179),
 (19, 13, 'Pizza Caseira', 'Pizza caseira com molho de tomate e queijo.', '1. Prepara a massa... 2. Acrescenta os ingredientes e leva ao forno...', NULL, 50, 4, 'https://images.mrcook.app/recipe-image/01932b85-f423-78fc-aeb1-dc2e3c50f40c?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-05-06 21:12:23', 0, 6),
 (20, 13, 'Salada Caesar', 'Salada clássica com molho Caesar.', '1. Junta a alface, o frango grelhado e os croutons... 2. Mistura o molho e serve...', NULL, 10, 2, 'https://cdn.okchef.com/recipes/01j98qy4vamemvk9d964k15hdd/01jaqcwsn1rg9vy3byy2yf8n8y.jpg', '2025-02-19 00:26:47', '2025-05-06 21:12:20', 0, 10),
 (21, 13, 'Tacos Mexicanos', 'Tacos recheados com carne temperada e guacamole.', '1. Cozinha a carne com os temperos... 2. Preenche as tortilhas e adiciona os acompanhamentos...', NULL, 25, 3, 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2022/03/15/672899432-aprenda-como-fazer-tacos-mexicanos-em-casa-fonte-my-quiet-kitchen-500x500.jpg', '2025-02-19 00:26:47', '2025-04-26 11:48:37', 0, 6),
@@ -367,82 +363,34 @@ CREATE TABLE `recipe_views` (
 --
 
 INSERT INTO `recipe_views` (`view_id`, `user_id`, `recipe_id`, `viewed_at`) VALUES
-(1, 13, 3, '2025-04-25 20:53:28'),
-(2, 13, 21, '2025-04-25 20:56:28'),
-(3, 13, 21, '2025-04-25 20:56:29'),
-(4, 13, 3, '2025-04-25 20:56:49'),
-(5, 13, 3, '2025-04-25 20:56:54'),
-(6, 13, 41, '2025-04-25 21:01:14'),
-(7, 13, 41, '2025-04-25 21:01:20'),
-(8, 13, 41, '2025-04-25 21:01:25'),
-(9, 13, 3, '2025-04-25 21:01:58'),
-(10, 13, 3, '2025-04-25 21:02:03'),
-(21, 1, 37, '2025-04-26 01:42:20'),
-(22, 1, 18, '2025-04-26 01:45:22'),
-(23, 1, 47, '2025-04-26 01:49:26'),
-(24, 1, 3, '2025-04-26 12:48:30'),
-(25, 1, 21, '2025-04-26 12:48:37'),
-(26, 1, 18, '2025-04-26 12:48:42'),
-(27, 1, 18, '2025-04-26 12:55:58'),
-(28, 1, 48, '2025-04-26 12:56:00'),
-(29, 1, 59, '2025-04-26 12:56:02'),
-(30, 1, 24, '2025-04-26 12:56:05'),
-(31, 1, 24, '2025-04-26 12:56:06'),
-(32, 1, 22, '2025-04-26 12:56:08'),
-(33, 1, 20, '2025-04-26 12:56:20'),
-(34, 1, 19, '2025-04-26 12:56:22'),
-(35, 1, 20, '2025-04-26 12:56:24'),
-(36, 1, 18, '2025-04-26 12:56:26'),
-(37, 1, 20, '2025-04-26 12:56:27'),
-(38, 1, 18, '2025-04-26 12:56:31'),
-(39, 1, 18, '2025-04-26 12:56:40'),
-(40, 1, 18, '2025-04-26 12:56:41'),
-(41, 1, 18, '2025-04-26 12:56:42'),
-(42, 1, 58, '2025-04-26 12:57:02'),
-(43, 1, 18, '2025-04-26 12:58:33'),
-(44, 1, 18, '2025-04-26 12:59:16'),
-(45, 1, 18, '2025-04-26 12:59:17'),
-(46, 1, 18, '2025-04-26 12:59:18'),
-(47, 1, 18, '2025-04-26 12:59:25'),
-(48, 1, 18, '2025-04-26 12:59:27'),
-(49, 1, 37, '2025-04-26 13:00:01'),
-(59, 13, 58, '2025-05-01 00:07:11'),
-(60, 13, 58, '2025-05-01 00:07:27'),
-(61, 13, 58, '2025-05-01 16:30:15'),
-(62, 13, 48, '2025-05-01 16:30:18'),
-(63, 1, 18, '2025-05-01 16:46:32'),
-(64, 1, 18, '2025-05-01 18:04:02'),
-(65, 1, 57, '2025-05-01 18:21:36'),
-(66, 1, 40, '2025-05-02 04:06:16'),
-(67, 1, 60, '2025-05-02 04:06:37'),
-(68, 1, 20, '2025-05-02 04:08:05'),
-(69, 1, 47, '2025-05-02 04:08:26'),
-(70, 1, 58, '2025-05-02 04:11:10'),
-(71, 1, 3, '2025-05-03 16:10:37'),
-(72, 1, 47, '2025-05-03 16:10:40'),
-(73, 1, 3, '2025-05-03 16:11:18'),
-(74, 1, 18, '2025-05-03 16:13:04'),
-(75, 1, 3, '2025-05-03 16:16:10'),
-(76, 1, 18, '2025-05-03 16:16:16'),
-(77, 1, 3, '2025-05-03 16:16:24'),
-(78, 1, 3, '2025-05-03 16:16:37'),
-(79, 1, 18, '2025-05-03 17:04:06'),
-(80, 1, 24, '2025-05-03 17:30:51'),
-(81, 1, 47, '2025-05-04 13:48:03'),
-(82, 1, 18, '2025-05-04 13:48:06'),
-(83, 1, 54, '2025-05-05 13:59:37'),
-(84, 1, 47, '2025-05-05 17:36:00'),
-(85, 1, 58, '2025-05-05 17:44:13'),
-(86, 1, 18, '2025-05-06 18:39:02'),
-(87, 1, 54, '2025-05-06 18:39:06'),
-(88, 1, 3, '2025-05-06 19:02:06'),
-(89, 1, 3, '2025-05-06 19:02:22'),
-(90, 1, 18, '2025-05-06 19:02:33'),
-(91, 1, 47, '2025-05-06 19:02:36'),
-(92, 1, 47, '2025-05-06 19:02:39'),
-(93, 1, 18, '2025-05-06 19:20:52'),
-(94, 1, 54, '2025-05-06 19:20:54'),
-(95, 1, 18, '2025-05-06 19:20:56');
+(137, 13, 18, '2025-05-11 18:45:39'),
+(138, 13, 18, '2025-05-11 18:45:56'),
+(139, 13, 18, '2025-05-11 18:46:16'),
+(140, 13, 3, '2025-05-11 18:57:29'),
+(141, 13, 18, '2025-05-11 19:02:22'),
+(142, 13, 3, '2025-05-11 19:02:25'),
+(143, 13, 18, '2025-05-11 19:02:27'),
+(144, 1, 18, '2025-05-11 19:14:43'),
+(145, 1, 3, '2025-05-11 19:14:53'),
+(146, 1, 3, '2025-05-11 19:14:55'),
+(147, 1, 18, '2025-05-11 19:14:57'),
+(148, 1, 3, '2025-05-11 19:14:59'),
+(149, 1, 18, '2025-05-11 19:15:02'),
+(150, 1, 18, '2025-05-11 19:29:17'),
+(151, 1, 3, '2025-05-11 19:29:55'),
+(152, 1, 3, '2025-05-11 19:30:53'),
+(153, 1, 3, '2025-05-11 19:31:01'),
+(154, 1, 18, '2025-05-11 19:31:12'),
+(155, 1, 3, '2025-05-11 19:31:33'),
+(156, 1, 3, '2025-05-11 19:31:37'),
+(157, 1, 3, '2025-05-11 19:39:29'),
+(158, 1, 3, '2025-05-11 19:41:06'),
+(159, 1, 18, '2025-05-11 19:41:39'),
+(160, 1, 3, '2025-05-11 19:49:03'),
+(161, 1, 3, '2025-05-11 19:50:55'),
+(162, 1, 3, '2025-05-11 19:59:58'),
+(163, 1, 3, '2025-05-11 20:00:51'),
+(164, 1, 18, '2025-05-17 13:46:42');
 
 --
 -- Triggers `recipe_views`
@@ -498,23 +446,17 @@ CREATE TABLE `saved_recipes` (
 --
 
 INSERT INTO `saved_recipes` (`saved_id`, `list_id`, `recipe_id`, `added_at`) VALUES
-(238, 63, 37, '2025-04-30 23:36:41'),
-(254, 63, 58, '2025-05-01 14:27:22'),
-(289, 35, 22, '2025-05-06 17:05:18'),
-(290, 35, 23, '2025-05-06 17:05:22'),
 (291, 35, 24, '2025-05-06 17:18:55'),
-(296, 35, 31, '2025-05-06 17:35:28'),
 (298, 35, 41, '2025-05-06 17:35:35'),
-(303, 35, 21, '2025-05-06 18:35:18'),
-(315, 35, 3, '2025-05-07 18:19:08'),
-(316, 35, 50, '2025-05-07 23:23:44'),
-(319, 63, 20, '2025-05-08 12:39:25'),
-(322, 63, 18, '2025-05-08 13:16:23'),
-(323, 63, 30, '2025-05-09 15:21:44'),
-(324, 63, 47, '2025-05-09 15:26:19'),
-(326, 66, 22, '2025-05-09 16:03:20'),
-(327, 63, 24, '2025-05-09 16:03:23'),
-(328, 63, 23, '2025-05-10 16:23:11');
+(344, 66, 32, '2025-05-11 15:04:35'),
+(354, 63, 22, '2025-05-11 16:02:07'),
+(361, 63, 3, '2025-05-11 17:45:22'),
+(362, 63, 23, '2025-05-11 17:45:24'),
+(363, 63, 47, '2025-05-11 17:45:27'),
+(364, 63, 43, '2025-05-11 17:45:29'),
+(366, 63, 18, '2025-05-11 18:02:24'),
+(372, 35, 22, '2025-05-11 19:00:47'),
+(374, 35, 44, '2025-05-17 12:43:46');
 
 -- --------------------------------------------------------
 
@@ -554,6 +496,22 @@ CREATE TABLE `user_category_stats` (
   `finished_count` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `user_category_stats`
+--
+
+INSERT INTO `user_category_stats` (`user_id`, `category_id`, `views_count`, `favorites_count`, `finished_count`) VALUES
+(1, 22, 7, 2, 1),
+(1, 23, 14, 4, 4),
+(1, 33, 7, 2, 1),
+(1, 41, 14, 4, 4),
+(1, 42, 7, 2, 1),
+(13, 22, 5, 2, 1),
+(13, 23, 2, 1, 0),
+(13, 33, 5, 2, 1),
+(13, 41, 2, 1, 0),
+(13, 42, 5, 2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -561,22 +519,23 @@ CREATE TABLE `user_category_stats` (
 --
 
 CREATE TABLE `user_recipe_finished` (
+  `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `recipe_id` int(11) NOT NULL,
-  `finished_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `finished_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_recipe_finished`
 --
 
-INSERT INTO `user_recipe_finished` (`user_id`, `recipe_id`, `finished_at`) VALUES
-(1, 3, '2025-05-03 15:16:29'),
-(1, 18, '2025-04-26 11:58:38'),
-(13, 3, '2025-04-25 19:55:06'),
-(13, 21, '2025-04-25 19:56:13'),
-(13, 32, '2025-04-25 19:56:03'),
-(13, 41, '2025-04-25 19:58:23');
+INSERT INTO `user_recipe_finished` (`id`, `user_id`, `recipe_id`, `finished_at`) VALUES
+(10, 13, 18, '2025-05-11 18:45:58'),
+(11, 1, 3, '2025-05-11 19:30:45'),
+(12, 1, 3, '2025-05-11 19:40:37'),
+(13, 1, 18, '2025-05-11 19:41:48'),
+(14, 1, 3, '2025-05-11 19:49:55'),
+(15, 1, 3, '2025-05-11 20:00:30');
 
 --
 -- Indexes for dumped tables
@@ -685,7 +644,8 @@ ALTER TABLE `user_category_stats`
 -- Indexes for table `user_recipe_finished`
 --
 ALTER TABLE `user_recipe_finished`
-  ADD PRIMARY KEY (`user_id`,`recipe_id`),
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
   ADD KEY `recipe_id` (`recipe_id`);
 
 --
@@ -702,7 +662,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `ingredients`
@@ -714,13 +674,13 @@ ALTER TABLE `ingredients`
 -- AUTO_INCREMENT for table `ingredient_categories`
 --
 ALTER TABLE `ingredient_categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `recipes`
@@ -738,7 +698,7 @@ ALTER TABLE `recipe_ingredients`
 -- AUTO_INCREMENT for table `recipe_views`
 --
 ALTER TABLE `recipe_views`
-  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
 
 --
 -- AUTO_INCREMENT for table `saved_lists`
@@ -750,13 +710,19 @@ ALTER TABLE `saved_lists`
 -- AUTO_INCREMENT for table `saved_recipes`
 --
 ALTER TABLE `saved_recipes`
-  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=329;
+  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=375;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+
+--
+-- AUTO_INCREMENT for table `user_recipe_finished`
+--
+ALTER TABLE `user_recipe_finished`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables

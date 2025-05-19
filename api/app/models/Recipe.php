@@ -185,7 +185,7 @@ class Recipe
                 ? BASE_URL . UPLOADS_FOLDER . INGREDIENTS_FOLDER . $row['image_url']
                 : BASE_URL . DEFAULT_IMAGE;
             $quantity = $row['quantity'] ?? '';
-            $ingredients[] = ['name' => $name, 'quantity' => $quantity, 'image' => $image];
+            $ingredients[] = ['ingredient_name' => $name, 'ingredient_quantity' => $quantity, 'ingredient_image' => $image];
         }
 
         $recipe['ingredients'] = $ingredients;
