@@ -12,7 +12,7 @@ public class RecipeData implements Serializable {
     private String description;
     private String instructions;
     @SerializedName("categories")
-    private List<RecipeCategoryData> categories;
+    private List<CategoryData> categories;
     private int preparation_time;
     private int servings;
     private String difficulty;
@@ -22,7 +22,7 @@ public class RecipeData implements Serializable {
     @SerializedName("average_rating")
     private float averageRating;
 
-    public RecipeData(int recipe_id, String title, String description, String instructions, List<RecipeCategoryData> categories, int preparation_time, int servings, String difficulty, String image) {
+    public RecipeData(int recipe_id, String title, String description, String instructions, List<CategoryData> categories, int preparation_time, int servings, String difficulty, String image) {
         this.recipe_id = recipe_id;
         this.title = title;
         this.description = description;
@@ -39,7 +39,7 @@ public class RecipeData implements Serializable {
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public String getInstructions() { return instructions; }
-    public List<RecipeCategoryData> getCategories() {return categories;}
+    public List<CategoryData> getCategories() {return categories;}
     public int getPreparationTime() { return preparation_time; }
     public String getDifficulty() { return difficulty; }
     public int getServings() { return servings; }
@@ -52,7 +52,7 @@ public class RecipeData implements Serializable {
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
     public void setInstructions(String instructions) { this.instructions = instructions; }
-    public void setCategories(List<RecipeCategoryData> categories) {this.categories = categories;}
+    public void setCategories(List<CategoryData> categories) {this.categories = categories;}
     public void setPreparationTime(int preparationTime) { this.preparation_time = preparationTime; }
     public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
     public void setServings(int servings) { this.servings = servings; }

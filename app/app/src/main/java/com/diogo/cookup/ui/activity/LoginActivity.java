@@ -16,13 +16,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.fragment.ForgotPasswordFragment;
-import com.diogo.cookup.ui.fragment.WelcomeFragment;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
@@ -70,7 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
             navigateToMainActivity();
         } else if (getIntent().getBooleanExtra("show_welcome", true)) {
-            showWelcomeFragment();
+            NavController navController = Navigation.findNavController(this, R.id.fragment_container);
+            navController.navigate(R.id.welcomeFragment);
         }
     }
 
@@ -106,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
         authViewModel.getSuccessMessage().observe(this, success -> {
             if (success != null) {
                 MessageUtils.showSnackbar(findViewById(android.R.id.content), success, Color.GREEN);
@@ -125,9 +123,8 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(this::performLogin);
         btnGoogleLogin.setOnClickListener(v -> signInWithGoogle());
         btnGoToSignup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
-        arrowBack.setOnClickListener(v -> showWelcomeFragment());
-        forgot_password.setOnClickListener(v -> forgotPasswordFragment());
-
+        arrowBack.setOnClickListener(v -> Navigation.findNavController(this, R.id.fragment_container).navigate(R.id.welcomeFragment));
+        forgot_password.setOnClickListener(v -> Navigation.findNavController(this, R.id.fragment_container).navigate(R.id.forgotPasswordFragment));
     }
 
     private boolean onPasswordToggleTouch(View v, MotionEvent event) {
@@ -208,21 +205,4 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    private void showWelcomeFragment() {
-        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new WelcomeFragment())
-                    .commit();
-        }
-    }
-
-    private void forgotPasswordFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, new ForgotPasswordFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
 }
