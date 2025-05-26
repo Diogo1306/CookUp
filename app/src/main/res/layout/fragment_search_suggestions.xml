@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/suggestionsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextSearch"
+        style="@style/input"
+        android:autofillHints="emailAddress"
+        android:drawableStart="@drawable/ic_search"
+        android:layout_marginTop="@dimen/margin_small"
+        android:drawablePadding="@dimen/padding_small"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:hint="Receitas, cateogires e ingredientes"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColorHint="@color/gray" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>

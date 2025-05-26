@@ -2,7 +2,7 @@ package com.diogo.cookup.network;
 
 import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.ApiResponseWithFilled;
-import com.diogo.cookup.data.model.RecipeCategoryData;
+import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.CommentRequest;
 import com.diogo.cookup.data.model.RatingRequest;
@@ -40,7 +40,7 @@ public interface ApiService {
     Call<ApiResponseWithFilled<List<RecipeData>>> getWeeklyRecipes(@Query("route") String route);
 
     @GET("api.php")
-    Call<ApiResponseWithFilled<List<RecipeData>>> getPopularRecipes(@Query("route") String route);
+    Call<ApiResponse<List<RecipeData>>> getPopularRecipes(@Query("route") String route);
 
     @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getRecommendedRecipes(@Query("route") String route);
@@ -71,10 +71,13 @@ public interface ApiService {
 
     // Categories
     @GET("api.php")
-    Call<ApiResponse<List<RecipeCategoryData>>> getCategories(@Query("route") String route);
+    Call<ApiResponse<List<CategoryData>>> getCategories(@Query("route") String route);
 
     @GET("api.php")
-    Call<ApiResponse<List<RecipeCategoryData>>> getUserCategories(@Query("route") String route, @Query("user_id") int userId);
+    Call<ApiResponse<List<CategoryData>>> getUserCategories(@Query("route") String route, @Query("user_id") int userId);
+
+    @GET("api.php")
+    Call<ApiResponse<List<CategoryData>>> getPopularCategories(@Query("route") String route);
 
     @GET("api.php")
     Call<ApiResponseWithFilled<List<Integer>>> getTopUserCategories(@Query("route") String route, @Query("user_id") int userId);

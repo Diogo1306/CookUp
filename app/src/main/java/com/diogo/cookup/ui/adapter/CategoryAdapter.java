@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.RecipeCategoryData;
+import com.diogo.cookup.data.model.CategoryData;
 
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<RecipeCategoryData> categoryList;
+    private final List<CategoryData> categoryList;
     private final OnCategoryClickListener listener;
     private boolean skeletonMode = true;
 
@@ -25,10 +25,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_NORMAL = 1;
 
     public interface OnCategoryClickListener {
-        void onCategoryClick(RecipeCategoryData category);
+        void onCategoryClick(CategoryData category);
     }
 
-    public CategoryAdapter(List<RecipeCategoryData> categoryList, OnCategoryClickListener listener) {
+    public CategoryAdapter(List<CategoryData> categoryList, OnCategoryClickListener listener) {
         this.categoryList = categoryList;
         this.listener = listener;
     }
@@ -42,7 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return skeletonMode;
     }
 
-    public void setData(List<RecipeCategoryData> list) {
+    public void setData(List<CategoryData> list) {
         categoryList.clear();
         categoryList.addAll(list);
         notifyDataSetChanged();
@@ -94,7 +94,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             label = itemView.findViewById(R.id.tvCategoryLabel);
         }
 
-        public void bind(RecipeCategoryData category) {
+        public void bind(CategoryData category) {
             String name = category.getCategoryName();
             label.setText(name != null && !name.trim().isEmpty() ? name : "Sem Nome");
 

@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.RecipeCategoryData;
+import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.IngredientData;
 import com.diogo.cookup.data.model.TrackRequest;
@@ -144,9 +144,9 @@ public class RecipeDetailFragment extends Fragment {
 
             chipGroup.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(requireContext());
-            List<RecipeCategoryData> categories = recipe.getCategories();
+            List<CategoryData> categories = recipe.getCategories();
             if (categories != null && !categories.isEmpty()) {
-                for (RecipeCategoryData category : categories) {
+                for (CategoryData category : categories) {
                     Chip chip = (Chip) inflater.inflate(R.layout.item_category_tag, chipGroup, false);
                     chip.setText(category.getCategoryName());
 

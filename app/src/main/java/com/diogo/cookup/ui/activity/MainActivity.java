@@ -4,27 +4,30 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
+
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.fragment.HomeFragment;
-import com.diogo.cookup.ui.fragment.SearchFragment;
+import com.diogo.cookup.ui.fragment.ExploreFragment;
 import com.diogo.cookup.ui.fragment.SavesFragment;
 import com.diogo.cookup.ui.fragment.ProfileFragment;
-import com.diogo.cookup.utils.NavigationUtils;
-import com.diogo.cookup.utils.SharedPrefHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.diogo.cookup.viewmodel.UserViewModel;
+
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,14 +47,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
         setContentView(R.layout.activity_main);
 
         preferences = getSharedPreferences("app_prefs", MODE_PRIVATE);
         int savedTheme = preferences.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(savedTheme);
-
-        setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         setupBottomNavigation();
@@ -93,33 +93,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-            String fragmentTag = null;
-
-            if (item.getItemId() == R.id.navigation_home) {
-                selectedFragment = new HomeFragment();
-                fragmentTag = HomeFragment.class.getName();
-            } else if (item.getItemId() == R.id.navigation_search) {
-                selectedFragment = new SearchFragment();
-                fragmentTag = SearchFragment.class.getName();
-            } else if (item.getItemId() == R.id.navigation_saves) {
-                selectedFragment = new SavesFragment();
-                fragmentTag = SavesFragment.class.getName();
-            } else if (item.getItemId() == R.id.navigation_profile) {
-                selectedFragment = new ProfileFragment();
-                fragmentTag = ProfileFragment.class.getName();
-            }
-
-            if (selectedFragment != null) {
-                NavigationUtils.openFragment(this, selectedFragment);
-
-                preferences.edit().putString("last_fragment", fragmentTag).apply();
-                return true;
-            }
-            return false;
-        });
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
+
 
     public void setBottomNavVisibility(boolean visible) {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -132,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void openInitialFragment() {
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-        NavigationUtils.openFragment(this, new HomeFragment());
     }
 
     private void handleEmailVerification(Intent intent) {

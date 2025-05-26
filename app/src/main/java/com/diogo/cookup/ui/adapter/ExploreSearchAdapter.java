@@ -66,7 +66,7 @@ public class ExploreSearchAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (!showOnlyRecipes) {
             if (item instanceof String) return TYPE_HEADER;
             if (item instanceof RecipeData) return TYPE_RECIPE;
-            if (item instanceof RecipeCategoryData) return TYPE_CATEGORY_RECIPE;
+            if (item instanceof CategoryData) return TYPE_CATEGORY_RECIPE;
             if (item instanceof IngredientData) return TYPE_INGREDIENT;
         }
         return TYPE_RECIPE;
@@ -103,8 +103,8 @@ public class ExploreSearchAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (item instanceof RecipeData) {
                 displayText = ((RecipeData) item).getTitle();
                 label.setText("🍽️ " + displayText);
-            } else if (item instanceof RecipeCategoryData) {
-                displayText = ((RecipeCategoryData) item).getCategoryName();
+            } else if (item instanceof CategoryData) {
+                displayText = ((CategoryData) item).getCategoryName();
                 label.setText("🏷️ " + displayText);
             } else if (item instanceof IngredientData) {
                 displayText = ((IngredientData) item).getName();

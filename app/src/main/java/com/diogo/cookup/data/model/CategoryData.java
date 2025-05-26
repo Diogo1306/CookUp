@@ -3,7 +3,7 @@ package com.diogo.cookup.data.model;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-public class RecipeCategoryData {
+public class CategoryData {
 
     @SerializedName("category_id")
     private int categoryId;
