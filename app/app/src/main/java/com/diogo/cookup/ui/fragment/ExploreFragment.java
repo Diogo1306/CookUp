@@ -11,19 +11,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.ui.adapter.CategoryAdapter;
 import com.diogo.cookup.ui.adapter.RecipeAdapterDefault;
 import com.diogo.cookup.viewmodel.ExploreViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ExploreFragment extends Fragment {
 
@@ -47,12 +46,23 @@ public class ExploreFragment extends Fragment {
         recyclerViewCategories = view.findViewById(R.id.recyclerViewCategories);
         recyclerViewRecipes = view.findViewById(R.id.recyclerViewRecipes);
 
-        setupCategorySection();
-        setupRecipeSection();
+        setupCategorySection(view);
+        setupRecipeSection(view);
         setupObservers();
 
+        editTextSearch.setFocusableInTouchMode(true);
+
+        editTextSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                NavHostFragment.findNavController(ExploreFragment.this)
+                        .navigate(R.id.action_exploreFragment_to_searchSuggestionsFragment);
+            }
+        });
+
         editTextSearch.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_exploreFragment_to_searchSuggestionsFragment);
+            editTextSearch.requestFocus();
+            NavHostFragment.findNavController(ExploreFragment.this)
+                    .navigate(R.id.action_exploreFragment_to_searchSuggestionsFragment);
         });
 
         loadInitialContent();
@@ -60,14 +70,24 @@ public class ExploreFragment extends Fragment {
         return view;
     }
 
-    private void setupCategorySection() {
+    private void setupCategorySection(View view) {
         recyclerViewCategories.setLayoutManager(new GridLayoutManager(getContext(), 3));
         categoryAdapter = new CategoryAdapter(new ArrayList<>(), category -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("query", category.getCategoryName());
-            Navigation.findNavController(getView()).navigate(R.id.action_searchSuggestionsFragment_to_searchResultFragment, bundle);
+            ExploreFragmentDirections.ActionExploreFragmentToSearchResultFragment action =
+                    ExploreFragmentDirections.actionExploreFragmentToSearchResultFragment(category.getCategoryName());
+            Navigation.findNavController(view).navigate(action);
         });
         recyclerViewCategories.setAdapter(categoryAdapter);
+    }
+
+    private void setupRecipeSection(View view) {
+        recipeAdapter = new RecipeAdapterDefault(
+                new ArrayList<>(), new ArrayList<>(),
+                this::openRecipeDetail,
+                recipeId -> {}
+        );
+        recyclerViewRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewRecipes.setAdapter(recipeAdapter);
     }
 
     private void setupObservers() {
@@ -86,28 +106,14 @@ public class ExploreFragment extends Fragment {
         });
     }
 
-    private void setupRecipeSection() {
-        recipeAdapter = new RecipeAdapterDefault(
-                new ArrayList<>(), new ArrayList<>(),
-                this::openRecipeDetail,
-                recipeId -> {}
-        );
-        recyclerViewRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewRecipes.setAdapter(recipeAdapter);
-    }
-
     private void loadInitialContent() {
-        categoryAdapter.setSkeletonMode(false);
-        categoryAdapter.setData(new ArrayList<>());
-
-        recipeAdapter.setSkeletonMode(false);
-        recipeAdapter.setData(new ArrayList<>());
+        categoryAdapter.setSkeletonMode(true);
+        recipeAdapter.setSkeletonMode(true);
     }
 
     private void openRecipeDetail(RecipeData recipe) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("recipe_id", recipe.getRecipeId());
-
-        Navigation.findNavController(getView()).navigate(R.id.action_searchResultFragment_to_recipeDetailFragment, bundle);
+        ExploreFragmentDirections.ActionExploreFragmentToRecipeDetailFragment action =
+                ExploreFragmentDirections.actionExploreFragmentToRecipeDetailFragment(recipe.getRecipeId());
+        Navigation.findNavController(requireView()).navigate(action);
     }
 }

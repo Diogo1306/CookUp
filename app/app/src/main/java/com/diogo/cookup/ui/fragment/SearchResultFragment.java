@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +31,6 @@ public class SearchResultFragment extends Fragment {
     private RecipeAdapterDefault adapter;
     private RecyclerView recyclerView;
 
-    private String query;
     private EditText editTextSearch;
     private ImageView buttonBack;
 
@@ -49,7 +49,7 @@ public class SearchResultFragment extends Fragment {
 
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 
-        buttonBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+        buttonBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
 
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
@@ -61,11 +61,14 @@ public class SearchResultFragment extends Fragment {
             return false;
         });
 
-        if (getArguments() != null) {
-            query = getArguments().getString("query", "");
-            editTextSearch.setText(query);
-            editTextSearch.setSelection(query.length());
-            if (!query.isEmpty()) performSearch(query);
+        SearchResultFragmentArgs args = SearchResultFragmentArgs.fromBundle(getArguments());
+        String query = args.getQuery();
+
+        editTextSearch.setText(query);
+        editTextSearch.setSelection(query.length());
+
+        if (!query.isEmpty()) {
+            performSearch(query);
         }
 
         return view;

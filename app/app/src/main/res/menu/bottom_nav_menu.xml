@@ -1,21 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/nav_home_selector"
-        android:title="início" />
-
+        android:title="Início" />
     <item
-        android:id="@+id/navigation_search"
+        android:id="@+id/exploreFragment"
         android:icon="@drawable/ic_search"
-        android:title="explorar" />
-
+        android:title="Explorar" />
     <item
-        android:id="@+id/navigation_saves"
+        android:id="@+id/savesFragment"
         android:icon="@drawable/nav_saves_selector"
         android:title="Guardados" />
-
     <item
-        android:id="@+id/navigation_profile"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/nav_profile_selector"
-        android:title="perfil" />
+        android:title="Perfil" />
 </menu>
