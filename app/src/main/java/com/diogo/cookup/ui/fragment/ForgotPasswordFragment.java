@@ -1,5 +1,6 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.util.TypedValue;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.utils.NavigationUtils;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -107,8 +110,11 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     private void navigateToLogin() {
-        getParentFragmentManager().popBackStack();
+        Intent intent = new Intent(requireActivity(), LoginActivity.class);
+        startActivity(intent);
+        requireActivity().finish();
     }
+
 
     private void showMessage(String message) {
         resetPasswordMessage.setText(message);

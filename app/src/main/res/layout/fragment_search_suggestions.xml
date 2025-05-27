@@ -4,19 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@color/background"
     android:padding="16dp">
 
     <EditText
         android:id="@+id/editTextSearch"
         style="@style/input"
-        android:autofillHints="emailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_search"
-        android:layout_marginTop="@dimen/margin_small"
         android:drawablePadding="@dimen/padding_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:hint="Receitas, cateogires e ingredientes"
+        android:hint="Pesquisar receitas, categorias e ingredientes..."
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:maxLines="1"
         android:singleLine="true"
         android:textColorHint="@color/gray" />

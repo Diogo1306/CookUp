@@ -2,6 +2,7 @@ package com.diogo.cookup.ui.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,11 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.ui.adapter.ExploreSearchAdapter;
 import com.diogo.cookup.viewmodel.SearchViewModel;
 
@@ -32,6 +34,20 @@ public class SearchSuggestionsFragment extends Fragment {
     private RecyclerView recyclerSuggestions;
     private ExploreSearchAdapter suggestionAdapter;
     private SearchViewModel viewModel;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        editTextSearch.requestFocus();
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 250);
+    }
 
     @Nullable
     @Override
@@ -44,11 +60,16 @@ public class SearchSuggestionsFragment extends Fragment {
 
         setupSuggestions();
 
-        // Foco no input e abrir teclado
         editTextSearch.requestFocus();
-        new Handler().postDelayed(() -> {
+
+        editTextSearch.setFocusableInTouchMode(true);
+        editTextSearch.requestFocus();
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) imm.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+            if (imm != null) {
+                imm.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+            }
         }, 200);
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -95,16 +116,9 @@ public class SearchSuggestionsFragment extends Fragment {
     }
 
     private void openSearchResultFragment(String query) {
-        Bundle bundle = new Bundle();
-        bundle.putString("query", query);
-
-        SearchResultFragment fragment = new SearchResultFragment();
-        fragment.setArguments(bundle);
-
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+        NavController navController = NavHostFragment.findNavController(this);
+        SearchSuggestionsFragmentDirections.ActionSearchSuggestionsFragmentToSearchResultFragment action =
+                SearchSuggestionsFragmentDirections.actionSearchSuggestionsFragmentToSearchResultFragment(query);
+        navController.navigate(action);
     }
 }
