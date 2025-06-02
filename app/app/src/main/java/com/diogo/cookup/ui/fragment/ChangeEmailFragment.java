@@ -25,7 +25,6 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.utils.LiveDataUtils;
 import com.diogo.cookup.utils.MessageUtils;
-import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -57,7 +56,9 @@ public class ChangeEmailFragment extends Fragment {
         buttonSendVerification.setOnClickListener(v -> reauthenticateAndSendVerification(view));
         buttonConfirm.setOnClickListener(v -> confirmEmailChange(view));
 
-        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+        view.findViewById(R.id.arrow_back).setOnClickListener(v -> {
+            androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack();
+        });
 
         return view;
     }
@@ -173,7 +174,11 @@ public class ChangeEmailFragment extends Fragment {
 
                         MessageUtils.showSnackbar(view, "Email atualizado com sucesso!");
 
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> requireActivity().onBackPressed(), 2000);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            if (isAdded()) {
+                                androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack();
+                            }
+                        }, 2000);
                     } else {
                         MessageUtils.showSnackbar(view, "Erro ao carregar os teus dados.");
                     }

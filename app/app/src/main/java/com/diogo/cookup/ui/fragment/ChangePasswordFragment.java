@@ -1,6 +1,5 @@
 package com.diogo.cookup.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,7 +21,6 @@ import androidx.fragment.app.Fragment;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.utils.MessageUtils;
-import com.diogo.cookup.utils.NavigationUtils;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,7 +59,9 @@ public class ChangePasswordFragment extends Fragment {
 
     private void setupListeners(View view) {
         changePasswordButton.setOnClickListener(v -> changePassword(view));
-        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+        view.findViewById(R.id.arrow_back).setOnClickListener(v -> {
+            androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack();
+        });
     }
 
     private void changePassword(View view) {
@@ -113,7 +113,11 @@ public class ChangePasswordFragment extends Fragment {
             if (updateTask.isSuccessful()) {
                 MessageUtils.showSnackbar(view, "Palavra-passe alterada com sucesso!", Color.GREEN);
 
-                new Handler(Looper.getMainLooper()).postDelayed(() -> requireActivity().onBackPressed(), 2000);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    requireActivity().runOnUiThread(() ->
+                            androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack()
+                    );
+                }, 2000);
             } else {
                 MessageUtils.showSnackbar(view, "Erro ao atualizar palavra-passe: " + updateTask.getException().getMessage(), Color.RED);
             }

@@ -7,18 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.diogo.cookup.R;
 import com.diogo.cookup.utils.MessageUtils;
-import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import androidx.navigation.fragment.NavHostFragment;
 
 public class SettingsFragment extends Fragment {
 
@@ -78,9 +77,17 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupListeners(View view) {
-        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
-        btn_profile.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new SettingsProfileFragment()));
-        btn_account.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new SettingsAccountFragment()));
-        btn_appearance.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new SettingsAppearanceFragment()));
+        view.findViewById(R.id.arrow_back).setOnClickListener(v -> {
+            androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack();
+        });
+        btn_profile.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_settingsFragment_to_settingsProfileFragment));
+        btn_account.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_settingsFragment_to_settingsAccountFragment));
+        btn_appearance.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_settingsFragment_to_settingsAppearanceFragment));
     }
 }

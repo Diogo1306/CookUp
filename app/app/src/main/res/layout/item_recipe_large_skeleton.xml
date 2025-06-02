@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_margin="@dimen/margin_small"
+    android:padding="8dp">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shimmer_auto_start="true"
+        app:shimmer_duration="1000">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Skeleton da Imagem -->
+            <View
+                android:layout_width="85dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="14dp"
+                android:background="@drawable/skeleton_background" />
+
+            <!-- Conteúdo textual fake -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Título -->
+                <View
+                    android:layout_width="140dp"
+                    android:layout_height="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/skeleton_background" />
+
+                <!-- Linha de infos -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="60dp"
+                        android:layout_height="12dp"
+                        android:background="@drawable/skeleton_background" />
+
+                    <View
+                        android:layout_width="35dp"
+                        android:layout_height="12dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/skeleton_background" />
+
+                    <View
+                        android:layout_width="35dp"
+                        android:layout_height="12dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/skeleton_background" />
+                </LinearLayout>
+
+                <!-- Descrição -->
+                <View
+                    android:layout_width="110dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/skeleton_background" />
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/skeleton_background" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</LinearLayout>

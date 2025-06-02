@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -98,7 +99,9 @@ public class RecipeDetailFragment extends Fragment {
         ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredientsRecyclerView.setNestedScrollingEnabled(false);
 
-        btnBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+        btnBack.setOnClickListener(v -> {
+            NavHostFragment.findNavController(this).popBackStack();
+        });
 
         RecyclerView commentsRecyclerView = view.findViewById(R.id.comments_recycler_view);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

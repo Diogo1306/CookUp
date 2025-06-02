@@ -1,7 +1,6 @@
 package com.diogo.cookup.ui.activity;
 
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,17 +29,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferences = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        int savedTheme = preferences.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(savedTheme);
+
         super.onCreate(savedInstanceState);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_main);
 
-        preferences = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        int savedTheme = preferences.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        AppCompatDelegate.setDefaultNightMode(savedTheme);
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment == null) {
+            throw new IllegalStateException("NavHostFragment não encontrado! Verifique o id/nav_host_fragment no layout.");
+        }
         NavController navController = navHostFragment.getNavController();
 
         final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

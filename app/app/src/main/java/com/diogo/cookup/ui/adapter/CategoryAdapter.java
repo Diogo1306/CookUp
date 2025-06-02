@@ -48,6 +48,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
+    public List<CategoryData> getCurrentCategories() {
+        return categoryList;
+    }
+
     @Override
     public int getItemViewType(int position) {
         return skeletonMode ? VIEW_TYPE_SKELETON : VIEW_TYPE_NORMAL;

@@ -10,13 +10,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.ui.adapter.RecipeAdapterSaved;
-import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -46,7 +45,9 @@ public class SavedRecipesFragment extends Fragment {
         TextView listNameText = view.findViewById(R.id.text_list_name);
         listNameText.setText(listName);
 
-        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+        view.findViewById(R.id.arrow_back).setOnClickListener(v -> {
+            androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack();
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_saved_recipes);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -58,12 +59,8 @@ public class SavedRecipesFragment extends Fragment {
                     Toast.makeText(requireContext(), "Receita removida da lista", Toast.LENGTH_SHORT).show();
                 },
                 recipe -> {
-                    RecipeDetailFragment fragment = RecipeDetailFragment.newInstance(recipe.getRecipeId());
-                    requireActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_container, fragment)
-                            .addToBackStack(null)
-                            .commit();
+                    NavHostFragment.findNavController(this)
+                            .navigate(SavedRecipesFragmentDirections.actionSavedRecipesFragmentToRecipeDetailFragment(recipe.getRecipeId()));
                 }
         );
 

@@ -34,6 +34,8 @@ public class RecipeData implements Serializable {
         this.image = image;
     }
 
+    public RecipeData() {}
+
     public List<IngredientData> getIngredients() {return ingredients;}
     public int getRecipeId() { return recipe_id; }
     public String getTitle() { return title; }
@@ -49,6 +51,7 @@ public class RecipeData implements Serializable {
     }
     public float getAverageRating() {return averageRating;}
 
+    public void setRecipeId(int recipeId) {this.recipe_id = recipeId;}
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
     public void setInstructions(String instructions) { this.instructions = instructions; }

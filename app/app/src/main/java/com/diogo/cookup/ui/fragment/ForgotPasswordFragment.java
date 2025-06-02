@@ -14,12 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.ui.activity.LoginActivity;
-import com.diogo.cookup.utils.NavigationUtils;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
@@ -59,7 +56,9 @@ public class ForgotPasswordFragment extends Fragment {
                 navigateToLogin();
             }
         });
-        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+        view.findViewById(R.id.arrow_back).setOnClickListener(v -> {
+            androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack();
+        });
     }
 
     private void sendResetEmail() {

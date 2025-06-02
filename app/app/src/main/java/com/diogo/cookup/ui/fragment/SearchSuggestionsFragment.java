@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.content.Context;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,29 +26,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.data.model.SearchData;
 import com.diogo.cookup.ui.adapter.ExploreSearchAdapter;
 import com.diogo.cookup.viewmodel.SearchViewModel;
 
 public class SearchSuggestionsFragment extends Fragment {
 
     private EditText editTextSearch;
+    private ImageView buttonBack, buttonClear;
     private RecyclerView recyclerSuggestions;
     private ExploreSearchAdapter suggestionAdapter;
     private SearchViewModel viewModel;
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        editTextSearch.requestFocus();
-
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
-            }
-        }, 250);
-    }
 
     @Nullable
     @Override
@@ -55,22 +44,27 @@ public class SearchSuggestionsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search_suggestions, container, false);
 
         editTextSearch = view.findViewById(R.id.editTextSearch);
+        buttonBack = view.findViewById(R.id.buttonBack);
+        buttonClear = view.findViewById(R.id.buttonClear);
         recyclerSuggestions = view.findViewById(R.id.recyclerSuggestions);
         viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 
+        String currentQuery = "";
+        if (getArguments() != null) {
+            SearchSuggestionsFragmentArgs args = SearchSuggestionsFragmentArgs.fromBundle(getArguments());
+            currentQuery = args.getQuery();
+        }
+        editTextSearch.setText(currentQuery);
+        editTextSearch.setSelection(currentQuery.length());
+
         setupSuggestions();
 
-        editTextSearch.requestFocus();
+        buttonBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
 
-        editTextSearch.setFocusableInTouchMode(true);
-        editTextSearch.requestFocus();
-
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
-            }
-        }, 200);
+        buttonClear.setOnClickListener(v -> {
+            editTextSearch.setText("");
+            buttonClear.setVisibility(View.GONE);
+        });
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -78,13 +72,17 @@ public class SearchSuggestionsFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String query = s.toString().trim();
+                buttonClear.setVisibility(query.isEmpty() ? View.GONE : View.VISIBLE);
                 if (!query.isEmpty()) {
                     Log.d("Suggestions", "🔎 Digitando: " + query);
                     viewModel.fetchSuggestions(query);
+                } else {
+                    suggestionAdapter.setSuggestions(new SearchData());
                 }
             }
         });
 
+        // ENTER faz pesquisa
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
@@ -95,12 +93,23 @@ public class SearchSuggestionsFragment extends Fragment {
             return false;
         });
 
+        // Mostra teclado ao entrar
+        editTextSearch.requestFocus();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 250);
+
+        // Observa resultado de sugestões
         viewModel.getSearchResult().observe(getViewLifecycleOwner(), response -> {
             if (response != null && response.getData() != null) {
                 Log.d("Suggestions", "✅ Sugestões carregadas");
                 suggestionAdapter.setSuggestions(response.getData());
             } else {
                 Log.d("Suggestions", "⚠️ Nenhuma sugestão encontrada");
+                suggestionAdapter.setSuggestions(new SearchData());
             }
         });
 
@@ -117,8 +126,8 @@ public class SearchSuggestionsFragment extends Fragment {
 
     private void openSearchResultFragment(String query) {
         NavController navController = NavHostFragment.findNavController(this);
-        SearchSuggestionsFragmentDirections.ActionSearchSuggestionsFragmentToSearchResultFragment action =
-                SearchSuggestionsFragmentDirections.actionSearchSuggestionsFragmentToSearchResultFragment(query);
-        navController.navigate(action);
+        navController.navigate(
+                SearchSuggestionsFragmentDirections.actionSearchSuggestionsFragmentToSearchResultFragment(query)
+        );
     }
 }

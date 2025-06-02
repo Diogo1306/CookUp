@@ -15,20 +15,20 @@
 
         <ImageView
             android:id="@+id/buttonBack"
-            android:layout_width="@dimen/icon_size_large"
-            android:layout_height="@dimen/icon_size_large"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_arrow_left"
             android:contentDescription="Voltar"
-            android:padding="4dp" />
+            android:padding="6dp" />
 
         <EditText
             android:id="@+id/editTextSearch"
             style="@style/input"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_search"
-            android:drawablePadding="@dimen/padding_small"
+            android:drawablePadding="8dp"
             android:hint="Pesquisar receitas..."
             android:maxLines="1"
             android:singleLine="true"
@@ -38,6 +38,15 @@
             android:paddingEnd="8dp"
             android:textColorHint="@color/gray"
             android:background="@drawable/input" />
+
+        <ImageView
+            android:id="@+id/buttonClear"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="Limpar"
+            android:padding="6dp"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

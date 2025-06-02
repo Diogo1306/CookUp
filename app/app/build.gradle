@@ -53,8 +53,11 @@ dependencies {
 
     // shimmer
     implementation libs.shimmer
-
     implementation libs.gson
+
+    // recyclerview
+    implementation libs.recyclerview
+
 
     implementation libs.glide
     implementation libs.navigation.fragment
