@@ -58,6 +58,7 @@ class RecipeController
     }
 
 
+
     public function getRecommendedRecipes()
     {
         $recipes = Recipe::getRecommendedRecipes();

@@ -196,42 +196,32 @@ class Recipe
         return $recipe;
     }
 
-    public static function getPopularRecipes()
+    public static function getPopularWithPagination($page)
     {
+        $limit = 6;
+        $offset = ($page - 1) * $limit;
+
         $db = Database::connect();
-        $stmt = $db->prepare("
-        SELECT 
-            r.recipe_id,
-            r.title,
-            r.description,
-            r.image,
-            r.preparation_time,
-            r.difficulty,
-            r.servings,
-            r.favorites_count,
-            r.views_count,
-            u.username AS author_name,
+        $query = "
+        SELECT r.*, 
             GROUP_CONCAT(DISTINCT c.category_id) AS category_ids,
             GROUP_CONCAT(DISTINCT c.category_name) AS category_names,
             GROUP_CONCAT(DISTINCT c.color_hex) AS category_colors,
             GROUP_CONCAT(DISTINCT c.image_url) AS category_images
-        FROM (
-            SELECT * FROM recipes
-            ORDER BY (favorites_count * 2 + views_count) DESC
-            LIMIT ? OFFSET ?
-        ) AS r
-        LEFT JOIN users u ON u.user_id = r.author_id
+        FROM recipes r
         LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
         LEFT JOIN categories c ON c.category_id = rc.category_id
         GROUP BY r.recipe_id
-    ");
+        ORDER BY r.views_count DESC
+        LIMIT ? OFFSET ?
+    ";
 
+        $stmt = $db->prepare($query);
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $recipes = [];
-
         while ($row = $result->fetch_assoc()) {
             $row['categories'] = self::parseCategories([
                 'category_ids' => (string)($row['category_ids'] ?? ''),
@@ -239,11 +229,9 @@ class Recipe
                 'category_colors' => (string)($row['category_colors'] ?? ''),
                 'category_images' => (string)($row['category_images'] ?? '')
             ]);
-
             unset($row['category_ids'], $row['category_names'], $row['category_colors'], $row['category_images']);
 
             $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
-
             $recipes[] = $row;
         }
 
