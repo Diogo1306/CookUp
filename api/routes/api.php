@@ -30,7 +30,7 @@ $searchController       = new SearchController();
 Router::add('GET',  'recipe',                  [$recipeController, 'getAllRecipes']);
 Router::add('POST', 'recipe',                  [$recipeController, 'createOrUpdateRecipe']);
 Router::add('GET',  'recipe_detail',           [$recipeController, 'getRecipeDetail']);
-Router::add('GET',  'popular_recipes',         [$recipeController, 'getPopularRecipes']);
+Router::add('GET',  'popular_recipes_pagination', [$recipeController, 'getPopularWithPagination']);
 Router::add('GET',  'most_favorited_recipes',  [$recipeController, 'getMostFavoritedRecipes']);
 Router::add('GET',  'recipes_by_mealtype',     [$recipeController, 'getRecipesByMealType']);
 Router::add('GET',  'recommended',             [$recipeController, 'getRecommendedRecipes']);

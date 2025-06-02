@@ -89,16 +89,20 @@ class Recipe
 
     private static function parseCategories($recipe)
     {
-        $ids = explode(',', $recipe['category_ids'] ?? '');
-        $names = explode(',', $recipe['category_names'] ?? '');
-        $colors = explode(',', $recipe['category_colors'] ?? []);
+        $ids = explode(',', (string)($recipe['category_ids'] ?? ''));
+        $names = explode(',', (string)($recipe['category_names'] ?? ''));
+        $colors = explode(',', (string)($recipe['category_colors'] ?? ''));
+        $images = explode(',', (string)($recipe['category_images'] ?? ''));
 
         $categories = [];
         for ($i = 0; $i < count($ids); $i++) {
             $categories[] = [
                 'category_id' => (int)$ids[$i],
                 'category_name' => $names[$i] ?? '',
-                'category_color' => $colors[$i] ?? '#EEEEEE'
+                'category_color' => $colors[$i] ?? '#EEEEEE',
+                'image_url' => (!empty($images[$i]))
+                    ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $images[$i]
+                    : null
             ];
         }
 
@@ -196,26 +200,50 @@ class Recipe
     {
         $db = Database::connect();
         $stmt = $db->prepare("
-            SELECT 
-                r.*, 
-                GROUP_CONCAT(c.category_id) AS category_ids,
-                GROUP_CONCAT(c.category_name) AS category_names
-            FROM recipes r
-            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-            LEFT JOIN categories c ON c.category_id = rc.category_id
-            GROUP BY r.recipe_id
-            ORDER BY (r.favorites_count * 2 + r.views_count) DESC
-            LIMIT 10
-        ");
+        SELECT 
+            r.recipe_id,
+            r.title,
+            r.description,
+            r.image,
+            r.preparation_time,
+            r.difficulty,
+            r.servings,
+            r.favorites_count,
+            r.views_count,
+            u.username AS author_name,
+            GROUP_CONCAT(DISTINCT c.category_id) AS category_ids,
+            GROUP_CONCAT(DISTINCT c.category_name) AS category_names,
+            GROUP_CONCAT(DISTINCT c.color_hex) AS category_colors,
+            GROUP_CONCAT(DISTINCT c.image_url) AS category_images
+        FROM (
+            SELECT * FROM recipes
+            ORDER BY (favorites_count * 2 + views_count) DESC
+            LIMIT ? OFFSET ?
+        ) AS r
+        LEFT JOIN users u ON u.user_id = r.author_id
+        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+        LEFT JOIN categories c ON c.category_id = rc.category_id
+        GROUP BY r.recipe_id
+    ");
+
+        $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
+
         $recipes = [];
 
         while ($row = $result->fetch_assoc()) {
-            $row['categories'] = self::parseCategories($row);
-            unset($row['category_ids']);
-            unset($row['category_names']);
+            $row['categories'] = self::parseCategories([
+                'category_ids' => (string)($row['category_ids'] ?? ''),
+                'category_names' => (string)($row['category_names'] ?? ''),
+                'category_colors' => (string)($row['category_colors'] ?? ''),
+                'category_images' => (string)($row['category_images'] ?? '')
+            ]);
+
+            unset($row['category_ids'], $row['category_names'], $row['category_colors'], $row['category_images']);
+
             $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
+
             $recipes[] = $row;
         }
 
