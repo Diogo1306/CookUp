@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.diogo.cookup.R;
 import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.viewmodel.AuthViewModel;
@@ -34,11 +36,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void openSettingsFragment() {
-        Fragment settingsFragment = new SettingsFragment();
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, settingsFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_profileFragment_to_settingsFragment);
     }
 
     private void logoutUser() {

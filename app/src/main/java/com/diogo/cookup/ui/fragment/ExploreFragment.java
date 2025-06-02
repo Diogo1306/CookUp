@@ -1,10 +1,12 @@
 package com.diogo.cookup.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,103 +14,181 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.ui.adapter.CategoryAdapter;
-import com.diogo.cookup.ui.adapter.RecipeAdapterDefault;
+import com.diogo.cookup.ui.adapter.RecipeAdapterLarge;
 import com.diogo.cookup.viewmodel.ExploreViewModel;
+import com.diogo.cookup.viewmodel.SavedListViewModel;
+import com.diogo.cookup.data.model.UserData;
+import com.diogo.cookup.utils.SharedPrefHelper;
 
 import java.util.ArrayList;
 
 public class ExploreFragment extends Fragment {
 
-    private ExploreViewModel exploreViewModel;
-
-    private EditText editTextSearch;
-    private RecyclerView recyclerViewCategories;
-    private RecyclerView recyclerViewRecipes;
-
+    private ExploreViewModel viewModel;
+    private SavedListViewModel savedListViewModel;
+    private RecipeAdapterLarge recipeAdapter;
     private CategoryAdapter categoryAdapter;
-    private RecipeAdapterDefault recipeAdapter;
+
+    private RecyclerView recyclerCategories, recyclerRecipes;
+    private TextView textEndMessage;
+    private EditText searchEditText;
+
+    private boolean categoriasProntas = false;
+    private boolean receitasProntas = false;
+    private boolean isLoadingMore = false;
+    private boolean carregandoPrimeiraVez = true;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_explore, container, false);
-
-        exploreViewModel = new ViewModelProvider(this).get(ExploreViewModel.class);
-
-        editTextSearch = view.findViewById(R.id.editTextSearch);
-        recyclerViewCategories = view.findViewById(R.id.recyclerViewCategories);
-        recyclerViewRecipes = view.findViewById(R.id.recyclerViewRecipes);
-
-        setupCategorySection(view);
-        setupRecipeSection(view);
-        setupObservers();
-
-        editTextSearch.setFocusableInTouchMode(true);
-
-        editTextSearch.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                NavHostFragment.findNavController(ExploreFragment.this)
-                        .navigate(R.id.action_exploreFragment_to_searchSuggestionsFragment);
-            }
-        });
-
-        editTextSearch.setOnClickListener(v -> {
-            editTextSearch.requestFocus();
-            NavHostFragment.findNavController(ExploreFragment.this)
-                    .navigate(R.id.action_exploreFragment_to_searchSuggestionsFragment);
-        });
-
-        loadInitialContent();
-
-        return view;
+        return inflater.inflate(R.layout.fragment_explore, container, false);
     }
 
-    private void setupCategorySection(View view) {
-        recyclerViewCategories.setLayoutManager(new GridLayoutManager(getContext(), 3));
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        viewModel = new ViewModelProvider(this).get(ExploreViewModel.class);
+        savedListViewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
+
+        searchEditText = view.findViewById(R.id.searchEditText);
+        recyclerCategories = view.findViewById(R.id.recyclerCategories);
+        recyclerRecipes = view.findViewById(R.id.recyclerRecipes);
+        textEndMessage = view.findViewById(R.id.textEndMessage);
+
+        setupSearchBar(view);
+        setupCategoryRecycler(view);
+        setupRecipeRecycler();
+
+        categoriasProntas = false;
+        receitasProntas = false;
+        carregandoPrimeiraVez = true;
+        categoryAdapter.setSkeletonMode(true);
+        recipeAdapter.setSkeletonMode(true);
+        textEndMessage.setVisibility(View.GONE);
+
+        // Observa favoritos em tempo real
+        savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), savedIds -> {
+            recipeAdapter.updateSavedIds(savedIds);
+        });
+
+        // Garante favoritos sempre atualizados ao abrir tela
+        UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+        if (user != null) {
+            savedListViewModel.loadUserSavedRecipeIds(user.getUserId());
+        }
+
+        new Handler().postDelayed(() -> {
+            if (!isAdded()) return;
+            observeViewModel();
+            viewModel.resetPagination();
+            viewModel.loadCategories();
+            viewModel.loadNextPage();
+        }, 400);
+    }
+
+    private void setupSearchBar(View view) {
+        if (searchEditText != null) {
+            View.OnClickListener navigateToSearch = v ->
+                    NavHostFragment.findNavController(this)
+                            .navigate(R.id.action_exploreFragment_to_searchSuggestionsFragment);
+
+            searchEditText.setOnClickListener(navigateToSearch);
+            searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) navigateToSearch.onClick(v);
+            });
+        }
+    }
+
+    private void setupCategoryRecycler(View view) {
         categoryAdapter = new CategoryAdapter(new ArrayList<>(), category -> {
             ExploreFragmentDirections.ActionExploreFragmentToSearchResultFragment action =
                     ExploreFragmentDirections.actionExploreFragmentToSearchResultFragment(category.getCategoryName());
             Navigation.findNavController(view).navigate(action);
         });
-        recyclerViewCategories.setAdapter(categoryAdapter);
+
+        recyclerCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerCategories.setAdapter(categoryAdapter);
     }
 
-    private void setupRecipeSection(View view) {
-        recipeAdapter = new RecipeAdapterDefault(
-                new ArrayList<>(), new ArrayList<>(),
+    private void setupRecipeRecycler() {
+        recipeAdapter = new RecipeAdapterLarge(
+                requireContext(),
                 this::openRecipeDetail,
-                recipeId -> {}
+                recipeId -> SaveRecipeBottomSheet.newInstance(recipeId, this)
+                        .show(requireActivity().getSupportFragmentManager(), "save_sheet")
         );
-        recyclerViewRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewRecipes.setAdapter(recipeAdapter);
+        recyclerRecipes.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerRecipes.setAdapter(recipeAdapter);
+
+        recyclerRecipes.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy <= 0) return;
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager == null) return;
+
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (!isLoadingMore && lastVisibleItem >= totalItemCount - 2
+                        && Boolean.FALSE.equals(viewModel.getIsLastPage().getValue())) {
+                    isLoadingMore = true;
+                    recipeAdapter.setSkeletonMode(true);
+                    new Handler().postDelayed(() -> {
+                        viewModel.loadNextPage();
+                    }, 300);
+                }
+            }
+        });
     }
 
-    private void setupObservers() {
-        exploreViewModel.getPopularCategories().observe(getViewLifecycleOwner(), response -> {
+    private void observeViewModel() {
+        viewModel.getPopularCategories().observe(getViewLifecycleOwner(), response -> {
             if (response != null && response.getData() != null) {
-                categoryAdapter.setSkeletonMode(false);
                 categoryAdapter.setData(response.getData());
+                categoriasProntas = true;
+                verificarEEsconderSkeletons();
             }
         });
 
-        exploreViewModel.getPopularRecipes().observe(getViewLifecycleOwner(), response -> {
-            if (response != null && response.getData() != null) {
-                recipeAdapter.setSkeletonMode(false);
-                recipeAdapter.setData(response.getData());
+        viewModel.getAllRecipes().observe(getViewLifecycleOwner(), recipes -> {
+            if (recipes != null) {
+                recipeAdapter.setData(recipes);
+                receitasProntas = true;
+                verificarEEsconderSkeletons();
+                carregandoPrimeiraVez = false;
+            }
+        });
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
+            isLoadingMore = loading != null && loading;
+        });
+
+        viewModel.getIsLastPage().observe(getViewLifecycleOwner(), isLast -> {
+            if (Boolean.TRUE.equals(isLast) && recipeAdapter.getItemCount() > 0) {
+                textEndMessage.setVisibility(View.VISIBLE);
+            } else {
+                textEndMessage.setVisibility(View.GONE);
             }
         });
     }
 
-    private void loadInitialContent() {
-        categoryAdapter.setSkeletonMode(true);
-        recipeAdapter.setSkeletonMode(true);
+    private void verificarEEsconderSkeletons() {
+        if (categoriasProntas && receitasProntas) {
+            categoryAdapter.setSkeletonMode(false);
+            recipeAdapter.setSkeletonMode(false);
+        }
+        else if (!carregandoPrimeiraVez && receitasProntas) {
+            recipeAdapter.setSkeletonMode(false);
+        }
     }
 
     private void openRecipeDetail(RecipeData recipe) {

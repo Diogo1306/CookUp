@@ -31,6 +31,7 @@ public class SavedListViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Integer>> savedRecipeIds = new MutableLiveData<>();
     private final MutableLiveData<Integer> changedRecipeId = new MutableLiveData<>();
 
+
     public SavedListViewModel(Application application) {
         super(application);
     }

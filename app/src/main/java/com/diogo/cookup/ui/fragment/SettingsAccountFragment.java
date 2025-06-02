@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 import com.diogo.cookup.R;
 import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.utils.MessageUtils;
-import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.material.card.MaterialCardView;
@@ -33,7 +33,7 @@ public class SettingsAccountFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_settings_account, container, false);
 
@@ -96,23 +96,30 @@ public class SettingsAccountFragment extends Fragment {
 
     private void loadUserData(View view) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser != null ){
+        if (currentUser != null) {
             userViewModel.loadUser(currentUser.getUid());
-        }else {
+        } else {
             MessageUtils.showSnackbar(requireView(), "Usuário não logado", Color.RED);
         }
     }
 
     private void setupLisners(View view)  {
-        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
-        btn_Email.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new ChangeEmailFragment()));
-        btn_password.setOnClickListener(v -> NavigationUtils.openFragment(requireActivity(), new ChangePasswordFragment()));
+        view.findViewById(R.id.arrow_back).setOnClickListener(v ->
+                NavHostFragment.findNavController(this).popBackStack()
+        );
+        btn_Email.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_settingsAccountFragment_to_changeEmailFragment)
+        );
+        btn_password.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_settingsAccountFragment_to_changePasswordFragment)
+        );
         btn_logout.setOnClickListener(v -> {
-                authViewModel.logout();
-        Intent intent = new Intent(requireActivity(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+            authViewModel.logout();
+            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
     }
-
 }

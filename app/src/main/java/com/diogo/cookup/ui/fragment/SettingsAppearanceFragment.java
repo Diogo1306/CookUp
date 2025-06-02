@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.utils.NavigationUtils;
 
 public class SettingsAppearanceFragment extends Fragment {
 
@@ -46,13 +46,14 @@ public class SettingsAppearanceFragment extends Fragment {
         iconThemeDark = view.findViewById(R.id.icon_theme_dark);
         iconThemeSystem = view.findViewById(R.id.icon_theme_system);
 
-        NavigationUtils.setupBackButton(this, view, R.id.arrow_back);
+        view.findViewById(R.id.arrow_back).setOnClickListener(v ->
+                NavHostFragment.findNavController(this).popBackStack()
+        );
     }
 
     private void setupListeners() {
         View.OnClickListener themeClickListener = v -> {
             int selectedTheme;
-
             if (v == btnThemeLight) {
                 selectedTheme = AppCompatDelegate.MODE_NIGHT_NO;
             } else if (v == btnThemeDark) {
@@ -64,11 +65,9 @@ public class SettingsAppearanceFragment extends Fragment {
             saveThemeSelection(selectedTheme);
             updateSelectedIcon(selectedTheme);
 
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .detach(this)
-                    .attach(this)
-                    .commit();
+            // Apenas isso! O Android faz todo o resto sozinho.
+            // Se quiser garantir, pode forçar recreate() se não atualizar:
+            // requireActivity().recreate();
         };
 
         btnThemeLight.setOnClickListener(themeClickListener);
@@ -91,12 +90,9 @@ public class SettingsAppearanceFragment extends Fragment {
         int currentTheme = preferences.getInt("selected_theme", -1);
 
         if (currentTheme != themeMode) {
-
-            String currentFragmentTag = requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass().getName();
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("selected_theme", themeMode);
             editor.putBoolean("theme_changed", true);
-            editor.putString("last_fragment", currentFragmentTag);
             editor.apply();
 
             AppCompatDelegate.setDefaultNightMode(themeMode);

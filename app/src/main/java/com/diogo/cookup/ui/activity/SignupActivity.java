@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.diogo.cookup.R;
 import com.diogo.cookup.utils.MessageUtils;
-import com.diogo.cookup.utils.NavigationUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
 
@@ -37,7 +36,7 @@ public class SignupActivity extends AppCompatActivity {
         setupViews();
         setupListeners();
         setupObservers();
-        NavigationUtils.setupBackButton(this, R.id.arrow_back);
+        findViewById(R.id.arrow_back).setOnClickListener(v -> onBackPressed());
     }
 
     private void setupViews() {

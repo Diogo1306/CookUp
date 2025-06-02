@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.data.model.SavedListData;
 import com.diogo.cookup.ui.adapter.SavedListAdapterManage;
 import com.diogo.cookup.ui.dialog.CreateListDialog;
 import com.diogo.cookup.utils.SharedPrefHelper;
@@ -47,18 +47,11 @@ public class SavesFragment extends Fragment {
         }
 
         adapter = new SavedListAdapterManage(list -> {
-            SavedRecipesFragment fragment = new SavedRecipesFragment();
             Bundle args = new Bundle();
             args.putInt("list_id", list.list_id);
             args.putString("list_name", list.list_name);
-            fragment.setArguments(args);
-
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit();
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_savesFragment_to_savedRecipesFragment, args);
         });
 
         adapter.setOnAddClickListener(() -> {

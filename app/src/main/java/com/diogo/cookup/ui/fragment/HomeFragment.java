@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment {
             setAdapters();
             observeViewModels();
             loadInitialData();
-        }, 450);
+        }, 400);
     }
 
     private void initViewModels() {
@@ -289,12 +290,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void openRecipeDetail(RecipeData recipe) {
-        Fragment fragment = RecipeDetailFragment.newInstance(recipe.getRecipeId());
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+        HomeFragmentDirections.ActionHomeFragmentToRecipeDetailFragment action = HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId());
+        Navigation.findNavController(requireView()).navigate(action);
     }
 
     private void animateRecycler(RecyclerView recyclerView) {

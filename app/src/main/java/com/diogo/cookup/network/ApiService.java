@@ -40,7 +40,7 @@ public interface ApiService {
     Call<ApiResponseWithFilled<List<RecipeData>>> getWeeklyRecipes(@Query("route") String route);
 
     @GET("api.php")
-    Call<ApiResponse<List<RecipeData>>> getPopularRecipes(@Query("route") String route);
+    Call<ApiResponse<List<RecipeData>>> getPopularRecipesWithPage(@Query("route") String route, @Query("page") int page);
 
     @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getRecommendedRecipes(@Query("route") String route);

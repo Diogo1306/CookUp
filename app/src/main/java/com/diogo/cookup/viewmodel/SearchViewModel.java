@@ -20,7 +20,7 @@ public class SearchViewModel extends ViewModel {
         repository.fetchSearchResults(query, searchResult, errorMessage);
     }
 
-    public LiveData<ApiResponse<SearchData>> fetchSearchResult(String query) {
-        return repository.fetchSearchResults(query);
+    public void searchRecipes(String query) {
+        repository.fetchSearchResults(query, searchResult, errorMessage);
     }
 }
