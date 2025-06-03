@@ -1,11 +1,13 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -23,11 +25,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
+import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.adapter.RecipeAdapterLarge;
+import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 import com.diogo.cookup.viewmodel.SearchViewModel;
-import com.diogo.cookup.data.model.UserData;
-import com.diogo.cookup.utils.SharedPrefHelper;
 
 import java.util.ArrayList;
 
@@ -39,8 +41,9 @@ public class SearchResultFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private EditText editTextSearch;
-    private ImageView buttonBack, buttonClear;
+    private ImageView buttonBack;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,7 +51,6 @@ public class SearchResultFragment extends Fragment {
 
         editTextSearch = view.findViewById(R.id.editTextSearch);
         buttonBack = view.findViewById(R.id.buttonBack);
-        buttonClear = view.findViewById(R.id.buttonClear);
         recyclerView = view.findViewById(R.id.recycler_results);
 
         recipeAdapter = new RecipeAdapterLarge(
@@ -63,9 +65,7 @@ public class SearchResultFragment extends Fragment {
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
         savedListViewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
 
-        savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), savedIds -> {
-            recipeAdapter.updateSavedIds(savedIds);
-        });
+        savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), recipeAdapter::updateSavedIds);
 
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null) {
@@ -82,38 +82,40 @@ public class SearchResultFragment extends Fragment {
             }
         });
 
-        buttonBack.setOnClickListener(v -> {
-            NavHostFragment.findNavController(this).popBackStack(R.id.exploreFragment, false);
-        });
+        buttonBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack(R.id.exploreFragment, false));
 
-        buttonClear.setOnClickListener(v -> {
-            editTextSearch.setText("");
-            editTextSearch.clearFocus();
-            Log.d("DEBUG", "Botão X clicado. Indo para sugestões com texto vazio.");
-            NavHostFragment.findNavController(this)
-                    .navigate(SearchResultFragmentDirections
-                            .actionSearchResultFragmentToSearchSuggestionsFragment()
-                            .setQuery(""));
-        });
+        editTextSearch.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                final int DRAWABLE_END = 2;
 
+                Drawable drawable = editTextSearch.getCompoundDrawables()[DRAWABLE_END];
+                if (drawable != null) {
+                    int drawableWidth = drawable.getBounds().width();
+
+                    int[] location = new int[2];
+                    editTextSearch.getLocationOnScreen(location);
+                    int editTextRight = location[0] + editTextSearch.getWidth();
+
+                    int touchX = (int) event.getRawX();
+
+                    if (touchX >= (editTextRight - drawableWidth - editTextSearch.getPaddingEnd())) {
+                        editTextSearch.setText("");
+                        editTextSearch.requestFocus();
+                        v.performClick();
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
 
         editTextSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 String currentText = editTextSearch.getText().toString();
-                Log.d("DEBUG", "Abrindo sugestões com texto: " + currentText);
                 NavHostFragment.findNavController(this)
                         .navigate(SearchResultFragmentDirections
                                 .actionSearchResultFragmentToSearchSuggestionsFragment()
                                 .setQuery(currentText));
-            }
-        });
-
-        editTextSearch.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                buttonClear.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -129,7 +131,6 @@ public class SearchResultFragment extends Fragment {
 
         SearchResultFragmentArgs args = SearchResultFragmentArgs.fromBundle(getArguments());
         String query = args.getQuery();
-
         editTextSearch.setText(query);
         editTextSearch.setSelection(query.length());
 
@@ -148,6 +149,7 @@ public class SearchResultFragment extends Fragment {
 
     private void openRecipeDetail(RecipeData recipe) {
         NavHostFragment.findNavController(this)
-                .navigate(SearchResultFragmentDirections.actionSearchResultFragmentToRecipeDetailFragment(recipe.getRecipeId()));
+                .navigate(SearchResultFragmentDirections
+                        .actionSearchResultFragmentToRecipeDetailFragment(recipe.getRecipeId()));
     }
 }
