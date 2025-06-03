@@ -73,12 +73,10 @@ public class ExploreFragment extends Fragment {
         recipeAdapter.setSkeletonMode(true);
         textEndMessage.setVisibility(View.GONE);
 
-        // Observa favoritos em tempo real
         savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), savedIds -> {
             recipeAdapter.updateSavedIds(savedIds);
         });
 
-        // Garante favoritos sempre atualizados ao abrir tela
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null) {
             savedListViewModel.loadUserSavedRecipeIds(user.getUserId());

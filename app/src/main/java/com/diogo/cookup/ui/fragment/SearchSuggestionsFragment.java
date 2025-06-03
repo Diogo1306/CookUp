@@ -1,13 +1,15 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -33,11 +35,12 @@ import com.diogo.cookup.viewmodel.SearchViewModel;
 public class SearchSuggestionsFragment extends Fragment {
 
     private EditText editTextSearch;
-    private ImageView buttonBack, buttonClear;
+    private ImageView buttonBack;
     private RecyclerView recyclerSuggestions;
     private ExploreSearchAdapter suggestionAdapter;
     private SearchViewModel viewModel;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,7 +48,6 @@ public class SearchSuggestionsFragment extends Fragment {
 
         editTextSearch = view.findViewById(R.id.editTextSearch);
         buttonBack = view.findViewById(R.id.buttonBack);
-        buttonClear = view.findViewById(R.id.buttonClear);
         recyclerSuggestions = view.findViewById(R.id.recyclerSuggestions);
         viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 
@@ -57,24 +59,41 @@ public class SearchSuggestionsFragment extends Fragment {
         editTextSearch.setText(currentQuery);
         editTextSearch.setSelection(currentQuery.length());
 
-        setupSuggestions();
-
         buttonBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
 
-        buttonClear.setOnClickListener(v -> {
-            editTextSearch.setText("");
-            buttonClear.setVisibility(View.GONE);
+        editTextSearch.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                final int DRAWABLE_END = 2;
+
+                Drawable drawable = editTextSearch.getCompoundDrawables()[DRAWABLE_END];
+                if (drawable != null) {
+                    int drawableWidth = drawable.getBounds().width();
+
+                    int[] location = new int[2];
+                    editTextSearch.getLocationOnScreen(location);
+                    int editTextRight = location[0] + editTextSearch.getWidth();
+
+                    int touchX = (int) event.getRawX();
+
+                    if (touchX >= (editTextRight - drawableWidth - editTextSearch.getPaddingEnd())) {
+                        editTextSearch.setText("");
+                        editTextSearch.requestFocus();
+                        v.performClick();
+                        return true;
+                    }
+                }
+            }
+            return false;
         });
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String query = s.toString().trim();
-                buttonClear.setVisibility(query.isEmpty() ? View.GONE : View.VISIBLE);
                 if (!query.isEmpty()) {
-                    Log.d("Suggestions", "🔎 Digitando: " + query);
                     viewModel.fetchSuggestions(query);
                 } else {
                     suggestionAdapter.setSuggestions(new SearchData());
@@ -82,7 +101,6 @@ public class SearchSuggestionsFragment extends Fragment {
             }
         });
 
-        // ENTER faz pesquisa
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
@@ -93,7 +111,6 @@ public class SearchSuggestionsFragment extends Fragment {
             return false;
         });
 
-        // Mostra teclado ao entrar
         editTextSearch.requestFocus();
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -102,13 +119,11 @@ public class SearchSuggestionsFragment extends Fragment {
             }
         }, 250);
 
-        // Observa resultado de sugestões
+        setupSuggestions();
         viewModel.getSearchResult().observe(getViewLifecycleOwner(), response -> {
             if (response != null && response.getData() != null) {
-                Log.d("Suggestions", "✅ Sugestões carregadas");
                 suggestionAdapter.setSuggestions(response.getData());
             } else {
-                Log.d("Suggestions", "⚠️ Nenhuma sugestão encontrada");
                 suggestionAdapter.setSuggestions(new SearchData());
             }
         });

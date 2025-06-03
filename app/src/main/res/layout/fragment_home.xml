@@ -42,7 +42,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/input_email"
+            android:id="@+id/searchEditText"
             style="@style/input"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
@@ -52,7 +52,7 @@
             android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:hint="@string/email"
+            android:hint="Receitas, categorias, Alimentos.."
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"

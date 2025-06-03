@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +50,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerCategories, recyclerRecommended, recyclerWeekly, recyclerPopular, recyclerCat1, recyclerCat2, recyclerCat3;
     private TextView tvNameHome , tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3, seeMoreCat1, seeMoreCat2, seeMoreCat3;
 
+    private EditText searchEditText;
+
     private final List<RecipeData> recipeList = new ArrayList<>();
     private final List<CategoryData> categoryList = new ArrayList<>();
     private final List<Integer> savedRecipeIds = new ArrayList<>();
@@ -63,6 +67,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initViewModels();
         initViews(view);
+        setupSearchBar(view);
         showSkeletons();
 
         new Handler().postDelayed(() -> {
@@ -72,6 +77,19 @@ public class HomeFragment extends Fragment {
             observeViewModels();
             loadInitialData();
         }, 400);
+    }
+
+    private void setupSearchBar(View view) {
+        if (searchEditText != null) {
+            View.OnClickListener navigateToSearch = v ->
+                    NavHostFragment.findNavController(this)
+                            .navigate(R.id.action_homeFragment_to_searchSuggestionsFragment);
+
+            searchEditText.setOnClickListener(navigateToSearch);
+            searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) navigateToSearch.onClick(v);
+            });
+        }
     }
 
     private void initViewModels() {
@@ -98,6 +116,7 @@ public class HomeFragment extends Fragment {
         seeMoreCat2 = view.findViewById(R.id.see_more_cat2);
         seeMoreCat3 = view.findViewById(R.id.see_more_cat3);
         tvNameHome = view.findViewById(R.id.tvNameHome);
+        searchEditText = view.findViewById(R.id.searchEditText);
 
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null) {
