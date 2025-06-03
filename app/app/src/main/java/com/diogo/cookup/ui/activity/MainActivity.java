@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.UserData;
+import com.diogo.cookup.network.ApiRetrofit;
+import com.diogo.cookup.network.ApiService;
 import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,7 +23,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseConnectivityActivity {
 
     private UserViewModel userViewModel;
     private FirebaseAuth auth;
@@ -38,6 +40,24 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_main);
 
+        View layoutNetworkError = findViewById(R.id.layout_network_error);
+        View layoutServerError = findViewById(R.id.layout_server_error);
+        View layoutContent = findViewById(R.id.nav_host_fragment);
+
+        ApiService apiService = ApiRetrofit.getApiService();
+
+        initConnectivityLayouts(layoutNetworkError, layoutServerError, layoutContent, apiService);
+
+        View tryAgainNetwork = layoutNetworkError.findViewById(R.id.button_try_again);
+        if (tryAgainNetwork != null) {
+            tryAgainNetwork.setOnClickListener(v -> recheckConnection());
+        }
+
+        View tryAgainServer = layoutServerError.findViewById(R.id.button_try_again);
+        if (tryAgainServer != null) {
+            tryAgainServer.setOnClickListener(v -> recheckConnection());
+        }
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
         if (navHostFragment == null) {
@@ -53,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         handleEmailVerification(getIntent());
     }
+
 
     public void setBottomNavVisibility(boolean visible) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
