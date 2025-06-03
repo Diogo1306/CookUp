@@ -1,78 +1,96 @@
-package com.diogo.cookup.ui.activity;
+package com.diogo.cookup.ui.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.diogo.cookup.R;
+import com.diogo.cookup.ui.activity.MainActivity;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
 
-public class SignupActivity extends AppCompatActivity {
+import java.nio.InvalidMarkException;
+
+public class SignupFragment extends Fragment {
 
     private EditText editUsername, editEmail, editPassword, editConfirmPassword;
     private Button btnSignUp;
+
+    private ImageButton arrowBack;
     private TextView btnGoToLogin;
     private AuthViewModel authViewModel;
     private boolean isPasswordVisible = false;
     private boolean isConfirmPasswordVisible = false;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        setupViews();
+        setupViews(view);
         setupListeners();
         setupObservers();
-        findViewById(R.id.arrow_back).setOnClickListener(v -> onBackPressed());
+
+        return view;
     }
 
-    private void setupViews() {
-        editUsername = findViewById(R.id.input_username);
-        editEmail = findViewById(R.id.input_email);
-        editPassword = findViewById(R.id.input_password);
-        editConfirmPassword = findViewById(R.id.input_confirm_password);
-        btnSignUp = findViewById(R.id.signup_button);
-        btnGoToLogin = findViewById(R.id.singuptologin);
+    private void setupViews(View view) {
+        editUsername = view.findViewById(R.id.input_username);
+        editEmail = view.findViewById(R.id.input_email);
+        editPassword = view.findViewById(R.id.input_password);
+        editConfirmPassword = view.findViewById(R.id.input_confirm_password);
+        btnSignUp = view.findViewById(R.id.signup_button);
+        btnGoToLogin = view.findViewById(R.id.singuptologin);
+        arrowBack = view.findViewById(R.id.arrow_back);
+
     }
 
     private void setupListeners() {
         editPassword.setOnTouchListener((v, event) -> onPasswordToggleTouch(editPassword, event, true));
         editConfirmPassword.setOnTouchListener((v, event) -> onPasswordToggleTouch(editConfirmPassword, event, false));
-
-        btnSignUp.setOnClickListener(this::performSignUp);
-        btnGoToLogin.setOnClickListener(v -> navigateToLogin());
+        arrowBack.setOnClickListener(v ->
+                NavHostFragment.findNavController(this).popBackStack());        btnSignUp.setOnClickListener(this::performSignUp);
+        btnGoToLogin.setOnClickListener(v ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_signupFragment_to_loginFragment));
     }
 
     private void setupObservers() {
-        authViewModel.getUserLiveData().observe(this, firebaseUser -> {
+        authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), firebaseUser -> {
             if (firebaseUser != null) {
                 new ViewModelProvider(this).get(UserViewModel.class).loadUser(firebaseUser.getUid());
                 new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
         });
 
-        authViewModel.getErrorMessage().observe(this, errorMessage -> {
+        authViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
-                MessageUtils.showSnackbar(findViewById(android.R.id.content), errorMessage, Color.RED);
+                MessageUtils.showSnackbar(requireView(), errorMessage, Color.RED);
             }
         });
 
-        authViewModel.getSuccessMessage().observe(this, successMessage -> {
+        authViewModel.getSuccessMessage().observe(getViewLifecycleOwner(), successMessage -> {
             if (successMessage != null && !successMessage.isEmpty()) {
-                MessageUtils.showSnackbar(findViewById(android.R.id.content), successMessage, Color.GREEN);
+                MessageUtils.showSnackbar(requireView(), successMessage, Color.GREEN);
             }
         });
     }
@@ -127,17 +145,10 @@ public class SignupActivity extends AppCompatActivity {
         authViewModel.signup(email, password, username);
     }
 
-    private void navigateToLogin() {
-        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-        intent.putExtra("show_welcome", false);
-        startActivity(intent);
-        finish();
-    }
-
     private void navigateToMainActivity() {
-        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+        Intent intent = new Intent(requireContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();
+        requireActivity().finish();
     }
 }

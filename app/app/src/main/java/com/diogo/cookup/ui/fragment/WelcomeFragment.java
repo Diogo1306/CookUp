@@ -1,6 +1,5 @@
 package com.diogo.cookup.ui.fragment;
 
-import android.content.Intent;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
@@ -17,10 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.activity.LoginActivity;
-import com.diogo.cookup.ui.activity.SignupActivity;
 
 import java.io.IOException;
 
@@ -48,15 +46,16 @@ public class WelcomeFragment extends Fragment implements TextureView.SurfaceText
         Button btnSignup = view.findViewById(R.id.signup_button);
         TextView btnLogin = view.findViewById(R.id.login_button);
 
+        // Correto: usa as ações do nav_graph para navegar entre fragments
         btnSignup.setOnClickListener(v ->
-                startActivity(new android.content.Intent(requireActivity(), SignupActivity.class))
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_welcomeFragment_to_signupFragment)
         );
 
-        btnLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), LoginActivity.class);
-            startActivity(intent);
-        });
-
+        btnLogin.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_welcomeFragment_to_loginFragment)
+        );
     }
 
     private void hideSystemUI() {

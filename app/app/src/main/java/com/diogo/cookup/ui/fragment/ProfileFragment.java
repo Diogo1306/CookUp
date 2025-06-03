@@ -9,12 +9,10 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.activity.LoginActivity;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 
 public class ProfileFragment extends Fragment {
@@ -39,15 +37,4 @@ public class ProfileFragment extends Fragment {
         NavHostFragment.findNavController(this)
                 .navigate(R.id.action_profileFragment_to_settingsFragment);
     }
-
-    private void logoutUser() {
-        authViewModel.logout();
-        if (getActivity() != null) {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            getActivity().finish();
-        }
-    }
-
 }
