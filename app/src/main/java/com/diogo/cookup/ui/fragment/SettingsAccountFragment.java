@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.activity.LoginActivity;
+import com.diogo.cookup.ui.activity.AuthActivity;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
@@ -117,9 +118,11 @@ public class SettingsAccountFragment extends Fragment {
         );
         btn_logout.setOnClickListener(v -> {
             authViewModel.logout();
-            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+
+            Intent intent = new Intent(requireActivity(), AuthActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
+
     }
 }
