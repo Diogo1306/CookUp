@@ -117,7 +117,8 @@ class Category
         JOIN categories c ON rc.category_id = c.category_id
         WHERE rc.recipe_id = ?
     ");
-        $stmt->execute([$recipeId]);
+        $stmt->bind_param("i", $recipeId);
+        $stmt->execute();
 
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);

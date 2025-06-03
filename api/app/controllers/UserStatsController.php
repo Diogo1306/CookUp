@@ -38,21 +38,4 @@ class UserStatsController
         UserStats::markRecipeAsFinished($userId, $recipeId);
         Response::json(["success" => true, "message" => "Receita marcada como finalizada."]);
     }
-
-    public function getUserRecommendations()
-    {
-        if (!isset($_GET['user_id'])) {
-            Response::json(["success" => false, "message" => "ID do utilizador em falta."]);
-            return;
-        }
-
-        $userId = intval($_GET['user_id']);
-        $recipes = UserStats::getUserRecommendedRecipes($userId);
-
-        if (!empty($recipes)) {
-            Response::json(["success" => true, "data" => $recipes]);
-        } else {
-            Response::json(["success" => false, "message" => "Nenhuma recomendação disponível."]);
-        }
-    }
 }
