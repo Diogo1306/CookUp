@@ -15,6 +15,7 @@ import com.diogo.cookup.data.model.HomeFeedData;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -130,5 +131,9 @@ public interface ApiService {
     // Tracking
     @POST("api.php")
     Call<ApiResponse<Void>> trackInteraction(@Query("route") String route, @Body TrackRequest trackRequest);
+
+    // Test_Connection
+    @GET("test_connection.php")
+    Call<ResponseBody> testConnection();
 
 }
