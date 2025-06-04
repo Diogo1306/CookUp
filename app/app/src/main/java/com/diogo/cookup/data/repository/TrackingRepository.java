@@ -30,14 +30,12 @@ public class TrackingRepository {
                     successLiveData.postValue(true);
                 } else {
                     successLiveData.postValue(false);
-                    Log.e("TRACKING", "Erro ao registar interação.");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {
                 successLiveData.postValue(false);
-                Log.e("TRACKING", "Erro de rede: " + t.getMessage());
             }
         });
     }

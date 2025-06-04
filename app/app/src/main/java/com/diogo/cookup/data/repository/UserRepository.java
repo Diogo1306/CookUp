@@ -22,29 +22,25 @@ public class UserRepository {
     }
 
     public void getUser(String firebaseUid, UserCallback callback) {
-        Log.d("USER_REPO", "🚨 getUser DISPARADO com UID: " + firebaseUid);
-
         apiService.getUser("user", firebaseUid).enqueue(new Callback<ApiResponse<UserData>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<UserData>> call, @NonNull Response<ApiResponse<UserData>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     callback.onSuccess(response.body().getData(), response.body().getMessage());
                 } else {
-                    Log.e("USER_REPO", "❌ Falha na resposta: " + response.code());
                     callback.onError("Resposta inválida ou falha no corpo");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<UserData>> call, @NonNull Throwable t) {
-                Log.e("USER_REPO", "❌ Erro de conexão: " + t.getMessage());
                 callback.onError("Erro de conexão: " + t.getMessage());
             }
         });
     }
 
     public void createOrUpdateUser(UserData userData, UserCallback callback) {
-        apiService.createOrUpdateUser("user", userData).enqueue(new Callback<ApiResponse<UserData>>() {
+        apiService.saveUser("user", userData).enqueue(new Callback<ApiResponse<UserData>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<UserData>> call, @NonNull Response<ApiResponse<UserData>> response) {
                 if (response.isSuccessful() && response.body() != null) {

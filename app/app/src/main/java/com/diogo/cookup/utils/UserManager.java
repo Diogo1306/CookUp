@@ -13,7 +13,6 @@ public class UserManager {
         if (user != null && user.getUserId() > 0) {
             return user;
         } else {
-            Log.e(TAG, "Utilizador não encontrado ou inválido.");
             return null;
         }
     }
@@ -24,11 +23,9 @@ public class UserManager {
 
     public static void saveUser(Context context, UserData user) {
         SharedPrefHelper.getInstance(context).saveUser(user);
-        Log.d(TAG, "Utilizador salvo localmente: " + user.getUsername());
     }
 
     public static void clearUser(Context context) {
         SharedPrefHelper.getInstance(context).clearUser();
-        Log.d(TAG, "Utilizador removido localmente.");
     }
 }

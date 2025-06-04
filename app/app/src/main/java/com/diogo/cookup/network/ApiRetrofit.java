@@ -7,7 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiRetrofit {
-    private static final String BASE_URL = "http://192.168.173.229/PAP/CookUp_Core/public/";
+    private static final String BASE_URL = "http://192.168.0.26/PAP/CookUp_Core/public/";
     private static Retrofit retrofit = null;
     private static OkHttpClient httpClient = null;
 

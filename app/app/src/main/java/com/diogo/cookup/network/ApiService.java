@@ -1,17 +1,6 @@
 package com.diogo.cookup.network;
 
-import com.diogo.cookup.data.model.ApiResponse;
-import com.diogo.cookup.data.model.ApiResponseWithFilled;
-import com.diogo.cookup.data.model.CategoryData;
-import com.diogo.cookup.data.model.CommentData;
-import com.diogo.cookup.data.model.CommentRequest;
-import com.diogo.cookup.data.model.RatingRequest;
-import com.diogo.cookup.data.model.RecipeData;
-import com.diogo.cookup.data.model.SavedListData;
-import com.diogo.cookup.data.model.SearchData;
-import com.diogo.cookup.data.model.TrackRequest;
-import com.diogo.cookup.data.model.UserData;
-import com.diogo.cookup.data.model.HomeFeedData;
+import com.diogo.cookup.data.model.*;
 
 import java.util.List;
 
@@ -26,64 +15,80 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    // Users
+    // === USERS ===
     @POST("api.php")
-    Call<ApiResponse<UserData>> createOrUpdateUser(@Query("route") String route, @Body UserData user);
+    Call<ApiResponse<UserData>> saveUser(@Query("route") String route, @Body UserData user);
 
     @GET("api.php")
     Call<ApiResponse<UserData>> getUser(@Query("route") String route, @Query("firebase_uid") String firebaseUid);
 
-    // Recipes
+    // === RECIPES ===
     @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getAllRecipes(@Query("route") String route);
 
     @GET("api.php")
-    Call<ApiResponseWithFilled<List<RecipeData>>> getWeeklyRecipes(@Query("route") String route);
+    Call<ApiResponse<RecipeData>> getRecipeById(@Query("route") String route, @Query("recipe_id") int recipeId);
+
+    @POST("api.php")
+    Call<ApiResponse<Void>> saveRecipe(@Query("route") String route, @Body RecipeData recipe);
 
     @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getPopularRecipesWithPage(@Query("route") String route, @Query("page") int page);
 
     @GET("api.php")
+    Call<ApiResponse<List<RecipeData>>> getMostFavoritedRecipes(@Query("route") String route);
+
+    @GET("api.php")
+    Call<ApiResponse<List<RecipeData>>> getByCategory(@Query("route") String route, @Query("category_id") int categoryId);
+
+    @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getRecommendedRecipes(@Query("route") String route);
 
+    // === PROFILE ===
     @GET("api.php")
-    Call<ApiResponse<List<RecipeData>>> getUserRecommendedRecipes(@Query("route") String route, @Query("user_id") int userId);
+    Call<ApiResponse<ProfileData>> getProfileSummary(@Query("route") String route, @Query("user_id") int userId);
 
     @GET("api.php")
-    Call<ApiResponse<List<RecipeData>>> getRecommendedRecipesByUser(@Query("route") String route, @Query("user_id") int userId);
+    Call<ApiResponse<List<RecipeData>>> getProfileRecipes(@Query("route") String route, @Query("user_id") int userId);
 
-    @GET("api.php")
-    Call<ApiResponseWithFilled<List<RecipeData>>> getRecipesByCategory(@Query("route") String route, @Query("category_id") int categoryId);
-
+    // === HOME FEED ===
     @GET("api.php")
     Call<ApiResponse<HomeFeedData>> getFullHomeFeed(@Query("route") String route, @Query("user_id") int userId);
 
     @GET("api.php")
-    Call<ApiResponse<RecipeData>> getRecipeDetail(@Query("route") String route, @Query("action") String action, @Query("recipe_id") int recipeId);
-
-    // FallbackRecipes
-    @POST("api.php")
-    Call<ApiResponseWithFilled<List<RecipeData>>> getFallbackRecipes();
-
-    //Search
+    Call<ApiResponseWithFilled<List<RecipeData>>> getWeeklyRecipes(@Query("route") String route);
 
     @GET("api.php")
-    Call<ApiResponse<SearchData>> searchAll(@Query("route") String route, @Query("query") String query);
+    Call<ApiResponse<List<RecipeData>>> getPopularHomeRecipes(@Query("route") String route);
 
-    // Categories
+    @GET("api.php")
+    Call<ApiResponseWithFilled<List<RecipeData>>> getRecipesByCategory(@Query("route") String route, @Query("category_id") int categoryId);
+
+    // === CATEGORIES ===
     @GET("api.php")
     Call<ApiResponse<List<CategoryData>>> getCategories(@Query("route") String route);
-
-    @GET("api.php")
-    Call<ApiResponse<List<CategoryData>>> getUserCategories(@Query("route") String route, @Query("user_id") int userId);
 
     @GET("api.php")
     Call<ApiResponse<List<CategoryData>>> getPopularCategories(@Query("route") String route);
 
     @GET("api.php")
-    Call<ApiResponseWithFilled<List<Integer>>> getTopUserCategories(@Query("route") String route, @Query("user_id") int userId);
+    Call<ApiResponse<List<CategoryData>>> getUserCategories(@Query("route") String route, @Query("user_id") int userId);
 
-    // Saved Lists
+    // === COMMENTS ===
+    @POST("api.php")
+    Call<ApiResponse<Void>> submitComment(@Query("route") String route, @Body CommentRequest request);
+
+    @GET("api.php")
+    Call<ApiResponse<List<CommentData>>> getComments(@Query("route") String route, @Query("recipe_id") int recipeId);
+
+    // === RATINGS ===
+    @POST("api.php")
+    Call<ApiResponse<Void>> submitRating(@Query("route") String route, @Body RatingRequest request);
+
+    @GET("api.php")
+    Call<ApiResponse<Float>> getAverageRating(@Query("route") String route, @Query("recipe_id") int recipeId);
+
+    // === SAVED LISTS ===
     @FormUrlEncoded
     @POST("api.php")
     Call<ApiResponse<Void>> createList(@Query("route") String route, @Field("user_id") int userId, @Field("list_name") String listName, @Field("color") String color);
@@ -97,7 +102,7 @@ public interface ApiService {
     Call<ApiResponse<Void>> removeRecipeFromList(@Query("route") String route, @Field("list_id") int listId, @Field("recipe_id") int recipeId);
 
     @GET("api.php")
-    Call<ApiResponse<List<SavedListData>>> getUserLists(@Query("route") String route, @Query("action") String action, @Query("user_id") int userId);
+    Call<ApiResponse<List<SavedListData>>> getUserLists(@Query("route") String route, @Query("user_id") int userId);
 
     @FormUrlEncoded
     @POST("api.php")
@@ -115,25 +120,15 @@ public interface ApiService {
     @GET("api.php")
     Call<ApiResponse<List<Integer>>> getSavedRecipeIds(@Query("route") String route, @Query("user_id") int userId);
 
-    // Ratings & Comments
-    @GET("api.php")
-    Call<ApiResponse<Float>> getAverageRating(@Query("route") String route, @Query("recipe_id") int recipeId);
-
-    @POST("api.php")
-    Call<ApiResponse<Void>> submitRating(@Query("route") String route, @Body RatingRequest request);
-
-    @GET("api.php")
-    Call<ApiResponse<List<CommentData>>> getComments(@Query("route") String route, @Query("recipe_id") int recipeId);
-
-    @POST("api.php")
-    Call<ApiResponse<Void>> submitComment(@Query("route") String route, @Body CommentRequest request);
-
-    // Tracking
+    // === TRACKING ===
     @POST("api.php")
     Call<ApiResponse<Void>> trackInteraction(@Query("route") String route, @Body TrackRequest trackRequest);
 
-    // Test_Connection
+    // === SEARCH ===
+    @GET("api.php")
+    Call<ApiResponse<SearchData>> searchAll(@Query("route") String route, @Query("query") String query);
+
+    // === TEST CONNECTION ===
     @GET("test_connection.php")
     Call<ResponseBody> testConnection();
-
 }

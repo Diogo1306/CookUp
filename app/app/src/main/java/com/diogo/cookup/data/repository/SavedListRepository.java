@@ -15,7 +15,7 @@ public class SavedListRepository {
     private final ApiService api = ApiRetrofit.getApiService();
 
     public void getUserLists(int userId, Callback<ApiResponse<List<SavedListData>>> callback) {
-        api.getUserLists("lists", "lists", userId).enqueue(callback);
+        api.getUserLists("lists", userId).enqueue(callback);
     }
 
     public void createList(int userId, String name, String color, Callback<ApiResponse<Void>> callback) {

@@ -25,21 +25,10 @@ public class UserViewModel extends AndroidViewModel {
         sharedPrefHelper = SharedPrefHelper.getInstance(application.getApplicationContext());
     }
 
-    public LiveData<UserData> getUserLiveData() {
-        return userLiveData;
-    }
-
-    public LiveData<String> getSuccessMessageLiveData() {
-        return successMessage;
-    }
-
-    public LiveData<String> getErrorMessageLiveData() {
-        return errorMessage;
-    }
-
-    public LiveData<ApiResponse<UserData>> getApiResponseLiveData() {
-        return userApiResponseLiveData;
-    }
+    public LiveData<UserData> getUserLiveData() {return userLiveData;}
+    public LiveData<String> getSuccessMessageLiveData() {return successMessage;}
+    public LiveData<String> getErrorMessageLiveData() {return errorMessage;}
+    public LiveData<ApiResponse<UserData>> getApiResponseLiveData() {return userApiResponseLiveData;}
 
     public void loadUser(String firebaseUid) {
         userRepository.getUser(firebaseUid, new UserRepository.UserCallback() {

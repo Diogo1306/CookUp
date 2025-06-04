@@ -66,12 +66,9 @@ public class RecipeRepository {
     }
 
     public void loadWeeklyRecipes(MutableLiveData<List<RecipeData>> liveData, MutableLiveData<String> error) {
-        Log.d("HOME_FEED", "Chamando API: weekly");
-
         apiService.getWeeklyRecipes("weekly").enqueue(new Callback<ApiResponseWithFilled<List<RecipeData>>>() {
             @Override
             public void onResponse(Call<ApiResponseWithFilled<List<RecipeData>>> call, Response<ApiResponseWithFilled<List<RecipeData>>> response) {
-                Log.d("HOME_FEED", "Resposta weekly recebida: " + (response.body() != null ? response.body().getData().size() : "null"));
 
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     liveData.postValue(response.body().getData());
@@ -83,24 +80,19 @@ public class RecipeRepository {
             @Override
             public void onFailure(Call<ApiResponseWithFilled<List<RecipeData>>> call, Throwable t) {
                 error.postValue("Falha: " + t.getMessage());
-                Log.e("HOME_FEED", "Falha weekly: " + t.getMessage());
             }
         });
     }
 
     public void getRecipeDetail(int recipeId, MutableLiveData<RecipeData> recipeData, MutableLiveData<String> errorMessage) {
-        Log.d("RECIPE_API", "Buscando detalhes da receita com ID: " + recipeId);
-
-        apiService.getRecipeDetail("recipe_detail", "getRecipeDetail", recipeId)
+        apiService.getRecipeById("recipe", recipeId)
                 .enqueue(new Callback<ApiResponse<RecipeData>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<RecipeData>> call, Response<ApiResponse<RecipeData>> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            Log.d("RECIPE_API", "Resposta crua: " + new Gson().toJson(response.body()));
 
                             if (response.body().isSuccess()) {
                                 recipeData.postValue(response.body().getData());
-                                Log.d("RECIPE_API", "Dados da receita: " + new Gson().toJson(response.body().getData()));
                             } else {
                                 errorMessage.postValue(response.body().getMessage());
                             }
@@ -108,7 +100,6 @@ public class RecipeRepository {
                             errorMessage.postValue("Erro ao buscar detalhes da receita.");
                         }
                     }
-
                     @Override
                     public void onFailure(Call<ApiResponse<RecipeData>> call, Throwable t) {
                         errorMessage.postValue("Erro de rede: " + t.getMessage());

@@ -35,7 +35,6 @@ public class AuthRepository {
                         String errorMsg = (task.getException() != null)
                                 ? task.getException().getMessage()
                                 : "Erro desconhecido";
-                        Log.e("AUTH_REPO", "❌ Firebase login falhou: " + errorMsg);
                         callback.onError("Erro ao fazer login: " + errorMsg);
                     }
                 });

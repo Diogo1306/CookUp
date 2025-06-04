@@ -40,7 +40,6 @@ public class SharedPrefHelper {
 
     public UserData getUser() {
         String json = sharedPref.getString(KEY_USER, null);
-        Log.d("SHARED_PREF", "🔍 Dados do utilizador: " + json);
         if (json != null) {
             return gson.fromJson(json, UserData.class);
         }

@@ -30,7 +30,6 @@ import com.diogo.cookup.viewmodel.CategoryViewModel;
 import com.diogo.cookup.viewmodel.HomeFeedViewModel;
 import com.diogo.cookup.viewmodel.RecipeViewModel;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
-import com.diogo.cookup.viewmodel.UserStatsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,6 @@ public class HomeFragment extends Fragment {
     private CategoryViewModel categoryViewModel;
     private RecipeViewModel recipeViewModel;
     private SavedListViewModel savedListViewModel;
-    private UserStatsViewModel userStatsViewModel;
     private HomeFeedViewModel homeFeedViewModel;
     private boolean firstLoad = true;
 
@@ -96,7 +94,6 @@ public class HomeFragment extends Fragment {
         savedListViewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
         recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        userStatsViewModel = new ViewModelProvider(this).get(UserStatsViewModel.class);
         homeFeedViewModel = new ViewModelProvider(this).get(HomeFeedViewModel.class);
     }
 
