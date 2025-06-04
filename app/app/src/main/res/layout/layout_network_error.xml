@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_network_error"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,32 +8,39 @@
     android:gravity="center"
     android:background="@color/background">
 
-    <ImageView
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:src="@drawable/ic_people"
-        android:contentDescription="nao internet" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/server_error_icon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:lottie_fileName="no_internet.json"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:layout_gravity="center" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sem conexão com a internet"
-        android:textSize="18sp"
-        android:textColor="#D32F2F"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:fontFamily="@font/poppins_regular"
         android:layout_marginTop="16dp"/>
 
     <ProgressBar
         android:id="@+id/progress_checking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
         android:visibility="gone"
         android:layout_gravity="center_horizontal"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_try_again"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/button_primary"
+        android:layout_width="200dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:fontFamily="@font/poppins_semibold"
         android:text="Tentar novamente"
-        android:layout_marginTop="24dp"/>
+        android:textColor="@color/white" />
 </LinearLayout>

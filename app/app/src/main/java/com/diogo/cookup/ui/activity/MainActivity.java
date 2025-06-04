@@ -2,6 +2,7 @@ package com.diogo.cookup.ui.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -50,7 +51,12 @@ public class MainActivity extends BaseConnectivityActivity {
 
         View tryAgainNetwork = layoutNetworkError.findViewById(R.id.button_try_again);
         if (tryAgainNetwork != null) {
-            tryAgainNetwork.setOnClickListener(v -> recheckConnection());
+            tryAgainNetwork.setOnClickListener(v -> {
+                showCheckingNetwork(layoutNetworkError);
+                new Handler().postDelayed(() -> {
+                    recheckConnection();
+                }, 1200);
+            });
         }
 
         View tryAgainServer = layoutServerError.findViewById(R.id.button_try_again);

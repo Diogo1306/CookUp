@@ -58,6 +58,8 @@ dependencies {
     // recyclerview
     implementation libs.recyclerview
 
+    // Animated icons
+    implementation libs.lottie
 
     implementation libs.glide
     implementation libs.navigation.fragment
