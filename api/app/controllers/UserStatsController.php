@@ -8,8 +8,7 @@ class UserStatsController
     public function updateStat()
     {
         if (!isset($_POST['user_id'], $_POST['category_id'], $_POST['field'])) {
-            Response::json(["success" => false, "message" => "Parâmetros faltando."]);
-            return;
+            return Response::json(["success" => false, "message" => "Parâmetros em falta."], 400);
         }
 
         $userId = intval($_POST['user_id']);
@@ -17,25 +16,35 @@ class UserStatsController
         $field = $_POST['field'];
 
         if (!in_array($field, ['views_count', 'favorites_count', 'finished_count'])) {
-            Response::json(["success" => false, "message" => "Campo inválido."]);
-            return;
+            return Response::json(["success" => false, "message" => "Campo inválido."], 422);
         }
 
-        UserStats::updateUserCategoryStats($userId, $categoryId, $field);
-        Response::json(["success" => true, "message" => "Estatística atualizada."]);
+        $success = UserStats::updateUserCategoryStats($userId, $categoryId, $field);
+
+        return Response::json(
+            $success
+                ? ["success" => true, "message" => "Estatística atualizada com sucesso."]
+                : ["success" => false, "message" => "Erro ao atualizar estatística."],
+            $success ? 200 : 500
+        );
     }
 
     public function markFinished()
     {
         if (!isset($_POST['user_id'], $_POST['recipe_id'])) {
-            Response::json(["success" => false, "message" => "Parâmetros faltando."]);
-            return;
+            return Response::json(["success" => false, "message" => "Parâmetros em falta."], 400);
         }
 
         $userId = intval($_POST['user_id']);
         $recipeId = intval($_POST['recipe_id']);
 
-        UserStats::markRecipeAsFinished($userId, $recipeId);
-        Response::json(["success" => true, "message" => "Receita marcada como finalizada."]);
+        $success = UserStats::markRecipeAsFinished($userId, $recipeId);
+
+        return Response::json(
+            $success
+                ? ["success" => true, "message" => "Receita marcada como finalizada."]
+                : ["success" => false, "message" => "Erro ao marcar receita como finalizada."],
+            $success ? 200 : 500
+        );
     }
 }

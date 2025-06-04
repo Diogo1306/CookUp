@@ -5,32 +5,31 @@ require_once __DIR__ . '/../core/Response.php';
 
 class RatingController
 {
-    public static function submitRating()
+    public function submit()
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
         if (!isset($data['user_id'], $data['recipe_id'], $data['rating'])) {
-            Response::json(["success" => false, "message" => "Dados em falta."]);
-            return;
+            return Response::json(["success" => false, "message" => "Dados em falta."]);
         }
 
-        $success = Rating::submitRating($data['user_id'], $data['recipe_id'], $data['rating']);
+        $success = Rating::submit($data['user_id'], $data['recipe_id'], $data['rating']);
 
-        if ($success) {
-            Response::json(["success" => true, "message" => "Avaliação enviada com sucesso!"]);
-        } else {
-            Response::json(["success" => false, "message" => "Erro ao enviar avaliação."]);
-        }
+        Response::json(
+            $success
+                ? ["success" => true, "message" => "Avaliação enviada com sucesso!"]
+                : ["success" => false, "message" => "Erro ao enviar avaliação."]
+        );
     }
 
-    public static function getAverage()
+    public function getAverage()
     {
         if (!isset($_GET['recipe_id'])) {
             Response::json(["success" => false, "message" => "ID da receita em falta."]);
             return;
         }
 
-        $media = Rating::getAverageRating($_GET['recipe_id']);
-        Response::json(["success" => true, "average" => $media]);
+        $average = Rating::getAverage($_GET['recipe_id']);
+        Response::json(["success" => true, "average" => $average]);
     }
 }

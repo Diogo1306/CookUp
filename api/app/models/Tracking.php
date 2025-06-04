@@ -4,11 +4,16 @@ require_once __DIR__ . '/../core/Database.php';
 
 class Tracking
 {
-    public static function registerInteraction($userId, $recipeId, $type)
+    /**
+     * Registra uma interação do usuário com uma receita.
+     * Tipos: view, favorite, finish
+     */
+    public static function registerInteraction(int $userId, int $recipeId, string $type): bool
     {
-        $conn = Database::connect();
+        $db = Database::connect();
 
-        $stmt = $conn->prepare("SELECT category_id FROM recipe_category WHERE recipe_id = ?");
+        // Busca categorias da receita
+        $stmt = $db->prepare("SELECT category_id FROM recipe_category WHERE recipe_id = ?");
         $stmt->bind_param("i", $recipeId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -17,35 +22,38 @@ class Tracking
         while ($row = $result->fetch_assoc()) {
             $categoryIds[] = $row['category_id'];
         }
+        $stmt->close();
 
         if (empty($categoryIds)) return false;
 
         switch ($type) {
             case 'view':
-                $stmt = $conn->prepare("INSERT INTO recipe_views (user_id, recipe_id, viewed_at) VALUES (?, ?, NOW())");
+                $stmt = $db->prepare("INSERT INTO recipe_views (user_id, recipe_id, viewed_at) VALUES (?, ?, NOW())");
                 $stmt->bind_param("ii", $userId, $recipeId);
                 $stmt->execute();
-
+                $stmt->close();
                 foreach ($categoryIds as $categoryId) {
-                    self::updateUserCategoryStats($conn, $userId, $categoryId, 'views_count');
+                    self::updateUserCategoryStats($db, $userId, $categoryId, 'views_count');
                 }
                 break;
 
             case 'favorite':
-                $conn->query("UPDATE recipes SET favorites_count = favorites_count + 1 WHERE recipe_id = $recipeId");
-
+                $update = $db->prepare("UPDATE recipes SET favorites_count = favorites_count + 1 WHERE recipe_id = ?");
+                $update->bind_param("i", $recipeId);
+                $update->execute();
+                $update->close();
                 foreach ($categoryIds as $categoryId) {
-                    self::updateUserCategoryStats($conn, $userId, $categoryId, 'favorites_count');
+                    self::updateUserCategoryStats($db, $userId, $categoryId, 'favorites_count');
                 }
                 break;
 
             case 'finish':
-                $stmt = $conn->prepare("INSERT INTO user_recipe_finished (user_id, recipe_id, finished_at) VALUES (?, ?, NOW())");
+                $stmt = $db->prepare("INSERT INTO user_recipe_finished (user_id, recipe_id, finished_at) VALUES (?, ?, NOW())");
                 $stmt->bind_param("ii", $userId, $recipeId);
                 $stmt->execute();
-
+                $stmt->close();
                 foreach ($categoryIds as $categoryId) {
-                    self::updateUserCategoryStats($conn, $userId, $categoryId, 'finished_count');
+                    self::updateUserCategoryStats($db, $userId, $categoryId, 'finished_count');
                 }
                 break;
 
@@ -56,41 +64,45 @@ class Tracking
         return true;
     }
 
-    private static function updateUserCategoryStats($conn, $userId, $categoryId, $field)
+    /** Atualiza estatísticas por categoria e tipo (privado) */
+    private static function updateUserCategoryStats($db, int $userId, int $categoryId, string $field): void
     {
-        $base = ['views_count' => 0, 'favorites_count' => 0, 'finished_count' => 0];
-        $base[$field] = 1;
-
-        $updateSql = "";
-        switch ($field) {
-            case 'views_count':
-                $updateSql = "views_count = views_count + 1";
-                break;
-            case 'favorites_count':
-                $updateSql = "favorites_count = favorites_count + 1";
-                break;
-            case 'finished_count':
-                $updateSql = "finished_count = finished_count + 1";
-                break;
-            default:
-                return;
-        }
+        $fields = ['views_count' => 0, 'favorites_count' => 0, 'finished_count' => 0];
+        if (!isset($fields[$field])) return;
+        $fields[$field] = 1;
 
         $sql = "
             INSERT INTO user_category_stats (user_id, category_id, views_count, favorites_count, finished_count)
             VALUES (?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE $updateSql
+            ON DUPLICATE KEY UPDATE $field = $field + 1
         ";
 
-        $stmt = $conn->prepare($sql);
+        $stmt = $db->prepare($sql);
         $stmt->bind_param(
             "iiiii",
             $userId,
             $categoryId,
-            $base['views_count'],
-            $base['favorites_count'],
-            $base['finished_count']
+            $fields['views_count'],
+            $fields['favorites_count'],
+            $fields['finished_count']
         );
         $stmt->execute();
+        $stmt->close();
+    }
+
+    /** Conta quantas receitas do array foram marcadas como finalizadas */
+    public static function countFinishedByRecipeIds(array $recipeIds): int
+    {
+        if (empty($recipeIds)) return 0;
+        $db = Database::connect();
+        $placeholders = implode(',', array_fill(0, count($recipeIds), '?'));
+        $types = str_repeat('i', count($recipeIds));
+        $sql = "SELECT COUNT(*) as finished_count FROM user_recipe_finished WHERE recipe_id IN ($placeholders)";
+        $stmt = $db->prepare($sql);
+        $stmt->bind_param($types, ...$recipeIds);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return intval($res['finished_count'] ?? 0);
     }
 }

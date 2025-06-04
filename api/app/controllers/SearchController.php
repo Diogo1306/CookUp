@@ -10,10 +10,10 @@ class SearchController
         $query = $_GET['query'] ?? null;
 
         if (!$query) {
-            return Response::json(["success" => false, "message" => "Parâmetro 'query' em falta"], 422);
+            return Response::json(["success" => false, "message" => "Parâmetro 'query' em falta."], 422);
         }
 
-        $data = Search::globalSearch($query);
+        $data = Search::searchGlobal($query);
         return Response::json(["success" => true, "data" => $data]);
     }
 }

@@ -2,29 +2,44 @@
 
 require_once __DIR__ . '/../core/Database.php';
 
+/**
+ * Helper para montar URLs de imagem de categoria
+ */
+
+function buildCategoryImageUrl($image_url)
+{
+    return !empty($image_url)
+        ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $image_url
+        : BASE_URL . DEFAULT_IMAGE;
+}
+
 class Category
 {
-    public static function getAllCategories()
+    /**
+     * Retorna todas as categorias com URL de imagem já montada
+     */
+
+    public static function getAll(): array
     {
         $conn = Database::connect();
         $stmt = $conn->prepare("SELECT * FROM categories");
         $stmt->execute();
-
         $result = $stmt->get_result();
-        $categories = [];
 
+        $categories = [];
         while ($row = $result->fetch_assoc()) {
-            $row['category_image_url'] = !empty($row['image_url'])
-                ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $row['image_url']
-                : BASE_URL . DEFAULT_IMAGE;
+            $row['category_image_url'] = buildCategoryImageUrl($row['image_url'] ?? null);
             unset($row['image_url']);
             $categories[] = $row;
         }
-
         return $categories;
     }
 
-    public static function getPopularCategories()
+    /**
+     * Retorna as categorias mais populares (mais receitas relacionadas)
+     */
+
+    public static function getPopular($limit = 10): array
     {
         $conn = Database::connect();
         $stmt = $conn->prepare("SELECT c.*, COUNT(rc.recipe_id) AS total
@@ -32,26 +47,27 @@ class Category
             LEFT JOIN recipe_category rc ON rc.category_id = c.category_id
             GROUP BY c.category_id
             ORDER BY total DESC
-            LIMIT 10");
+            LIMIT ?");
+        $stmt->bind_param("i", $limit);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $categories = [];
         while ($row = $result->fetch_assoc()) {
-            $row['category_image_url'] = !empty($row['image_url'])
-                ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $row['image_url']
-                : BASE_URL . DEFAULT_IMAGE;
+            $row['category_image_url'] = buildCategoryImageUrl($row['image_url'] ?? null);
             unset($row['image_url']);
             $categories[] = $row;
         }
-
         return $categories;
     }
 
-    public static function getTopCategoriesByUser($userId, $limit = 10)
+    /**
+     * Retorna categorias "favoritas" de um usuário, preenchendo até o limite com as mais populares se faltar
+     */
+
+    public static function getUserTop($userId, $limit = 10): array
     {
         $conn = Database::connect();
-
         $stmt = $conn->prepare("SELECT c.category_id, c.category_name, c.image_url,
                    (ucs.views_count + ucs.favorites_count * 2 + ucs.finished_count * 3) AS score
             FROM user_category_stats ucs
@@ -65,66 +81,76 @@ class Category
 
         $categories = [];
         while ($row = $result->fetch_assoc()) {
-            $row['category_image_url'] = !empty($row['image_url'])
-                ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $row['image_url']
-                : BASE_URL . DEFAULT_IMAGE;
+            $row['category_image_url'] = buildCategoryImageUrl($row['image_url'] ?? null);
             unset($row['image_url']);
             $categories[] = $row;
         }
 
+        /**
+         * Preencher se tiver menos que o limite
+         */
+
         if (count($categories) < $limit) {
             $fetchedIds = array_column($categories, 'category_id');
-
+            $whereNotIn = '';
+            if (!empty($fetchedIds)) {
+                $placeholders = implode(',', array_fill(0, count($fetchedIds), '?'));
+                $whereNotIn = "WHERE c.category_id NOT IN ($placeholders) ";
+            }
             $query = "SELECT c.category_id, c.category_name, c.image_url,
                        COUNT(rc.recipe_id) AS total
                 FROM categories c
-                LEFT JOIN recipe_category rc ON rc.category_id = c.category_id ";
-
+                LEFT JOIN recipe_category rc ON rc.category_id = c.category_id
+                $whereNotIn
+                GROUP BY c.category_id
+                ORDER BY total DESC
+                LIMIT ?";
+            $params = [];
+            $types = '';
             if (!empty($fetchedIds)) {
-                $placeholders = implode(',', array_fill(0, count($fetchedIds), '?'));
-                $query .= "WHERE c.category_id NOT IN ($placeholders) ";
+                $params = $fetchedIds;
+                $types = str_repeat('i', count($fetchedIds));
             }
-
-            $query .= "GROUP BY c.category_id ORDER BY total DESC LIMIT ?";
-
+            $params[] = $limit - count($categories);
+            $types .= 'i';
             $stmt2 = $conn->prepare($query);
-            $types = str_repeat('i', count($fetchedIds)) . 'i';
-            $params = array_merge($fetchedIds, [$limit - count($categories)]);
             $stmt2->bind_param($types, ...$params);
-
             $stmt2->execute();
             $result2 = $stmt2->get_result();
 
             while ($row = $result2->fetch_assoc()) {
-                $row['category_image_url'] = !empty($row['image_url'])
-                    ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $row['image_url']
-                    : BASE_URL . DEFAULT_IMAGE;
+                $row['category_image_url'] = buildCategoryImageUrl($row['image_url'] ?? null);
                 unset($row['image_url']);
                 $categories[] = $row;
             }
         }
-
         return $categories;
     }
 
-    public static function getCategoriesByRecipeId($recipeId)
+    /**
+     * Retorna as categorias de uma receita específica
+     */
+
+    public static function getByRecipe($recipeId): array
     {
         $conn = Database::connect();
-
         $stmt = $conn->prepare("
-        SELECT c.category_id, c.category_name
-        FROM recipe_category rc
-        JOIN categories c ON rc.category_id = c.category_id
-        WHERE rc.recipe_id = ?
-    ");
+            SELECT c.category_id, c.category_name
+            FROM recipe_category rc
+            JOIN categories c ON rc.category_id = c.category_id
+            WHERE rc.recipe_id = ?
+        ");
         $stmt->bind_param("i", $recipeId);
         $stmt->execute();
-
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public static function getCategoryName($categoryId)
+    /**
+     * Retorna o nome da categoria (ou 'Sem Nome')
+     */
+
+    public static function getName($categoryId): string
     {
         $conn = Database::connect();
         $stmt = $conn->prepare("SELECT category_name FROM categories WHERE category_id = ?");
@@ -135,7 +161,6 @@ class Category
         if ($row = $result->fetch_assoc()) {
             return $row['category_name'];
         }
-
         return 'Sem Nome';
     }
 }

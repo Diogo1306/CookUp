@@ -4,34 +4,48 @@ require_once __DIR__ . '/../core/Database.php';
 
 class UserStats
 {
-    public static function updateUserCategoryStats($userId, $categoryId, $field)
+    /**
+     * Atualiza stats do user numa categoria.
+     * $field pode ser: views_count, favorites_count, finished_count.
+     */
+    public static function updateUserCategoryStats(int $userId, int $categoryId, string $field): bool
     {
-        $conn = Database::connect();
+        // Previne SQL injection
+        $validFields = ['views_count', 'favorites_count', 'finished_count'];
+        if (!in_array($field, $validFields)) return false;
 
-        $stmt = $conn->prepare("
+        $db = Database::connect();
+        $stmt = $db->prepare("
             INSERT INTO user_category_stats (user_id, category_id, $field)
             VALUES (?, ?, 1)
             ON DUPLICATE KEY UPDATE $field = $field + 1
         ");
         $stmt->bind_param("ii", $userId, $categoryId);
-        $stmt->execute();
+        $success = $stmt->execute();
         $stmt->close();
+        return $success;
     }
 
-    public static function markRecipeAsFinished($userId, $recipeId)
+    /**
+     * Marca receita como finalizada pelo usuário.
+     */
+    public static function markRecipeAsFinished(int $userId, int $recipeId): bool
     {
-        $conn = Database::connect();
-
-        $stmt = $conn->prepare("
+        $db = Database::connect();
+        $stmt = $db->prepare("
             INSERT IGNORE INTO user_recipe_finished (user_id, recipe_id)
             VALUES (?, ?)
         ");
         $stmt->bind_param("ii", $userId, $recipeId);
-        $stmt->execute();
+        $success = $stmt->execute();
         $stmt->close();
+        return $success;
     }
 
-    public static function getRecommendedByUserId($userId, $excludeIds = [])
+    /**
+     * Recomenda receitas para o user com base nas categorias mais vistas/favoritas/finalizadas.
+     */
+    public static function getRecommendedByUserId(int $userId, array $excludeIds = []): array
     {
         $db = Database::connect();
 
@@ -57,11 +71,11 @@ class UserStats
 
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
-            $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
             $row['categories'] = explode(',', $row['category_names']);
             unset($row['category_names']);
             $recipes[] = $row;
         }
+        $stmt->close();
         return $recipes;
     }
 }

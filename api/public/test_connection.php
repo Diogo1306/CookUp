@@ -6,15 +6,18 @@ try {
 
     if ($mysqli->connect_errno) {
         http_response_code(500);
-        echo json_encode(["status" => "error", "msg" => "DB off"]);
+        header("Content-Type: application/json");
+        echo json_encode(["success" => false, "message" => "Base de dados indisponível."]);
         exit();
     }
 } catch (Throwable $e) {
     http_response_code(500);
-    echo json_encode(["status" => "error", "msg" => "DB off", "details" => $e->getMessage()]);
+    header("Content-Type: application/json");
+    echo json_encode(["success" => false, "message" => "Base de dados indisponível.", "details" => $e->getMessage()]);
     exit();
 }
 
 http_response_code(200);
-echo json_encode(["status" => "ok"]);
+header("Content-Type: application/json");
+echo json_encode(["success" => true, "message" => "Ligação com a base de dados estabelecida."]);
 exit();

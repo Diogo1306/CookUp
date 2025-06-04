@@ -1,32 +1,29 @@
 <?php
 
 require_once __DIR__ . '/../core/Database.php';
-require_once __DIR__ . '/Rating.php';
 
 class Recipe
 {
-
-    public static function createOrUpdateRecipe($data)
+    public static function save($data): bool
     {
-        $conn = Database::connect();
+        $db = Database::connect();
 
-        $stmt = $conn->prepare("
-        INSERT INTO recipes (
-            recipe_id, author_id, title, description, instructions,
-            preparation_time, servings, image, utensils, difficulty, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-        ON DUPLICATE KEY UPDATE 
-            title = VALUES(title),
-            description = VALUES(description),
-            instructions = VALUES(instructions),
-            preparation_time = VALUES(preparation_time),
-            servings = VALUES(servings),
-            image = VALUES(image),
-            utensils = VALUES(utensils),
-            difficulty = VALUES(difficulty),
-            updated_at = NOW()
-    ");
-
+        $stmt = $db->prepare("
+            INSERT INTO recipes (
+                recipe_id, author_id, title, description, instructions,
+                preparation_time, servings, image, utensils, difficulty, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+            ON DUPLICATE KEY UPDATE 
+                title = VALUES(title),
+                description = VALUES(description),
+                instructions = VALUES(instructions),
+                preparation_time = VALUES(preparation_time),
+                servings = VALUES(servings),
+                image = VALUES(image),
+                utensils = VALUES(utensils),
+                difficulty = VALUES(difficulty),
+                updated_at = NOW()
+        ");
         $stmt->bind_param(
             "iisssissss",
             $data['recipe_id'],
@@ -46,109 +43,146 @@ class Recipe
 
         if (!$success) return false;
 
-        $recipeId = $data['recipe_id'];
-        if (!$recipeId) {
-            $recipeId = $conn->insert_id;
-        }
-
-        $deleteStmt = $conn->prepare("DELETE FROM recipe_category WHERE recipe_id = ?");
-        $deleteStmt->bind_param("i", $recipeId);
-        $deleteStmt->execute();
-        $deleteStmt->close();
-
+        // Lida com categorias (troca todas)
+        $recipeId = $data['recipe_id'] ?: $db->insert_id;
+        $db->query("DELETE FROM recipe_category WHERE recipe_id = $recipeId");
         if (!empty($data['categories']) && is_array($data['categories'])) {
-            $insertStmt = $conn->prepare("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?, ?)");
-            foreach ($data['categories'] as $categoryId) {
-                $insertStmt->bind_param("ii", $recipeId, $categoryId);
-                $insertStmt->execute();
+            $insert = $db->prepare("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?, ?)");
+            foreach ($data['categories'] as $catId) {
+                $insert->bind_param("ii", $recipeId, $catId);
+                $insert->execute();
             }
-            $insertStmt->close();
+            $insert->close();
         }
 
         return true;
     }
 
-    public static function deleteRecipe($recipeId)
+    /** Deleta uma receita (e tudo relacionado via cascade) */
+    public static function delete($recipeId): bool
     {
-        $conn = Database::connect();
-        $conn->begin_transaction();
-
-        try {
-            $stmt = $conn->prepare("DELETE FROM recipes WHERE recipe_id = ?");
-            $stmt->bind_param("i", $recipeId);
-            $stmt->execute();
-            $stmt->close();
-
-            $conn->commit();
-            return true;
-        } catch (Exception $e) {
-            $conn->rollback();
-            return false;
-        }
-    }
-
-    private static function parseCategories($recipe)
-    {
-        $ids = explode(',', (string)($recipe['category_ids'] ?? ''));
-        $names = explode(',', (string)($recipe['category_names'] ?? ''));
-        $colors = explode(',', (string)($recipe['category_colors'] ?? ''));
-        $images = explode(',', (string)($recipe['category_images'] ?? ''));
-
-        $categories = [];
-        for ($i = 0; $i < count($ids); $i++) {
-            $categories[] = [
-                'category_id' => (int)$ids[$i],
-                'category_name' => $names[$i] ?? '',
-                'category_color' => $colors[$i] ?? '#EEEEEE',
-                'image_url' => (!empty($images[$i]))
-                    ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $images[$i]
-                    : null
-            ];
-        }
-
-        return $categories;
-    }
-
-    public static function getAllRecipes()
-    {
-
         $db = Database::connect();
+        $stmt = $db->prepare("DELETE FROM recipes WHERE recipe_id = ?");
+        $stmt->bind_param("i", $recipeId);
+        return $stmt->execute();
+    }
 
+
+    /** 10 receitas com mais favoritos */
+    public static function getMostFavoritedRecipes()
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("
+        SELECT r.*, 
+            GROUP_CONCAT(c.category_id) AS category_ids,
+            GROUP_CONCAT(c.category_name) AS category_names
+        FROM recipes r
+        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+        LEFT JOIN categories c ON c.category_id = rc.category_id
+        GROUP BY r.recipe_id
+        ORDER BY r.favorites_count DESC
+        LIMIT 10
+    ");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $recipes = [];
+        while ($row = $result->fetch_assoc()) {
+            // Aqui pode fazer parse das categorias se quiser
+            $recipes[] = $row;
+        }
+        return $recipes;
+    }
+
+    // receitas recomendadas (baseado em favoritos e visualizações e categorias)
+    public static function getRecommendedRecipes()
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("
+        SELECT r.*, 
+            GROUP_CONCAT(c.category_id) AS category_ids,
+            GROUP_CONCAT(c.category_name) AS category_names
+        FROM recipes r
+        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+        LEFT JOIN categories c ON c.category_id = rc.category_id
+        GROUP BY r.recipe_id
+        ORDER BY (r.favorites_count * 2 + r.views_count) DESC
+        LIMIT 10
+    ");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $recipes = [];
+        while ($row = $result->fetch_assoc()) {
+            $recipes[] = $row;
+        }
+        return $recipes;
+    }
+
+    /** Pega receitas por tipo de refeição (café da manhã, almoço, etc.) */
+
+    public static function getRecipesByMealType($categoryId)
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("
+        SELECT r.*, 
+            GROUP_CONCAT(c.category_id) AS category_ids,
+            GROUP_CONCAT(c.category_name) AS category_names
+        FROM recipes r
+        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+        LEFT JOIN categories c ON c.category_id = rc.category_id
+        WHERE c.category_id = ?
+        GROUP BY r.recipe_id
+        ORDER BY (r.favorites_count * 2 + r.views_count) DESC
+        LIMIT 10
+    ");
+        $stmt->bind_param("i", $categoryId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $recipes = [];
+        while ($row = $result->fetch_assoc()) {
+            $recipes[] = $row;
+        }
+        return $recipes;
+    }
+
+
+    /** Retorna array de receitas (com categorias já formatadas) */
+    public static function getAll(): array
+    {
+        $db = Database::connect();
         $query = "
-            SELECT 
-                r.*, 
+            SELECT r.*, 
                 GROUP_CONCAT(c.category_id) AS category_ids,
-                GROUP_CONCAT(c.category_name) AS category_names
+                GROUP_CONCAT(c.category_name) AS category_names,
+                GROUP_CONCAT(c.color_hex) AS category_colors,
+                GROUP_CONCAT(c.image_url) AS category_images
             FROM recipes r
             LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
             LEFT JOIN categories c ON c.category_id = rc.category_id
             GROUP BY r.recipe_id
         ";
-
         $stmt = $db->prepare($query);
         $stmt->execute();
+        $result = $stmt->get_result();
 
         $recipes = [];
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $result->fetch_assoc()) {
             $row['categories'] = self::parseCategories($row);
-            unset($row['category_ids']);
-            unset($row['category_names']);
+            unset($row['category_ids'], $row['category_names'], $row['category_colors'], $row['category_images']);
             $recipes[] = $row;
         }
-
         return $recipes;
     }
 
-    public static function getRecipeDetail($recipeId)
+    /** Detalhe de receita (inclui ingredientes e categorias) */
+    public static function getById($recipeId): ?array
     {
         $db = Database::connect();
-
         $stmt = $db->prepare("
-            SELECT r.*, 
+            SELECT r.*,
                 GROUP_CONCAT(c.category_id) AS category_ids,
                 GROUP_CONCAT(c.category_name) AS category_names,
-                GROUP_CONCAT(c.color_hex) AS category_colors
+                GROUP_CONCAT(c.color_hex) AS category_colors,
+                GROUP_CONCAT(c.image_url) AS category_images
             FROM recipes r
             LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
             LEFT JOIN categories c ON c.category_id = rc.category_id
@@ -159,21 +193,14 @@ class Recipe
         $stmt->execute();
         $result = $stmt->get_result();
         $recipe = $result->fetch_assoc();
-
         if (!$recipe) return null;
 
         $recipe['categories'] = self::parseCategories($recipe);
-        unset($recipe['category_ids']);
-        unset($recipe['category_names']);
+        unset($recipe['category_ids'], $recipe['category_names'], $recipe['category_colors'], $recipe['category_images']);
 
-        $recipe['average_rating'] = Rating::getAverageRating($recipeId);
-
+        // Ingredientes
         $stmt2 = $db->prepare("
-            SELECT 
-                ri.quantity,
-                ri.custom_name,
-                i.ingredient_name,
-                i.image_url
+            SELECT ri.quantity, ri.custom_name, i.ingredient_name, i.image_url
             FROM recipe_ingredients ri
             LEFT JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
             WHERE ri.recipe_id = ?
@@ -184,38 +211,32 @@ class Recipe
 
         $ingredients = [];
         while ($row = $result2->fetch_assoc()) {
-            $name = $row['custom_name'] ?? $row['ingredient_name'] ?? 'Ingredient';
-            $image = (!empty($row['image_url']))
-                ? BASE_URL . UPLOADS_FOLDER . INGREDIENTS_FOLDER . $row['image_url']
-                : BASE_URL . DEFAULT_IMAGE;
-            $quantity = $row['quantity'] ?? '';
-            $ingredients[] = ['ingredient_name' => $name, 'ingredient_quantity' => $quantity, 'ingredient_image' => $image];
+            $name = $row['custom_name'] ?: ($row['ingredient_name'] ?? 'Ingrediente');
+            $image = !empty($row['image_url']) ? BASE_URL . UPLOADS_FOLDER . INGREDIENTS_FOLDER . $row['image_url'] : BASE_URL . DEFAULT_IMAGE;
+            $ingredients[] = ['ingredient_name' => $name, 'ingredient_quantity' => $row['quantity'], 'ingredient_image' => $image];
         }
-
         $recipe['ingredients'] = $ingredients;
         return $recipe;
     }
 
-    public static function getPopularWithPagination($page)
+    /** Pega receitas populares paginadas */
+    public static function getPopularWithPagination($page = 1, $limit = 6): array
     {
-        $limit = 6;
         $offset = ($page - 1) * $limit;
-
         $db = Database::connect();
         $query = "
-        SELECT r.*, 
-            GROUP_CONCAT(DISTINCT c.category_id) AS category_ids,
-            GROUP_CONCAT(DISTINCT c.category_name) AS category_names,
-            GROUP_CONCAT(DISTINCT c.color_hex) AS category_colors,
-            GROUP_CONCAT(DISTINCT c.image_url) AS category_images
-        FROM recipes r
-        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-        LEFT JOIN categories c ON c.category_id = rc.category_id
-        GROUP BY r.recipe_id
-        ORDER BY r.views_count DESC
-        LIMIT ? OFFSET ?
-    ";
-
+            SELECT r.*, 
+                GROUP_CONCAT(DISTINCT c.category_id) AS category_ids,
+                GROUP_CONCAT(DISTINCT c.category_name) AS category_names,
+                GROUP_CONCAT(DISTINCT c.color_hex) AS category_colors,
+                GROUP_CONCAT(DISTINCT c.image_url) AS category_images
+            FROM recipes r
+            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+            LEFT JOIN categories c ON c.category_id = rc.category_id
+            GROUP BY r.recipe_id
+            ORDER BY r.views_count DESC
+            LIMIT ? OFFSET ?
+        ";
         $stmt = $db->prepare($query);
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
@@ -223,110 +244,76 @@ class Recipe
 
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
-            $row['categories'] = self::parseCategories([
-                'category_ids' => (string)($row['category_ids'] ?? ''),
-                'category_names' => (string)($row['category_names'] ?? ''),
-                'category_colors' => (string)($row['category_colors'] ?? ''),
-                'category_images' => (string)($row['category_images'] ?? '')
-            ]);
+            $row['categories'] = self::parseCategories($row);
             unset($row['category_ids'], $row['category_names'], $row['category_colors'], $row['category_images']);
-
-            $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
             $recipes[] = $row;
         }
-
         return $recipes;
     }
 
-    public static function getRecommendedRecipes()
+    /** Helpers privados */
+
+    private static function parseCategories($recipe)
+    {
+        $ids = explode(',', $recipe['category_ids'] ?? '');
+        $names = explode(',', $recipe['category_names'] ?? '');
+        $colors = explode(',', $recipe['category_colors'] ?? '');
+        $images = explode(',', $recipe['category_images'] ?? '');
+
+        $categories = [];
+        for ($i = 0; $i < count($ids); $i++) {
+            $categories[] = [
+                'category_id' => (int)($ids[$i] ?? 0),
+                'category_name' => $names[$i] ?? '',
+                'category_color' => $colors[$i] ?? '#EEEEEE',
+                'image_url' => !empty($images[$i]) ? BASE_URL . UPLOADS_FOLDER . CATEGORIES_FOLDER . $images[$i] : null
+            ];
+        }
+        return $categories;
+    }
+
+    // Retorna todas as receitas de um autor (por user_id)
+    public static function getAllByAuthor($user_id)
     {
         $db = Database::connect();
-        $stmt = $db->prepare("
-            SELECT 
-                r.*, 
-                GROUP_CONCAT(c.category_id) AS category_ids,
-                GROUP_CONCAT(c.category_name) AS category_names
-            FROM recipes r
-            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-            LEFT JOIN categories c ON c.category_id = rc.category_id
-            GROUP BY r.recipe_id
-            ORDER BY (r.favorites_count * 2 + r.views_count) DESC
-            LIMIT 10
-        ");
+        $stmt = $db->prepare("SELECT * FROM recipes WHERE author_id = ?");
+        $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
-            $row['categories'] = self::parseCategories($row);
-            unset($row['category_ids']);
-            unset($row['category_names']);
-            $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
             $recipes[] = $row;
         }
-
         return $recipes;
     }
 
-    public static function getMostFavoritedRecipes()
+    // Retorna só os IDs das receitas de um autor (por user_id)
+    public static function getIdsByAuthor($user_id)
     {
         $db = Database::connect();
-        $stmt = $db->prepare("
-            SELECT 
-                r.*, 
-                GROUP_CONCAT(c.category_id) AS category_ids,
-                GROUP_CONCAT(c.category_name) AS category_names
-            FROM recipes r
-            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-            LEFT JOIN categories c ON c.category_id = rc.category_id
-            GROUP BY r.recipe_id
-            ORDER BY r.favorites_count DESC
-            LIMIT 10
-        ");
+        $stmt = $db->prepare("SELECT recipe_id FROM recipes WHERE author_id = ?");
+        $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $recipes = [];
-
+        $ids = [];
         while ($row = $result->fetch_assoc()) {
-            $row['categories'] = self::parseCategories($row);
-            unset($row['category_ids']);
-            unset($row['category_names']);
-            $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
-            $recipes[] = $row;
+            $ids[] = $row['recipe_id'];
         }
-
-        return $recipes;
+        return $ids;
     }
 
-    public static function getRecipesByMealType($categoryId)
+    // Soma todas as views das receitas passadas no array $recipeIds
+    public static function getTotalViewsByIds($recipeIds)
     {
+        if (empty($recipeIds)) return 0;
         $db = Database::connect();
-        $stmt = $db->prepare("
-            SELECT 
-                r.*, 
-                GROUP_CONCAT(c.category_id) AS category_ids,
-                GROUP_CONCAT(c.category_name) AS category_names
-            FROM recipes r
-            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-            LEFT JOIN categories c ON c.category_id = rc.category_id
-            WHERE c.category_id = ?
-            GROUP BY r.recipe_id
-            ORDER BY (r.favorites_count * 2 + r.views_count) DESC
-            LIMIT 10
-        ");
-        $stmt->bind_param("i", $categoryId);
+        $placeholders = implode(',', array_fill(0, count($recipeIds), '?'));
+        $types = str_repeat('i', count($recipeIds));
+        $sql = "SELECT SUM(views_count) as total_views FROM recipes WHERE recipe_id IN ($placeholders)";
+        $stmt = $db->prepare($sql);
+        $stmt->bind_param($types, ...$recipeIds);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $recipes = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $row['categories'] = self::parseCategories($row);
-            unset($row['category_ids']);
-            unset($row['category_names']);
-            $row['average_rating'] = Rating::getAverageRating($row['recipe_id']);
-            $recipes[] = $row;
-        }
-
-        return $recipes;
+        $res = $stmt->get_result()->fetch_assoc();
+        return intval($res['total_views'] ?? 0);
     }
 }

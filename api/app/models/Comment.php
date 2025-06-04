@@ -4,15 +4,22 @@ require_once __DIR__ . '/../core/Database.php';
 
 class Comment
 {
-    public static function submitComment($user_id, $recipe_id, $comment)
+    /**
+     * Insere um novo comentário para uma receita.
+     */
+
+    public static function submit($user_id, $recipe_id, $comment): bool
     {
         $db = Database::connect();
         $stmt = $db->prepare("INSERT INTO comments (user_id, recipe_id, comment) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $user_id, $recipe_id, $comment);
         return $stmt->execute();
     }
+    /**
+     * Retorna os comentários de uma receita, mais dados do user e rating se houver.
+     */
 
-    public static function getCommentsByRecipe($recipe_id)
+    public static function getByRecipe($recipe_id): array
     {
         $db = Database::connect();
 

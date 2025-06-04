@@ -5,34 +5,33 @@ require_once __DIR__ . '/../core/Response.php';
 
 class RecipeController
 {
-    public function getAllRecipes()
+    public function getAll()
     {
-        $recipes = Recipe::getAllRecipes();
-
-        if (!empty($recipes)) {
-            Response::json(["success" => true, "data" => $recipes]);
-        } else {
-            Response::json(["success" => false, "message" => "Nenhuma receita encontrada."]);
-        }
+        $recipes = Recipe::getAll();
+        Response::json(
+            !empty($recipes)
+                ? ["success" => true, "data" => $recipes]
+                : ["success" => false, "message" => "Nenhuma receita encontrada."]
+        );
     }
 
-    public static function getRecipeDetail()
+    public function getById()
     {
         if (!isset($_GET['recipe_id'])) {
             return Response::json(['success' => false, 'message' => 'ID da receita em falta.']);
         }
 
         $recipe_id = intval($_GET['recipe_id']);
-        $recipe = Recipe::getRecipeDetail($recipe_id);
+        $recipe = Recipe::getById($recipe_id);
 
-        if ($recipe) {
-            Response::json(['success' => true, 'data' => $recipe]);
-        } else {
-            Response::json(['success' => false, 'message' => 'Receita não encontrada.']);
-        }
+        Response::json(
+            $recipe
+                ? ['success' => true, 'data' => $recipe]
+                : ['success' => false, 'message' => 'Receita não encontrada.']
+        );
     }
 
-    public function createOrUpdateRecipe()
+    public function save()
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -41,47 +40,43 @@ class RecipeController
             return;
         }
 
-        $success = Recipe::createOrUpdateRecipe($data);
+        $success = Recipe::save($data);
 
-        if ($success) {
-            Response::json(["success" => true, "message" => "Receita guardada com sucesso!"]);
-        } else {
-            Response::json(["success" => false, "message" => "Erro ao guardar receita."]);
-        }
+        Response::json(
+            $success
+                ? ["success" => true, "message" => "Receita guardada com sucesso!"]
+                : ["success" => false, "message" => "Erro ao guardar receita."]
+        );
     }
 
-    public function getPopularWithPagination()
+    public function getPopularPaginated()
     {
         $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
         $data = Recipe::getPopularWithPagination($page);
         Response::json(['success' => true, 'data' => $data]);
     }
 
-
-
-    public function getRecommendedRecipes()
+    public function getRecommended()
     {
         $recipes = Recipe::getRecommendedRecipes();
-
-        if (!empty($recipes)) {
-            Response::json(["success" => true, "data" => $recipes]);
-        } else {
-            Response::json(["success" => false, "message" => "Nenhuma receita recomendada."]);
-        }
+        Response::json(
+            !empty($recipes)
+                ? ["success" => true, "data" => $recipes]
+                : ["success" => false, "message" => "Nenhuma receita recomendada."]
+        );
     }
 
-    public function getMostFavoritedRecipes()
+    public function getMostFavorited()
     {
         $recipes = Recipe::getMostFavoritedRecipes();
-
-        if (!empty($recipes)) {
-            Response::json(["success" => true, "data" => $recipes]);
-        } else {
-            Response::json(["success" => false, "message" => "Nenhuma receita favorita encontrada."]);
-        }
+        Response::json(
+            !empty($recipes)
+                ? ["success" => true, "data" => $recipes]
+                : ["success" => false, "message" => "Nenhuma receita favorita encontrada."]
+        );
     }
 
-    public function getRecipesByMealType()
+    public function getByCategory()
     {
         if (!isset($_GET['category_id'])) {
             return Response::json(['success' => false, 'message' => 'Parâmetro category_id em falta.']);
@@ -90,10 +85,10 @@ class RecipeController
         $categoryId = intval($_GET['category_id']);
         $recipes = Recipe::getRecipesByMealType($categoryId);
 
-        if (!empty($recipes)) {
-            Response::json(["success" => true, "data" => $recipes]);
-        } else {
-            Response::json(["success" => false, "message" => "Nenhuma receita encontrada para esta categoria."]);
-        }
+        Response::json(
+            !empty($recipes)
+                ? ["success" => true, "data" => $recipes]
+                : ["success" => false, "message" => "Nenhuma receita encontrada para esta categoria."]
+        );
     }
 }

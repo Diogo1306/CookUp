@@ -7,8 +7,7 @@ class CategoryController
 {
     public function getAll()
     {
-        $categories = Category::getAllCategories();
-
+        $categories = Category::getAll();
         Response::json(
             !empty($categories)
                 ? ["success" => true, "data" => $categories]
@@ -18,25 +17,28 @@ class CategoryController
 
     public function getPopular()
     {
-        $categories = Category::getPopularCategories();
-
+        $categories = Category::getPopular();
         Response::json(
             !empty($categories)
                 ? ["success" => true, "data" => $categories]
-                : ["success" => false, "message" => "Nenhuma categoria popular."]
+                : ["success" => false, "message" => "Nenhuma categoria popular encontrada."]
         );
     }
 
-    public static function getUserCategories()
+    public function getUserCategories()
     {
         if (!isset($_GET['user_id'])) {
-            Response::json(['success' => false, 'message' => 'Parâmetro user_id em falta']);
+            Response::json(['success' => false, 'message' => 'Parâmetro user_id em falta.']);
             return;
         }
 
         $userId = intval($_GET['user_id']);
-        $categories = Category::getTopCategoriesByUser($userId);
+        $categories = Category::getUserTop($userId);
 
-        Response::json(['success' => true, 'data' => $categories]);
+        Response::json(
+            !empty($categories)
+                ? ["success" => true, "data" => $categories]
+                : ["success" => false, "message" => "Nenhuma categoria favorita para este utilizador."]
+        );
     }
 }

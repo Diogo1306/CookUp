@@ -4,9 +4,12 @@ require_once __DIR__ . '/../core/Database.php';
 
 class Search
 {
-    public static function globalSearch($query)
+    /**
+     * Busca global: receitas (por título e ingrediente), categorias de receita e ingredientes
+     */
+    public static function searchGlobal(string $query): array
     {
-        $conn = Database::connect();
+        $db = Database::connect();
         $searchTerm = '%' . strtolower(trim($query)) . '%';
 
         $response = [
@@ -15,30 +18,35 @@ class Search
             'ingredients' => [],
         ];
 
-        $stmt = $conn->prepare("SELECT * FROM ingredients WHERE LOWER(ingredient_name) LIKE ?");
+        // Busca ingredientes
+        $stmt = $db->prepare("SELECT * FROM ingredients WHERE LOWER(ingredient_name) LIKE ?");
         $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
         $response['ingredients'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
 
-        $stmt = $conn->prepare("
-            SELECT DISTINCT c.* FROM categories c
-            JOIN recipe_category rc ON c.category_id = rc.category_id
-            WHERE LOWER(c.category_name) LIKE ?
-        ");
+        // Busca categorias de receita
+        $stmt = $db->prepare("SELECT * FROM categories WHERE LOWER(category_name) LIKE ?");
         $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
         $response['recipe_categories'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
 
-        $stmt = $conn->prepare("SELECT * FROM recipes WHERE LOWER(title) LIKE ?");
+        // Busca receitas por título e ingrediente (sem duplicar)
+        $recipesMap = [];
+
+        // Por título
+        $stmt = $db->prepare("SELECT * FROM recipes WHERE LOWER(title) LIKE ?");
         $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
-        $recipes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $res = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        foreach ($res as $row) {
+            $recipesMap[$row['recipe_id']] = $row;
+        }
         $stmt->close();
-        $response['recipes'] = array_merge($response['recipes'], $recipes);
 
-        $stmt = $conn->prepare("
+        // Por ingrediente
+        $stmt = $db->prepare("
             SELECT DISTINCT r.* FROM recipes r
             JOIN recipe_ingredients ri ON r.recipe_id = ri.recipe_id
             JOIN ingredients i ON i.ingredient_id = ri.ingredient_id
@@ -46,32 +54,13 @@ class Search
         ");
         $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
-        $recipesByIngredient = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $res = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        foreach ($res as $row) {
+            $recipesMap[$row['recipe_id']] = $row;
+        }
         $stmt->close();
 
-        foreach ($recipesByIngredient as $r) {
-            if (!in_array($r, $response['recipes'])) {
-                $response['recipes'][] = $r;
-            }
-        }
-
-        $stmt = $conn->prepare("
-            SELECT DISTINCT r.* FROM recipes r
-            JOIN recipe_ingredients ri ON r.recipe_id = ri.recipe_id
-            JOIN ingredients i ON i.ingredient_id = ri.ingredient_id
-            JOIN ingredient_categories c ON i.category_id = c.category_id
-            WHERE LOWER(c.category_name) LIKE ?
-        ");
-        $stmt->bind_param("s", $searchTerm);
-        $stmt->execute();
-        $recipesByCategory = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-
-        foreach ($recipesByCategory as $r) {
-            if (!in_array($r, $response['recipes'])) {
-                $response['recipes'][] = $r;
-            }
-        }
+        $response['recipes'] = array_values($recipesMap);
 
         return $response;
     }

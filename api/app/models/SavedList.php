@@ -4,146 +4,129 @@ require_once __DIR__ . '/../core/Database.php';
 
 class SavedList
 {
-    public static function getListsByUser($user_id)
+    /** Retorna todas as listas de um usuário */
+    public static function getByUser(int $user_id): array
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("SELECT * FROM saved_lists WHERE user_id = ?");
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT * FROM saved_lists WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-
         $result = $stmt->get_result();
-        $lists = [];
 
+        $lists = [];
         while ($row = $result->fetch_assoc()) {
             $lists[] = $row;
         }
-
         $stmt->close();
         return $lists;
     }
 
-    public static function createList($user_id, $list_name, $color)
+    /** Cria nova lista */
+    public static function create(int $user_id, string $list_name, string $color): bool
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("INSERT INTO saved_lists (user_id, list_name, color) VALUES (?, ?, ?)");
+        $db = Database::connect();
+        $stmt = $db->prepare("INSERT INTO saved_lists (user_id, list_name, color) VALUES (?, ?, ?)");
         $stmt->bind_param("iss", $user_id, $list_name, $color);
-
         $success = $stmt->execute();
         $stmt->close();
-
-        return $success
-            ? ["success" => true, "message" => "Lista criada com sucesso"]
-            : ["success" => false, "message" => "Erro ao criar lista"];
+        return $success;
     }
 
-    public static function updateList($list_id, $list_name, $color)
+    /** Atualiza lista */
+    public static function update(int $list_id, string $list_name, string $color): bool
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("UPDATE saved_lists SET list_name = ?, color = ? WHERE list_id = ?");
+        $db = Database::connect();
+        $stmt = $db->prepare("UPDATE saved_lists SET list_name = ?, color = ? WHERE list_id = ?");
         $stmt->bind_param("ssi", $list_name, $color, $list_id);
-
         $success = $stmt->execute();
         $stmt->close();
-
-        return $success
-            ? ["success" => true, "message" => "Lista atualizada com sucesso"]
-            : ["success" => false, "message" => "Erro ao atualizar a lista"];
+        return $success;
     }
 
-    public static function deleteList($list_id)
+    /** Deleta lista */
+    public static function delete(int $list_id): bool
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("DELETE FROM saved_lists WHERE list_id = ?");
+        $db = Database::connect();
+        $stmt = $db->prepare("DELETE FROM saved_lists WHERE list_id = ?");
         $stmt->bind_param("i", $list_id);
-
         $success = $stmt->execute();
         $stmt->close();
-
-        return $success
-            ? ["success" => true, "message" => "Lista deletada com sucesso"]
-            : ["success" => false, "message" => "Erro ao deletar lista"];
+        return $success;
     }
 
-    public static function deleteRecipeFromList($list_id, $recipe_id)
+    /** Remove receita de uma lista */
+    public static function removeRecipe(int $list_id, int $recipe_id): bool
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("DELETE FROM saved_recipes WHERE list_id = ? AND recipe_id = ?");
+        $db = Database::connect();
+        $stmt = $db->prepare("DELETE FROM saved_recipes WHERE list_id = ? AND recipe_id = ?");
         $stmt->bind_param("ii", $list_id, $recipe_id);
-
         $success = $stmt->execute();
         $stmt->close();
-
-        return $success
-            ? ["success" => true, "message" => "Receita removida com sucesso"]
-            : ["success" => false, "message" => "Erro ao remover receita"];
+        return $success;
     }
 
-    public static function addRecipeToList($list_id, $recipe_id)
+    /** Adiciona receita a uma lista */
+    public static function addRecipe(int $list_id, int $recipe_id): bool
     {
-        $conn = Database::connect();
-
-        $check = $conn->prepare("SELECT * FROM saved_recipes WHERE list_id = ? AND recipe_id = ?");
+        $db = Database::connect();
+        // Verifica se já existe
+        $check = $db->prepare("SELECT 1 FROM saved_recipes WHERE list_id = ? AND recipe_id = ?");
         $check->bind_param("ii", $list_id, $recipe_id);
         $check->execute();
         $exists = $check->get_result()->num_rows > 0;
         $check->close();
 
-        if ($exists) {
-            return ["success" => false, "message" => "A receita já está nesta lista"];
-        }
+        if ($exists) return false; // já existe
 
-        $stmt = $conn->prepare("INSERT INTO saved_recipes (list_id, recipe_id) VALUES (?, ?)");
+        $stmt = $db->prepare("INSERT INTO saved_recipes (list_id, recipe_id) VALUES (?, ?)");
         $stmt->bind_param("ii", $list_id, $recipe_id);
-
         $success = $stmt->execute();
         $stmt->close();
-
-        return $success
-            ? ["success" => true, "message" => "Receita adicionada com sucesso"]
-            : ["success" => false, "message" => "Erro ao adicionar receita"];
+        return $success;
     }
 
-
-    public static function getRecipesFromList($list_id)
+    /** Retorna receitas de uma lista */
+    public static function getRecipes(int $list_id): array
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("SELECT r.* FROM recipes r JOIN saved_recipes sr ON r.recipe_id = sr.recipe_id WHERE sr.list_id = ?");
+        $db = Database::connect();
+        $stmt = $db->prepare("
+            SELECT r.* 
+            FROM recipes r 
+            JOIN saved_recipes sr ON r.recipe_id = sr.recipe_id 
+            WHERE sr.list_id = ?
+        ");
         $stmt->bind_param("i", $list_id);
         $stmt->execute();
-
         $result = $stmt->get_result();
         $recipes = [];
-
         while ($row = $result->fetch_assoc()) {
             $recipes[] = $row;
         }
-
         $stmt->close();
         return $recipes;
     }
 
-    public static function getListIdsWithRecipe($recipe_id)
+    /** Retorna IDs de listas onde uma receita está */
+    public static function getListIdsByRecipe(int $recipe_id): array
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("SELECT list_id FROM saved_recipes WHERE recipe_id = ?");
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT list_id FROM saved_recipes WHERE recipe_id = ?");
         $stmt->bind_param("i", $recipe_id);
         $stmt->execute();
-
         $result = $stmt->get_result();
         $listIds = [];
-
         while ($row = $result->fetch_assoc()) {
-            $listIds[] = (int) $row['list_id'];
+            $listIds[] = (int)$row['list_id'];
         }
-
         $stmt->close();
         return $listIds;
     }
 
-    public static function getRecipeIdsByUser($user_id)
+    /** Retorna IDs de receitas salvas pelo usuário */
+    public static function getRecipeIdsByUser(int $user_id): array
     {
-        $conn = Database::connect();
-        $stmt = $conn->prepare("
+        $db = Database::connect();
+        $stmt = $db->prepare("
             SELECT DISTINCT sr.recipe_id 
             FROM saved_recipes sr
             JOIN saved_lists sl ON sr.list_id = sl.list_id
@@ -151,14 +134,11 @@ class SavedList
         ");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-
         $result = $stmt->get_result();
         $recipeIds = [];
-
         while ($row = $result->fetch_assoc()) {
-            $recipeIds[] = (int) $row['recipe_id'];
+            $recipeIds[] = (int)$row['recipe_id'];
         }
-
         $stmt->close();
         return $recipeIds;
     }
