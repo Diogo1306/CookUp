@@ -1,0 +1,119 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/card_recipe_img"
+    android:padding="@dimen/padding_small"
+    android:elevation="6dp"
+    android:layout_marginEnd="6dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        app:cardCornerRadius="@dimen/border_radius"
+        app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/recipe_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@drawable/image_rounded_corner" />
+
+            <ImageButton
+                android:id="@+id/button_edit_recipe"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="6dp"
+                android:src="@drawable/ic_edit"
+                android:background="@drawable/bg_circle"
+                android:layout_gravity="top|center"
+                android:contentDescription="Guardar Receita" />
+
+            <ImageButton
+                android:id="@+id/button_delete_recipe"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="6dp"
+                android:src="@drawable/ic_trash"
+                android:background="@drawable/bg_circle"
+                android:layout_gravity="top|end"
+                android:contentDescription="Guardar Receita" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/recipe_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_very_small"
+        android:fontFamily="@font/poppins_semibold"
+        android:textSize="@dimen/text_very_small"
+        android:text="Nome da Receita"
+        android:textColor="@color/text_primary"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start|center_vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_hat_chef" />
+
+            <TextView
+                android:id="@+id/preparation_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_very_small"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/poppins_regular"
+                android:text="2434"
+                android:textSize="@dimen/text_very_small"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="0dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_star" />
+
+            <TextView
+                android:id="@+id/rating_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_very_small"
+                android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"
+                android:text="4.9"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_very_small" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
