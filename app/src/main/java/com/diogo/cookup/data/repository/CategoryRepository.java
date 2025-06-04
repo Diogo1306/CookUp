@@ -23,7 +23,6 @@ public class CategoryRepository {
 
     public void getCategories(MutableLiveData<List<CategoryData>> categoriesLiveData,
                               MutableLiveData<String> errorMessage) {
-
         apiService.getCategories("categories").enqueue(new Callback<ApiResponse<List<CategoryData>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<CategoryData>>> call,

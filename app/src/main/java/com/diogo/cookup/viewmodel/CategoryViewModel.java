@@ -15,23 +15,9 @@ public class CategoryViewModel extends ViewModel {
     private final MutableLiveData<List<CategoryData>> categoriesLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    public CategoryViewModel() {
-        categoryRepository = new CategoryRepository();
-    }
-
-    public LiveData<List<CategoryData>> getCategoriesLiveData() {
-        return categoriesLiveData;
-    }
-
-    public LiveData<String> getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void loadCategories() {
-        categoryRepository.getCategories(categoriesLiveData, errorMessage);
-    }
-
-    public void loadUserCategories(int userId) {
-        categoryRepository.getRecommendedCategories(userId, categoriesLiveData, errorMessage);
-    }
+    public CategoryViewModel() {categoryRepository = new CategoryRepository();}
+    public LiveData<List<CategoryData>> getCategoriesLiveData() {return categoriesLiveData;}
+    public LiveData<String> getErrorMessage() {return errorMessage;}
+    public void loadCategories() {categoryRepository.getCategories(categoriesLiveData, errorMessage);}
+    public void loadUserCategories(int userId) {categoryRepository.getRecommendedCategories(userId, categoriesLiveData, errorMessage);}
 }

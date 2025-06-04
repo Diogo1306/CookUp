@@ -32,28 +32,15 @@ public class SavedListViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> changedRecipeId = new MutableLiveData<>();
 
 
-    public SavedListViewModel(Application application) {
-        super(application);
-    }
-
-    public LiveData<List<Integer>> getSavedRecipeIds() {
-        return savedRecipeIds;
-    }
-
+    public SavedListViewModel(Application application) {super(application);}
+    public LiveData<List<Integer>> getSavedRecipeIds() {return savedRecipeIds;}
     public LiveData<List<SavedListData>> getSavedLists() { return savedLists; }
     public LiveData<List<RecipeData>> getRecipesFromList() { return recipesFromList; }
     public LiveData<List<Integer>> getRecipeListIds() { return recipeListIds; }
     public LiveData<UserData> getUserLiveData() { return userLiveData; }
-
     public LiveData<Integer> getChangedRecipeId() { return changedRecipeId; }
-
-    public void setUser(UserData user) {
-        userLiveData.setValue(user);
-    }
-
-    public void notifyRecipeChanged(int recipeId) {
-        changedRecipeId.postValue(recipeId);
-    }
+    public void setUser(UserData user) {userLiveData.setValue(user);}
+    public void notifyRecipeChanged(int recipeId) {changedRecipeId.postValue(recipeId);}
 
     public void loadLists(int userId) {
         repository.getUserLists(userId, new Callback<ApiResponse<List<SavedListData>>>() {
@@ -164,31 +151,24 @@ public class SavedListViewModel extends AndroidViewModel {
     }
 
     public void loadUserSavedRecipeIds(int userId) {
-        Log.d("VIEWMODEL", "🔥 CHAMOU loadUserSavedRecipeIds com userId=" + userId);
-
         repository.getUserSavedRecipeIds(userId, new Callback<ApiResponse<List<Integer>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Integer>>> call, Response<ApiResponse<List<Integer>>> response) {
-                Log.d("VIEWMODEL", "📡 RESPOSTA RECEBIDA");
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     List<Integer> data = response.body().getData();
-                    Log.d("VIEWMODEL", "✅ RECEBIDO DO BACKEND: " + data);
                     savedRecipeIds.setValue(data);
                 } else {
-                    Log.e("VIEWMODEL", "❌ RESPOSTA INVÁLIDA");
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<List<Integer>>> call, Throwable t) {
-                Log.e("VIEWMODEL", "❌ ERRO NA REDE: " + t.getMessage());
             }
         });
     }
 
     public void reloadSavedRecipeData(int userId) {
         if (userId > 0) {
-            Log.d("VIEWMODEL", "🔁 reloadSavedRecipeData(userId=" + userId + ")");
             loadUserSavedRecipeIds(userId);
         }
     }
@@ -196,7 +176,6 @@ public class SavedListViewModel extends AndroidViewModel {
     private void reloadSavedRecipes() {
         if (userLiveData.getValue() != null && userLiveData.getValue().getUserId() > 0) {
             int id = userLiveData.getValue().getUserId();
-            Log.d("VIEWMODEL", "🔁 reloadSavedRecipes para userId: " + id);
             loadUserSavedRecipeIds(id);
         }
     }
