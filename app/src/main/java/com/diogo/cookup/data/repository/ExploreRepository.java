@@ -30,8 +30,7 @@ public class ExploreRepository {
     public LiveData<ApiResponse<List<RecipeData>>> getPopularRecipes(int page) {
         MutableLiveData<ApiResponse<List<RecipeData>>> liveData = new MutableLiveData<>();
 
-        Call<ApiResponse<List<RecipeData>>> call =
-                apiService.getPopularRecipesWithPage("popular_recipes_pagination", page);
+        Call<ApiResponse<List<RecipeData>>> call = apiService.getPopularRecipesWithPage("popular_recipes_pagination", page);
 
         call.enqueue(new Callback<ApiResponse<List<RecipeData>>>() {
             @Override

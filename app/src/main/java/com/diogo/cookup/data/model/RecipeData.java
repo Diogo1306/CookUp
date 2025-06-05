@@ -7,61 +7,179 @@ import java.util.List;
 
 public class RecipeData implements Serializable {
 
-    private int recipe_id;
+    @SerializedName("recipe_id")
+    private int recipeId;
+
+    @SerializedName("author_id")
+    private int authorId;
+
+    @SerializedName("title")
     private String title;
+
+    @SerializedName("description")
     private String description;
+
+    @SerializedName("instructions")
     private String instructions;
+
     @SerializedName("categories")
     private List<CategoryData> categories;
-    private int preparation_time;
+
+    @SerializedName("preparation_time")
+    private int preparationTime;
+
+    @SerializedName("servings")
     private int servings;
+
+    @SerializedName("views_count")
+    private int viewsCount;
+
+    @SerializedName("difficulty")
     private String difficulty;
+
+    @SerializedName("image")
     private String image;
+
+    @SerializedName("ingredients")
     private List<IngredientData> ingredients;
+
+    @SerializedName("comments")
     private List<CommentData> comments;
+
     @SerializedName("average_rating")
     private float averageRating;
 
-    public RecipeData(int recipe_id, String title, String description, String instructions, List<CategoryData> categories, int preparation_time, int servings, String difficulty, String image) {
-        this.recipe_id = recipe_id;
+
+    public RecipeData() {
+    }
+
+    public RecipeData(int recipeId, int authorId, String title, String description, String instructions,
+                      List<CategoryData> categories, int preparationTime, int servings,
+                      int viewsCount, String difficulty, String image, float averageRating) {
+        this.recipeId = recipeId;
+        this.authorId = authorId;
         this.title = title;
         this.description = description;
         this.instructions = instructions;
         this.categories = categories;
-        this.preparation_time = preparation_time;
+        this.preparationTime = preparationTime;
         this.servings = servings;
+        this.viewsCount = viewsCount;
         this.difficulty = difficulty;
         this.image = image;
+        this.averageRating = averageRating;
     }
 
-    public RecipeData() {}
+    public int getRecipeId() {
+        return recipeId;
+    }
 
-    public List<IngredientData> getIngredients() {return ingredients;}
-    public int getRecipeId() { return recipe_id; }
-    public String getTitle() { return title; }
-    public String getDescription() { return description; }
-    public String getInstructions() { return instructions; }
-    public List<CategoryData> getCategories() {return categories;}
-    public int getPreparationTime() { return preparation_time; }
-    public String getDifficulty() { return difficulty; }
-    public int getServings() { return servings; }
-    public String getImage() { return image; }
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public List<CategoryData> getCategories() {
+        return categories;
+    }
+
+    public int getPreparationTime() {
+        return preparationTime;
+    }
+
+    public int getServings() {
+        return servings;
+    }
+
+    public int getViewsCount() {
+        return viewsCount;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public List<IngredientData> getIngredients() {
+        return ingredients;
+    }
+
     public List<CommentData> getComments() {
         return comments;
     }
-    public float getAverageRating() {return averageRating;}
 
-    public void setRecipeId(int recipeId) {this.recipe_id = recipeId;}
-    public void setTitle(String title) { this.title = title; }
-    public void setDescription(String description) { this.description = description; }
-    public void setInstructions(String instructions) { this.instructions = instructions; }
-    public void setCategories(List<CategoryData> categories) {this.categories = categories;}
-    public void setPreparationTime(int preparationTime) { this.preparation_time = preparationTime; }
-    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
-    public void setServings(int servings) { this.servings = servings; }
-    public void setImage(String image) { this.image = image; }
-    public void setIngredients(List<IngredientData> ingredients) {this.ingredients = ingredients;}
+    public float getAverageRating() {
+        return averageRating;
+    }
+
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public void setCategories(List<CategoryData> categories) {
+        this.categories = categories;
+    }
+
+    public void setPreparationTime(int preparationTime) {
+        this.preparationTime = preparationTime;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
+    public void setViewsCount(int viewsCount) {
+        this.viewsCount = viewsCount;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setIngredients(List<IngredientData> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     public void setComments(List<CommentData> comments) {
         this.comments = comments;
+    }
+
+    public void setAverageRating(float averageRating) {
+        this.averageRating = averageRating;
     }
 }

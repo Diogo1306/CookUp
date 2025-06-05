@@ -52,7 +52,6 @@ public class AuthViewModel extends AndroidViewModel {
                     return;
                 }
 
-
                 userRepository.getUser(uid, new UserRepository.UserCallback() {
                     @Override
                     public void onSuccess(UserData user, String message) {
