@@ -34,17 +34,13 @@ class Rating
     }
 
     // Retorna média das ratings de várias receitas
-    public static function getAverageByRecipeIds($recipeIds)
+    public static function getAverageRatingByAuthor($user_id)
     {
-        if (empty($recipeIds)) return 0;
         $db = Database::connect();
-        $placeholders = implode(',', array_fill(0, count($recipeIds), '?'));
-        $types = str_repeat('i', count($recipeIds));
-        $sql = "SELECT AVG(rating) as avg_rating FROM ratings WHERE recipe_id IN ($placeholders)";
-        $stmt = $db->prepare($sql);
-        $stmt->bind_param($types, ...$recipeIds);
+        $stmt = $db->prepare("SELECT AVG(average_rating) as avg_rating FROM recipes WHERE author_id = ? AND average_rating > 0");
+        $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        $res = $stmt->get_result()->fetch_assoc();
-        return round($res['avg_rating'] ?? 0, 2);
+        $result = $stmt->get_result()->fetch_assoc();
+        return round($result['avg_rating'] ?? 0, 2);
     }
 }

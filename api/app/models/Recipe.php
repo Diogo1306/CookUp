@@ -87,7 +87,6 @@ class Recipe
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
-            // Aqui pode fazer parse das categorias se quiser
             $recipes[] = $row;
         }
         return $recipes;

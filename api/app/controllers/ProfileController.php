@@ -24,7 +24,7 @@ class ProfileController
         $finishedCount = 0;
 
         if ($totalRecipes > 0) {
-            $averageRating = Rating::getAverageByRecipeIds($recipeIds);
+            $averageRating = Rating::getAverageRatingByAuthor($recipeIds);
             $totalViews = Recipe::getTotalViewsByIds($recipeIds);
             $finishedCount = Tracking::countFinishedByRecipeIds($recipeIds);
         }
@@ -52,7 +52,7 @@ class ProfileController
 
         Response::json(
             !empty($recipes)
-                ? ['success' => true, 'recipes' => $recipes]
+                ? ['success' => true, 'data' => $recipes]
                 : ['success' => false, 'message' => 'Nenhuma receita encontrada para este utilizador.']
         );
     }

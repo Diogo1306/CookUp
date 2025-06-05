@@ -90,8 +90,8 @@ class Tracking
         $stmt->close();
     }
 
-    /** Conta quantas receitas do array foram marcadas como finalizadas */
-    public static function countFinishedByRecipeIds(array $recipeIds): int
+    // Conta quantas vezes receitas desse autor foram finalizadas
+    public static function countFinishedByRecipeIds($recipeIds)
     {
         if (empty($recipeIds)) return 0;
         $db = Database::connect();
@@ -102,7 +102,17 @@ class Tracking
         $stmt->bind_param($types, ...$recipeIds);
         $stmt->execute();
         $res = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
+        return intval($res['finished_count'] ?? 0);
+    }
+
+    // Conta quantas receitas o user já finalizou (de qualquer autor)
+    public static function countFinishedByUserId($user_id)
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT COUNT(*) as finished_count FROM user_recipe_finished WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
         return intval($res['finished_count'] ?? 0);
     }
 }
