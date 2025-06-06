@@ -12,12 +12,28 @@ class User
         $stmt->bind_param("s", $firebase_uid);
         $stmt->execute();
         $result = $stmt->get_result();
-        $user = $result->num_rows > 0 ? $result->fetch_assoc() : null;
-        $stmt->close();
-        return $user;
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+
+            if (empty($user['profile_picture'])) {
+                $photoUrl = BASE_URL . UPLOADS_FOLDER . 'profile_pictures/default.png';
+            } else if (filter_var($user['profile_picture'], FILTER_VALIDATE_URL)) {
+                $photoUrl = $user['profile_picture'];
+            } else {
+                $photoUrl = BASE_URL . UPLOADS_FOLDER . 'profile_pictures/' . $user['profile_picture'];
+            }
+
+            $user['profile_picture'] = $photoUrl;
+
+            return $user;
+        }
+        return null;
     }
 
-    /** Cria ou atualiza usuário (mensagem em PT-PT) */
+    /** 
+     * Cria ou atualiza usuário (mensagem em PT-PT) 
+     */
     public static function save(string $firebase_uid, string $username, string $email, string $profile_picture): array
     {
         $db = Database::connect();
@@ -60,5 +76,50 @@ class User
                 ? ["success" => true, "message" => "Conta criada com sucesso."]
                 : ["success" => false, "message" => "Erro ao criar conta."];
         }
+    }
+
+    /**
+     * Retorna o nome do arquivo da foto de perfil do usuário
+     */
+    public static function getProfilePhoto($userId): ?string
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT profile_picture FROM users WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            return $row['profile_picture'];
+        }
+        return null;
+    }
+
+    /**
+     * Atualiza o nome de usuário e a foto de perfil
+     */
+
+    public static function updateProfile($userId, $username, $photo)
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("UPDATE users SET username = ?, profile_picture = ? WHERE user_id = ?");
+        $stmt->bind_param("ssi", $username, $photo, $userId);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
+
+    /**
+     * Deleta o usuário do banco
+     */
+
+    public static function deleteUser($userId)
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("DELETE FROM users WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
     }
 }

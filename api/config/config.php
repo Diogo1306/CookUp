@@ -8,7 +8,7 @@ if (IS_LOCAL) {
     define('DB_USER', 'root');
     define('DB_PASS', '');
 
-    define('BASE_URL', 'http://192.168.173.229/PAP/CookUp_Core/');
+    define('BASE_URL', 'http://192.168.0.26/PAP/CookUp_Core/');
 } else {
     // define('DB_HOST', 'meu.servidor.com');
     // define('DB_NAME', 'cookup_prod');
@@ -22,3 +22,5 @@ define('UPLOADS_FOLDER', 'uploads/');
 define('INGREDIENTS_FOLDER', 'ingredients/');
 define('CATEGORIES_FOLDER', 'categories/');
 define('DEFAULT_IMAGE', 'uploads/default.png');
+define('PROFILE_PICTURES', 'profile_pictures/');
+define('PROFILE_PICTURE_PATH', BASE_URL . UPLOADS_FOLDER . PROFILE_PICTURES);

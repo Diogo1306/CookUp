@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2025 at 01:41 AM
+-- Generation Time: Jun 06, 2025 at 10:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -97,7 +97,12 @@ INSERT INTO `comments` (`comment_id`, `user_id`, `recipe_id`, `comment`, `create
 (36, 1, 3, 'Acrecente mais sal se nao gosta do peixe', '2025-05-11 18:50:11'),
 (37, 1, 3, 'top', '2025-05-11 19:00:30'),
 (38, 1, 3, 'Gostei', '2025-05-11 19:00:35'),
-(39, 1, 3, 'xsg', '2025-06-04 20:25:35');
+(39, 1, 3, 'xsg', '2025-06-04 20:25:35'),
+(40, 13, 3, 'nao gostei', '2025-06-05 08:37:16'),
+(41, 1, 3, 'top', '2025-06-05 09:10:21'),
+(42, 113, 18, 'Fiz essa recdita ficou muito giro meu....', '2025-06-05 16:23:41'),
+(43, 113, 18, 'Muito bom, mas faltou o.... Boinggg', '2025-06-05 16:24:07'),
+(44, 113, 18, 'iskd', '2025-06-05 16:24:36');
 
 -- --------------------------------------------------------
 
@@ -224,9 +229,10 @@ CREATE TABLE `ratings` (
 --
 
 INSERT INTO `ratings` (`rating_id`, `user_id`, `recipe_id`, `rating`, `created_at`) VALUES
-(51, 1, 3, 5, '2025-06-04 20:25:35'),
-(52, 1, 18, 3, '2025-05-11 18:41:48'),
-(56, 13, 3, 4, '2025-06-04 20:26:53');
+(60, 13, 3, 5, '2025-06-05 09:00:43'),
+(61, 13, 18, 5, '2025-06-05 09:00:47'),
+(62, 1, 3, 5, '2025-06-05 09:12:14'),
+(64, 113, 18, 5, '2025-06-05 16:24:36');
 
 --
 -- Triggers `ratings`
@@ -312,14 +318,14 @@ CREATE TABLE `recipes` (
 --
 
 INSERT INTO `recipes` (`recipe_id`, `author_id`, `title`, `description`, `instructions`, `difficulty`, `preparation_time`, `servings`, `image`, `created_at`, `updated_at`, `favorites_count`, `views_count`, `average_rating`, `ratings_count`) VALUES
-(3, 13, 'Churros Recheados', 'Churros crocantes por fora e macios por dentro, recheados com diversos sabores como Nutella, doce de leite e baunilha.ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', '1. Aqueça a água com manteiga, açúcar e sal.\n2. Adicione a farinha e mexa até formar uma massa homogênea.\n3. Deixe esfriar e misture o ovo.\n4. Modele com bico de confeitar e frite até dourar.\n5. Passe no açúcar e canela.\n6. Recheie com Nutella, doce de leite, creme de baunilha ou geleia.\n7. Sirva quente e aproveite!', 'dificil', 30, 6, 'https://static.itdg.com.br/images/640-440/b0a2d7797c9b1174ec771c88d64d2322/324392-original.jpg', '2025-04-25 17:56:39', '2025-06-04 23:27:00', 40, 214, 4.5, 2),
-(18, 13, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-06-04 23:27:14', 44, 193, 0, 0),
-(19, 13, 'Pizza Caseira', 'Pizza caseira com molho de tomate e queijo.', '1. Prepara a massa... 2. Acrescenta os ingredientes e leva ao forno...', NULL, 50, 4, 'https://images.mrcook.app/recipe-image/01932b85-f423-78fc-aeb1-dc2e3c50f40c?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-05-06 21:12:23', 0, 6, 0, 0),
-(20, 13, 'Salada Caesar', 'Salada clássica com molho Caesar.', '1. Junta a alface, o frango grelhado e os croutons... 2. Mistura o molho e serve...', NULL, 10, 2, 'https://cdn.okchef.com/recipes/01j98qy4vamemvk9d964k15hdd/01jaqcwsn1rg9vy3byy2yf8n8y.jpg', '2025-02-19 00:26:47', '2025-05-06 21:12:20', 0, 10, 0, 0),
-(21, 13, 'Tacos Mexicanos', 'Tacos recheados com carne temperada e guacamole.', '1. Cozinha a carne com os temperos... 2. Preenche as tortilhas e adiciona os acompanhamentos...', NULL, 25, 3, 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2022/03/15/672899432-aprenda-como-fazer-tacos-mexicanos-em-casa-fonte-my-quiet-kitchen-500x500.jpg', '2025-02-19 00:26:47', '2025-04-26 11:48:37', 0, 6, 0, 0),
-(22, 13, 'Sushi Tradicional', 'Sushi japonês feito com arroz e peixe fresco.', '1. Cozinha o arroz com vinagre de arroz... 2. Enrola com a alga e corta em pedaços...', NULL, 50, 4, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_1RcR6sp-afOKD4L5OcZ-pUb5rumF9f2NGQ&s', '2025-02-19 00:26:47', '2025-05-06 21:08:40', 0, 6, 0, 0),
-(23, 13, 'Esparguete à Bolonhesa', 'Massa italiana com molho de carne e tomate.', '1. Cozinha a massa em água a ferver... 2. Prepara o molho de carne e mistura...', NULL, 35, 5, 'https://images.mrcook.app/recipe-image/0192a1c0-4f98-7c74-b4de-251935c92401?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-04-25 18:58:24', 0, 0, 0, 0),
-(24, 13, 'Hambúrguer Artesanal', 'Hambúrguer caseiro com carne suculenta e pão brioche.', '1. Molda os hambúrgueres... 2. Grelha até ficar dourado...', NULL, 20, 2, 'https://aseguirniteroi.com.br/wp-content/uploads/2023/05/hamburguer-deck-7.jpg', '2025-02-19 00:26:47', '2025-05-03 16:30:51', 0, 6, 0, 0),
+(3, 1, 'Churros Recheados', 'Churros crocantes por fora e macios por dentro, recheados com diversos sabores como Nutella, doce de leite e baunilha.ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', '1. Aqueça a água com manteiga, açúcar e sal.\n2. Adicione a farinha e mexa até formar uma massa homogênea.\n3. Deixe esfriar e misture o ovo.\n4. Modele com bico de confeitar e frite até dourar.\n5. Passe no açúcar e canela.\n6. Recheie com Nutella, doce de leite, creme de baunilha ou geleia.\n7. Sirva quente e aproveite!', 'dificil', 30, 6, 'https://static.itdg.com.br/images/640-440/b0a2d7797c9b1174ec771c88d64d2322/324392-original.jpg', '2025-04-25 17:56:39', '2025-06-05 16:25:54', 42, 239, 5, 2),
+(18, 1, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-06-05 16:25:20', 47, 207, 5, 2),
+(19, 1, 'Pizza Caseira', 'Pizza caseira com molho de tomate e queijo.', '1. Prepara a massa... 2. Acrescenta os ingredientes e leva ao forno...', NULL, 50, 4, 'https://images.mrcook.app/recipe-image/01932b85-f423-78fc-aeb1-dc2e3c50f40c?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-06-05 09:00:16', 0, 6, 0, 0),
+(20, 1, 'Salada Caesar', 'Salada clássica com molho Caesar.', '1. Junta a alface, o frango grelhado e os croutons... 2. Mistura o molho e serve...', NULL, 10, 2, 'https://cdn.okchef.com/recipes/01j98qy4vamemvk9d964k15hdd/01jaqcwsn1rg9vy3byy2yf8n8y.jpg', '2025-02-19 00:26:47', '2025-06-05 09:00:19', 0, 10, 0, 0),
+(21, 1, 'Tacos Mexicanos', 'Tacos recheados com carne temperada e guacamole.', '1. Cozinha a carne com os temperos... 2. Preenche as tortilhas e adiciona os acompanhamentos...', NULL, 25, 3, 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2022/03/15/672899432-aprenda-como-fazer-tacos-mexicanos-em-casa-fonte-my-quiet-kitchen-500x500.jpg', '2025-02-19 00:26:47', '2025-06-05 09:00:22', 0, 6, 0, 0),
+(22, 1, 'Sushi Tradicional', 'Sushi japonês feito com arroz e peixe fresco.', '1. Cozinha o arroz com vinagre de arroz... 2. Enrola com a alga e corta em pedaços...', NULL, 50, 4, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_1RcR6sp-afOKD4L5OcZ-pUb5rumF9f2NGQ&s', '2025-02-19 00:26:47', '2025-06-05 09:00:35', 0, 6, 0, 0),
+(23, 1, 'Esparguete à Bolonhesa', 'Massa italiana com molho de carne e tomate.', '1. Cozinha a massa em água a ferver... 2. Prepara o molho de carne e mistura...', NULL, 35, 5, 'https://images.mrcook.app/recipe-image/0192a1c0-4f98-7c74-b4de-251935c92401?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-04-25 18:58:24', 0, 0, 0, 0),
+(24, 1, 'Hambúrguer Artesanal', 'Hambúrguer caseiro com carne suculenta e pão brioche.', '1. Molda os hambúrgueres... 2. Grelha até ficar dourado...', NULL, 20, 2, 'https://aseguirniteroi.com.br/wp-content/uploads/2023/05/hamburguer-deck-7.jpg', '2025-02-19 00:26:47', '2025-05-03 16:30:51', 0, 6, 0, 0),
 (30, 1, 'Bolo', 'Um fofo e delicioso.', 'Pré-aqueça o forno a 180°C. Misture ovos e mexa bem. Leve ao forno por 35 minutos.', 'Médio', 50, 8, 'https://exemplo.com/bolo.jpg', '2025-04-12 13:53:27', '2025-04-25 23:00:39', 0, 2, 0, 0),
 (31, 1, 'Aspernatur', 'Repudiandae ipsum veniam repellendus aspernatur.', '1. Eius ad fugit occaecati tempora provident.\r\n2. Voluptas adipisci laudantium tempora sed ea.', 'Fácil', 41, 3, 'aspernatur.jpg', '2025-04-25 17:56:39', '2025-05-06 21:08:43', 23, 33, 0, 0),
 (32, 1, 'Magni dolores', 'Natus est aperiam cupiditate quos error expedita non.', '1. Voluptate cum numquam excepturi temporibus distinctio reprehenderit neque.\r\n2. Cum quasi fugit iste.', NULL, 68, 1, 'magni_dolores.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3, 2, 0, 0),
@@ -551,7 +557,46 @@ INSERT INTO `recipe_views` (`view_id`, `user_id`, `recipe_id`, `viewed_at`) VALU
 (263, 1, 18, '2025-06-05 00:13:15'),
 (264, 1, 3, '2025-06-05 00:13:17'),
 (265, 1, 3, '2025-06-05 00:27:00'),
-(266, 1, 18, '2025-06-05 00:27:12');
+(266, 1, 18, '2025-06-05 00:27:12'),
+(267, 1, 3, '2025-06-05 09:36:16'),
+(268, 13, 3, '2025-06-05 09:36:59'),
+(269, 13, 3, '2025-06-05 09:37:25'),
+(270, 13, 3, '2025-06-05 09:39:53'),
+(271, 13, 18, '2025-06-05 09:40:03'),
+(272, 13, 18, '2025-06-05 09:40:19'),
+(273, 13, 3, '2025-06-05 09:45:36'),
+(274, 13, 18, '2025-06-05 09:45:59'),
+(275, 13, 18, '2025-06-05 09:46:10'),
+(276, 13, 18, '2025-06-05 09:46:12'),
+(277, 13, 3, '2025-06-05 09:47:46'),
+(278, 13, 18, '2025-06-05 09:47:49'),
+(279, 13, 3, '2025-06-05 09:48:01'),
+(280, 13, 3, '2025-06-05 09:48:03'),
+(281, 13, 3, '2025-06-05 09:48:13'),
+(282, 13, 3, '2025-06-05 09:48:24'),
+(283, 13, 3, '2025-06-05 10:00:41'),
+(284, 13, 18, '2025-06-05 10:00:45'),
+(285, 1, 3, '2025-06-05 10:10:18'),
+(286, 1, 3, '2025-06-05 10:12:12'),
+(287, 13, 3, '2025-06-05 12:27:59'),
+(288, 13, 3, '2025-06-05 12:40:30'),
+(289, 13, 3, '2025-06-05 12:43:12'),
+(290, 13, 3, '2025-06-05 12:43:38'),
+(291, 13, 3, '2025-06-05 15:20:08'),
+(292, 13, 3, '2025-06-05 15:20:10'),
+(293, 13, 3, '2025-06-05 15:20:15'),
+(294, 13, 3, '2025-06-05 15:20:17'),
+(295, 13, 18, '2025-06-05 15:20:23'),
+(296, 13, 18, '2025-06-05 15:20:25'),
+(297, 13, 18, '2025-06-05 15:20:31'),
+(298, 13, 3, '2025-06-05 15:20:39'),
+(299, 13, 18, '2025-06-05 15:20:46'),
+(300, 113, 18, '2025-06-05 17:21:45'),
+(301, 113, 18, '2025-06-05 17:24:27'),
+(302, 113, 18, '2025-06-05 17:25:20'),
+(303, 113, 3, '2025-06-05 17:25:40'),
+(304, 113, 3, '2025-06-05 17:25:52'),
+(305, 113, 3, '2025-06-05 17:25:54');
 
 --
 -- Triggers `recipe_views`
@@ -586,7 +631,8 @@ CREATE TABLE `saved_lists` (
 INSERT INTO `saved_lists` (`list_id`, `user_id`, `list_name`, `created_at`, `color`) VALUES
 (35, 1, 'sobr', '2025-04-11 13:40:31', '#FFF0F5'),
 (63, 13, 'ola', '2025-04-30 22:29:23', '#FFF0F5'),
-(66, 13, 'hdh', '2025-05-09 15:20:50', '#FAD6A5');
+(66, 13, 'hdh', '2025-05-09 15:20:50', '#FAD6A5'),
+(67, 113, 'Tralalero Tralala', '2025-06-05 16:22:46', '#B2EBF2');
 
 -- --------------------------------------------------------
 
@@ -610,14 +656,17 @@ INSERT INTO `saved_recipes` (`saved_id`, `list_id`, `recipe_id`, `added_at`) VAL
 (298, 35, 41, '2025-05-06 17:35:35'),
 (344, 66, 32, '2025-05-11 15:04:35'),
 (354, 63, 22, '2025-05-11 16:02:07'),
-(361, 63, 3, '2025-05-11 17:45:22'),
 (362, 63, 23, '2025-05-11 17:45:24'),
 (363, 63, 47, '2025-05-11 17:45:27'),
 (364, 63, 43, '2025-05-11 17:45:29'),
-(366, 63, 18, '2025-05-11 18:02:24'),
 (372, 35, 22, '2025-05-11 19:00:47'),
 (387, 35, 23, '2025-06-02 18:02:00'),
-(391, 35, 3, '2025-06-02 22:56:29');
+(391, 35, 3, '2025-06-02 22:56:29'),
+(395, 63, 54, '2025-06-05 08:46:40'),
+(396, 63, 44, '2025-06-05 08:46:41'),
+(398, 63, 18, '2025-06-05 08:47:42'),
+(399, 63, 3, '2025-06-05 08:48:21'),
+(400, 67, 18, '2025-06-05 16:22:51');
 
 -- --------------------------------------------------------
 
@@ -640,8 +689,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `firebase_uid`, `username`, `email`, `profile_picture`, `created_at`, `updated_at`) VALUES
-(1, 'ZA3PDVCrOrPzQKA2lST3lQVU1c23', 'admin', 'admin@gmail.com', '', '2025-04-05 12:56:27', '2025-04-05 12:56:37'),
-(13, 'ngl7Ux7HDlRsW3Xe0MpVzl37Pwf2', 'sayo santos', 'sayo.santos1306@gmail.com', 'https://lh3.googleusercontent.com/a/ACg8ocL9ANhIPt5cXYQkxgBQrH4v-61VDx_IbjNWgZfDaJxuiHZLu2M=s96-c', '2025-03-31 14:33:20', '2025-05-08 12:32:39');
+(1, 'ZA3PDVCrOrPzQKA2lST3lQVU1c23', 'adm', 'admin@gmail.com', 'profile_68430a0b1f4cd9.89772439_18833188.jpg', '2025-04-05 12:56:27', '2025-06-06 15:32:27'),
+(13, 'ngl7Ux7HDlRsW3Xe0MpVzl37Pwf2', 'sayo santos', 'sayo.santos1306@gmail.com', 'https://lh3.googleusercontent.com/a/ACg8ocL9ANhIPt5cXYQkxgBQrH4v-61VDx_IbjNWgZfDaJxuiHZLu2M=s96-c', '2025-03-31 14:33:20', '2025-06-06 11:07:01'),
+(113, 'tnDlwSs79egAxuLkY48TLcxTQru2', 'Kauan Matias', 'kauanmatiasfortunato@gmail.com', 'https://lh3.googleusercontent.com/a/ACg8ocLPSS2ksk3GCdauX57r3wepuYSr2T0Th10xADnCbUIvibqjsGzR=s96-c', '2025-06-05 16:21:22', '2025-06-05 16:27:28');
 
 -- --------------------------------------------------------
 
@@ -663,15 +713,20 @@ CREATE TABLE `user_category_stats` (
 
 INSERT INTO `user_category_stats` (`user_id`, `category_id`, `views_count`, `favorites_count`, `finished_count`) VALUES
 (1, 22, 21, 7, 1),
-(1, 23, 104, 15, 5),
+(1, 23, 107, 15, 7),
 (1, 33, 21, 7, 1),
-(1, 41, 104, 14, 5),
+(1, 41, 107, 14, 7),
 (1, 42, 21, 7, 1),
-(13, 22, 5, 2, 1),
-(13, 23, 2, 1, 0),
-(13, 33, 5, 2, 1),
-(13, 41, 2, 1, 0),
-(13, 42, 5, 2, 1);
+(13, 22, 6, 1, 5),
+(13, 23, 15, 2, 3),
+(13, 33, 6, 1, 5),
+(13, 41, 15, 2, 3),
+(13, 42, 6, 1, 5),
+(113, 22, 3, 1, 2),
+(113, 23, 3, 0, 0),
+(113, 33, 3, 1, 2),
+(113, 41, 3, 0, 0),
+(113, 42, 3, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -691,13 +746,24 @@ CREATE TABLE `user_recipe_finished` (
 --
 
 INSERT INTO `user_recipe_finished` (`id`, `user_id`, `recipe_id`, `finished_at`) VALUES
-(10, 13, 18, '2025-05-11 18:45:58'),
 (11, 1, 3, '2025-05-11 19:30:45'),
 (12, 1, 3, '2025-05-11 19:40:37'),
 (13, 1, 18, '2025-05-11 19:41:48'),
 (14, 1, 3, '2025-05-11 19:49:55'),
 (15, 1, 3, '2025-05-11 20:00:30'),
-(16, 1, 3, '2025-06-04 21:25:35');
+(16, 1, 3, '2025-06-04 21:25:35'),
+(22, 13, 3, '2025-06-05 09:47:48'),
+(23, 13, 18, '2025-06-05 09:47:51'),
+(24, 13, 3, '2025-06-05 09:48:26'),
+(25, 13, 3, '2025-06-05 10:00:43'),
+(26, 13, 18, '2025-06-05 10:00:47'),
+(27, 1, 3, '2025-06-05 10:10:21'),
+(28, 1, 3, '2025-06-05 10:12:14'),
+(29, 13, 18, '2025-06-05 15:20:33'),
+(30, 13, 18, '2025-06-05 15:20:34'),
+(31, 13, 18, '2025-06-05 15:20:48'),
+(32, 113, 18, '2025-06-05 17:24:07'),
+(33, 113, 18, '2025-06-05 17:24:37');
 
 --
 -- Indexes for dumped tables
@@ -824,7 +890,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `ingredients`
@@ -842,7 +908,7 @@ ALTER TABLE `ingredient_categories`
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `recipes`
@@ -860,31 +926,31 @@ ALTER TABLE `recipe_ingredients`
 -- AUTO_INCREMENT for table `recipe_views`
 --
 ALTER TABLE `recipe_views`
-  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=267;
+  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=306;
 
 --
 -- AUTO_INCREMENT for table `saved_lists`
 --
 ALTER TABLE `saved_lists`
-  MODIFY `list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `saved_recipes`
 --
 ALTER TABLE `saved_recipes`
-  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=394;
+  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=401;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT for table `user_recipe_finished`
 --
 ALTER TABLE `user_recipe_finished`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Constraints for dumped tables

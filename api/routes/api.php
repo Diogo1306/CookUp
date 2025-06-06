@@ -70,6 +70,8 @@ Router::add('GET',  'rating', [$ratingController, 'getAverage']);
 // USER
 Router::add('GET',  'user', [$userController, 'getUser']);
 Router::add('POST', 'user', [$userController, 'save']);
+Router::add('POST', 'update_profile', [$userController, 'updateProfile']);
+Router::add('POST', 'delete_user', [$userController, 'delete']);
 
 // USER STATS
 Router::add('POST', 'update_stat',       [$userStatsController, 'updateStat']);
