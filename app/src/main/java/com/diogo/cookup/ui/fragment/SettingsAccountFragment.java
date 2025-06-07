@@ -1,28 +1,29 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.diogo.cookup.R;
 import com.diogo.cookup.ui.activity.AuthActivity;
 import com.diogo.cookup.utils.MessageUtils;
+import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SettingsAccountFragment extends Fragment {
@@ -41,10 +42,9 @@ public class SettingsAccountFragment extends Fragment {
         setupViews(view);
         setupViewModels(view);
         loadUserData(view);
-        setupLisners(view);
+        setupListeners(view);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         authViewModel.checkLoginProvider();
-
 
         authViewModel.getLoginProvider().observe(getViewLifecycleOwner(), provider -> {
             boolean isGoogle = "google.com".equals(provider);
@@ -104,7 +104,7 @@ public class SettingsAccountFragment extends Fragment {
         }
     }
 
-    private void setupLisners(View view)  {
+    private void setupListeners(View view) {
         view.findViewById(R.id.arrow_back).setOnClickListener(v ->
                 NavHostFragment.findNavController(this).popBackStack()
         );
@@ -118,11 +118,65 @@ public class SettingsAccountFragment extends Fragment {
         );
         btn_logout.setOnClickListener(v -> {
             authViewModel.logout();
-
             Intent intent = new Intent(requireActivity(), AuthActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
 
+        btn_deleteAccount.setOnClickListener(v -> showDeleteAccountDialog());
+    }
+
+    // ----- DELETE ACCOUNT FLOW -----
+
+    private void showDeleteAccountDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Eliminar conta")
+                .setMessage("Tem certeza que deseja eliminar a sua conta? Esta ação é irreversível.")
+                .setPositiveButton("Eliminar", (dialog, which) -> deleteFromFirebaseAndBackend())
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void deleteFromFirebaseAndBackend() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.delete().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Firebase Auth deleted, now delete in backend
+                    deleteUserOnBackend();
+                } else {
+                    if (task.getException() instanceof FirebaseAuthRecentLoginRequiredException) {
+                        MessageUtils.showSnackbar(requireView(), "É necessário relogar para eliminar a conta.");
+                        // Aqui pode mostrar tela para reautenticar, se quiser.
+                    } else {
+                        MessageUtils.showSnackbar(requireView(), "Erro ao eliminar do Firebase: " + task.getException().getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    private void deleteUserOnBackend() {
+        if (userViewModel.getUserLiveData().getValue() == null) {
+            MessageUtils.showSnackbar(requireView(), "Erro: dados do usuário não encontrados.");
+            return;
+        }
+        int userId = userViewModel.getUserLiveData().getValue().getUserId();
+        userViewModel.deleteUser(userId, new com.diogo.cookup.data.repository.UserRepository.UserCallback() {
+            @Override
+            public void onSuccess(com.diogo.cookup.data.model.UserData user, String message) {
+                FirebaseAuth.getInstance().signOut();
+                SharedPrefHelper.getInstance(requireContext()).clearUser();
+                MessageUtils.showSnackbar(requireView(), "Conta eliminada com sucesso!");
+                Intent intent = new Intent(requireActivity(), AuthActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(String message) {
+                MessageUtils.showSnackbar(requireView(), "Erro ao eliminar no backend: " + message);
+            }
+        });
     }
 }
