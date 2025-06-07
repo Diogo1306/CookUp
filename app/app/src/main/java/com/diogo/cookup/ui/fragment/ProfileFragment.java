@@ -108,15 +108,19 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             user_name.setText(user.getUsername());
 
-            if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+            String photoUrl = user.getProfilePicture();
+            Log.d("UserData", "URL da imagem: " + user.getProfilePicture());
+            if (photoUrl != null && !photoUrl.isEmpty()) {
                 Glide.with(this)
-                        .load(user.getProfilePicture())
+                        .load(photoUrl)
                         .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .into(profile_image);
+            } else {
+                profile_image.setImageResource(R.drawable.placeholder);
             }
         }
     }
-
 
     private void observeViewModels() {
 
@@ -136,7 +140,6 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-
 
     private void openSaveRecipesFragment() {
         NavHostFragment.findNavController(this)

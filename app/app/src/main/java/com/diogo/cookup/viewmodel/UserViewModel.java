@@ -1,6 +1,9 @@
 package com.diogo.cookup.viewmodel;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -9,6 +12,8 @@ import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.UserRepository;
 import com.diogo.cookup.utils.SharedPrefHelper;
+
+import java.io.File;
 
 public class UserViewModel extends AndroidViewModel {
     private final UserRepository userRepository;
@@ -61,4 +66,41 @@ public class UserViewModel extends AndroidViewModel {
             }
         });
     }
+
+    public void updateUserPartialOnServer(UserData updatedUser) {
+        userRepository.createOrUpdateUser(updatedUser, new UserRepository.UserCallback() {
+            @Override
+            public void onSuccess(UserData user, String message) {
+                sharedPrefHelper.updateUserPartial(updatedUser);
+                userLiveData.postValue(sharedPrefHelper.getUser());
+                successMessage.postValue(message);
+            }
+
+            @Override
+            public void onError(String message) {
+                errorMessage.postValue("Erro ao atualizar usuário parcialmente: " + message);
+            }
+        });
+    }
+
+    public void updateUserWithImageFile(int userId, String username, File imageFile) {
+        userRepository.updateProfileWithImageFile(userId, username, imageFile, new UserRepository.UserCallback() {
+            @Override
+            public void onSuccess(UserData user, String message) {
+                userLiveData.postValue(user);
+                sharedPrefHelper.saveUser(user);
+                successMessage.postValue(message);
+            }
+
+            @Override
+            public void onError(String message) {
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    public void deleteUser(int userId, UserRepository.UserCallback callback) {
+        userRepository.deleteUser(userId, callback);
+    }
+
 }

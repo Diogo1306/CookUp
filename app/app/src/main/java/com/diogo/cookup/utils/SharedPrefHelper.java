@@ -37,6 +37,17 @@ public class SharedPrefHelper {
         editor.commit();
     }
 
+    public void updateUserPartial(UserData updatedUser) {
+        UserData currentUser = getUser();
+        if (currentUser != null) {
+            if (updatedUser.getUsername() != null) currentUser.setUsername(updatedUser.getUsername());
+            if (updatedUser.getProfilePicture() != null) currentUser.setProfilePicture(updatedUser.getProfilePicture());
+            if (updatedUser.getEmail() != null) currentUser.setEmail(updatedUser.getEmail());
+            saveUser(currentUser);
+        }
+    }
+
+
 
     public UserData getUser() {
         String json = sharedPref.getString(KEY_USER, null);

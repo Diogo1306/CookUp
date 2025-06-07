@@ -4,23 +4,34 @@ import com.diogo.cookup.data.model.*;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface ApiService {
 
     // === USERS ===
     @POST("api.php")
-    Call<ApiResponse<UserData>> saveUser(@Query("route") String route, @Body UserData user);
+     Call<ApiResponse<UserData>> saveUser(@Query("route") String route, @Body UserData user);
 
     @GET("api.php")
     Call<ApiResponse<UserData>> getUser(@Query("route") String route, @Query("firebase_uid") String firebaseUid);
+
+    @Multipart
+    @POST("api.php?route=update_profile")
+    Call<ApiResponse<UserData>> updateProfile(@Part("user_id") RequestBody userId, @Part("username") RequestBody username, @Part MultipartBody.Part profile_picture);
+
+    @POST("api.php")
+    Call<ApiResponse<Void>> deleteUser(@Query("route") String route, @Query("user_id") int userId);
 
     // === RECIPES ===
     @GET("api.php")
