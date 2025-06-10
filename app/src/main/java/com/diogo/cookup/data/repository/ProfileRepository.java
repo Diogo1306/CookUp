@@ -25,6 +25,12 @@ public class ProfileRepository {
         apiService = ApiRetrofit.getApiService();
     }
 
+    public interface DeleteCallback {
+        void onSuccess();
+
+        void onFailure(String errorMsg);
+    }
+
     public void getProfileSummary(int userId, MutableLiveData<ProfileData> data, MutableLiveData<String> error) {
         apiService.getProfileSummary("profile_summary", userId)
                 .enqueue(new Callback<ApiResponse<ProfileData>>() {
@@ -60,6 +66,25 @@ public class ProfileRepository {
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Throwable t) {
                         error.postValue("Falha de conexão: " + t.getMessage());
+                    }
+                });
+    }
+
+    public void deleteRecipe(int recipeId, DeleteCallback callback) {
+        apiService.deleteRecipe("delete_recipe", recipeId)
+                .enqueue(new Callback<ApiResponse<Void>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onFailure("Erro ao deletar receita.");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                        callback.onFailure("Erro de rede: " + t.getMessage());
                     }
                 });
     }

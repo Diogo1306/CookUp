@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
@@ -32,6 +33,7 @@ import com.diogo.cookup.data.model.TrackRequest;
 import com.diogo.cookup.data.repository.TrackingRepository;
 import com.diogo.cookup.ui.activity.MainActivity;
 import com.diogo.cookup.ui.adapter.CommentAdapter;
+import com.diogo.cookup.ui.adapter.GalleryPagerAdapter;
 import com.diogo.cookup.ui.adapter.IngredientAdapter;
 import com.diogo.cookup.ui.dialog.RatingBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
@@ -39,6 +41,8 @@ import com.diogo.cookup.viewmodel.RecipeViewModel;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +54,9 @@ public class RecipeDetailFragment extends Fragment {
     private RecipeViewModel viewModel;
     private IngredientAdapter ingredientAdapter;
     private RecyclerView ingredientsRecyclerView;
+    private ViewPager2 galleryPager;
+    private TabLayout galleryIndicator;
+    private GalleryPagerAdapter galleryPagerAdapter;
 
     public static RecipeDetailFragment newInstance(int recipeId) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
@@ -80,7 +87,11 @@ public class RecipeDetailFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
 
+        galleryPager = view.findViewById(R.id.gallery_pager);
+        galleryIndicator = view.findViewById(R.id.gallery_indicator);
+
         ImageView recipeImage = view.findViewById(R.id.recipe_image);
+
         TextView recipeTitle = view.findViewById(R.id.recipe_title);
         TextView recipeDescription = view.findViewById(R.id.recipe_description);
         TextView recipeInstructions = view.findViewById(R.id.recipe_instructions);
@@ -134,9 +145,33 @@ public class RecipeDetailFragment extends Fragment {
         viewModel.getRecipeDetailLiveData().observe(getViewLifecycleOwner(), recipe -> {
             if (recipe == null) return;
 
-            Glide.with(requireContext()).load(recipe.getImage())
-                    .placeholder(R.drawable.placeholder)
-                    .into(recipeImage);
+            List<String> gallery = recipe.getGallery();
+            if (gallery != null && !gallery.isEmpty()) {
+                if (galleryPager != null) galleryPager.setVisibility(View.VISIBLE);
+                if (galleryIndicator != null) galleryIndicator.setVisibility(View.VISIBLE);
+                if (recipeImage != null) recipeImage.setVisibility(View.GONE);
+
+                if (galleryPagerAdapter == null) {
+                    galleryPagerAdapter = new GalleryPagerAdapter(gallery);
+                    if (galleryPager != null) galleryPager.setAdapter(galleryPagerAdapter);
+                } else {
+                    galleryPagerAdapter.updateList(gallery);
+                }
+
+                if (galleryPager != null && galleryIndicator != null) {
+                    new TabLayoutMediator(galleryIndicator, galleryPager, (tab, position) -> {}).attach();
+                }
+            } else {
+                if (galleryPager != null) galleryPager.setVisibility(View.GONE);
+                if (galleryIndicator != null) galleryIndicator.setVisibility(View.GONE);
+                if (recipeImage != null) {
+                    recipeImage.setVisibility(View.VISIBLE);
+                    Glide.with(requireContext())
+                            .load(recipe.getImage())
+                            .placeholder(R.drawable.placeholder)
+                            .into(recipeImage);
+                }
+            }
 
             recipeTitle.setText(recipe.getTitle());
             txtTime.setText(getString(R.string.preparation_time_minutes, recipe.getPreparationTime()));

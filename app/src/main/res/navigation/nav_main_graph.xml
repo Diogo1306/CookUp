@@ -76,7 +76,13 @@
             app:destination="@id/settingsProfileFragment" />
         <action
             android:id="@+id/action_profileFragment_to_saveRecipesFragment"
-            app:destination="@id/saveRecipesFragment" />
+            app:destination="@id/RecipeSaveOrUpdateFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_recipeSaveOrUpdateFragment"
+            app:destination="@id/RecipeSaveOrUpdateFragment" />
     </fragment>
 
     <!-- Search Suggestions -->
@@ -172,7 +178,7 @@
         android:name="com.diogo.cookup.ui.fragment.ChangePasswordFragment"
         android:label="ChangePasswordFragment" />
     <fragment
-        android:id="@+id/saveRecipesFragment"
-        android:name="com.diogo.cookup.ui.fragment.SaveRecipesFragment"
+        android:id="@+id/RecipeSaveOrUpdateFragment"
+        android:name="com.diogo.cookup.ui.fragment.RecipeSaveOrUpdateFragment"
         android:label="SaveRecipesFragment" />
 </navigation>

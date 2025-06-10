@@ -24,21 +24,45 @@ public class RecipeViewModel extends ViewModel {
     private final MutableLiveData<Float> averageRatingLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> ratingSuccess = new MutableLiveData<>();
 
-    public RecipeViewModel() {recipeRepository = new RecipeRepository();}
-    public LiveData<List<RecipeData>> getRecipesLiveData() {return recipesLiveData;}
-    public LiveData<RecipeData> getRecipeDetailLiveData() {return recipeDetail;}
-    public LiveData<String> getErrorMessage() {return errorMessage;}
-    public LiveData<List<Integer>> getSavedRecipeIds() {return savedRecipeIds;}
-    public LiveData<List<CommentData>> getCommentsLiveData() {return commentsLiveData;}
-    public LiveData<Float> getAverageRatingLiveData() {return averageRatingLiveData;}
-    public LiveData<Boolean> getRatingSuccessLiveData() {return ratingSuccess;}
-    public void loadRecipes() {recipeRepository.getAllRecipes(recipesLiveData, errorMessage);}
-    public void loadRecipeDetail(int recipeId) {recipeRepository.getRecipeDetail(recipeId, recipeDetail, errorMessage);}
-    public void loadRecipesByCategory(int categoryId) {recipeRepository.getRecipesByCategory(categoryId, recipesLiveData, errorMessage);}
-    public void loadRecommendedRecipes() {recipeRepository.getRecommendedRecipes(recipesLiveData, errorMessage);}
-    public void loadComments(int recipeId) {recipeRepository.getComments(recipeId, commentsLiveData, errorMessage);}
-    public void loadAverageRating(int recipeId) {recipeRepository.getAverageRating(recipeId, averageRatingLiveData, errorMessage);}
-    public void submitRating(RatingRequest request) {recipeRepository.submitRating(request, ratingSuccess, errorMessage);}
+    public RecipeViewModel() {
+        recipeRepository = new RecipeRepository();
+    }
+
+    public LiveData<List<RecipeData>> getRecipesLiveData() { return recipesLiveData; }
+    public LiveData<RecipeData> getRecipeDetailLiveData() { return recipeDetail; }
+    public LiveData<String> getErrorMessage() { return errorMessage; }
+    public LiveData<List<Integer>> getSavedRecipeIds() { return savedRecipeIds; }
+    public LiveData<List<CommentData>> getCommentsLiveData() { return commentsLiveData; }
+    public LiveData<Float> getAverageRatingLiveData() { return averageRatingLiveData; }
+    public LiveData<Boolean> getRatingSuccessLiveData() { return ratingSuccess; }
+
+    public void loadRecipes() {
+        recipeRepository.getAllRecipes(recipesLiveData, errorMessage);
+    }
+
+    public void loadRecipeDetail(int recipeId) {
+        recipeRepository.getRecipeDetail(recipeId, recipeDetail, errorMessage);
+    }
+
+    public void loadRecipesByCategory(int categoryId) {
+        recipeRepository.getRecipesByCategory(categoryId, recipesLiveData, errorMessage);
+    }
+
+    public void loadRecommendedRecipes() {
+        recipeRepository.getRecommendedRecipes(recipesLiveData, errorMessage);
+    }
+
+    public void loadComments(int recipeId) {
+        recipeRepository.getComments(recipeId, commentsLiveData, errorMessage);
+    }
+
+    public void loadAverageRating(int recipeId) {
+        recipeRepository.getAverageRating(recipeId, averageRatingLiveData, errorMessage);
+    }
+
+    public void submitRating(RatingRequest request) {
+        recipeRepository.submitRating(request, ratingSuccess, errorMessage);
+    }
 
     public void submitComment(int userId, int recipeId, String comment) {
         CommentRequest request = new CommentRequest(userId, recipeId, comment);
@@ -50,7 +74,6 @@ public class RecipeViewModel extends ViewModel {
             RatingRequest ratingRequest = new RatingRequest(userId, recipeId, (int) rating);
             recipeRepository.submitRating(ratingRequest, ratingSuccess, errorMessage);
         }
-
         if (!comment.isEmpty()) {
             CommentRequest commentRequest = new CommentRequest(userId, recipeId, comment);
             recipeRepository.submitComment(commentRequest, ratingSuccess, errorMessage);
