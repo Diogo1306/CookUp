@@ -96,7 +96,6 @@ class UserController
             : ['success' => false, 'message' => 'Erro ao atualizar perfil.']);
     }
 
-
     public function delete()
     {
         $userId = $_POST['user_id'] ?? $_GET['user_id'] ?? null;

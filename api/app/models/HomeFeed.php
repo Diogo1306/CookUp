@@ -21,6 +21,7 @@ class HomeFeed
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
@@ -43,6 +44,7 @@ class HomeFeed
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
@@ -69,6 +71,7 @@ class HomeFeed
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
@@ -91,8 +94,16 @@ class HomeFeed
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
+    }
+
+    private static function buildImageUrl($image)
+    {
+        if (empty($image)) return BASE_URL . DEFAULT_IMAGE;
+        if (substr($image, 0, 4) === 'http') return $image;
+        return BASE_URL . UPLOADS_FOLDER . RECIPES_FOLDER . $image;
     }
 }

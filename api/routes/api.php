@@ -14,7 +14,8 @@ require_once __DIR__ . '/../app/controllers/HomeFeedController.php';
 require_once __DIR__ . '/../app/controllers/TrackingController.php';
 require_once __DIR__ . '/../app/controllers/SearchController.php';
 require_once __DIR__ . '/../app/controllers/ProfileController.php';
-
+require_once __DIR__ . '/../app/controllers/IngredientController.php';
+require_once __DIR__ . '/../app/controllers/TranslationController.php';
 
 // Instantiate controllers
 $recipeController       = new RecipeController();
@@ -27,7 +28,10 @@ $userStatsController    = new UserStatsController();
 $homeFeedController     = new HomeFeedController();
 $trackingController     = new TrackingController();
 $searchController       = new SearchController();
-$profileController = new ProfileController();
+$profileController      = new ProfileController();
+$ingredientController   = new IngredientController();
+$translationController = new TranslationController();
+
 
 // RECIPES
 Router::add('GET',  'recipes',     [$recipeController, 'getAll']);
@@ -37,6 +41,10 @@ Router::add('GET',  'popular_recipes_pagination', [$recipeController, 'getPopula
 Router::add('GET',  'most_favorited_recipes',     [$recipeController, 'getMostFavorited']);
 Router::add('GET',  'recipes_by_mealtype',        [$recipeController, 'getByCategory']);
 Router::add('GET',  'recommended',                [$recipeController, 'getRecommended']);
+Router::add('POST', 'upload_recipe_gallery', [$recipeController, 'uploadGallery']);
+Router::add('GET', 'recipe_gallery', [$recipeController, 'getGallery']);
+Router::add('POST', 'delete_recipe', [$recipeController, 'delete']);
+Router::add('POST', 'upload_recipe_gallery', [$recipeController, 'uploadGallery']);
 
 // PROFILE
 Router::add('GET',  'profile_summary',   [$profileController, 'getSummary']);
@@ -50,6 +58,11 @@ Router::add('GET',  'user_categories',       [$categoryController, 'getUserCateg
 // COMMENTS
 Router::add('POST', 'comment',   [$commentController, 'submit']);
 Router::add('GET',  'comment',   [$commentController, 'getByRecipe']);
+
+// i ngredients API spoonacular Tests
+Router::add('POST', 'add_recipe_ingredient', [$ingredientController, 'addIngredientToRecipe']);
+Router::add('POST', 'translate', [$translationController, 'translate']);
+Router::add('GET', 'autocomplete_ingredient', [$ingredientController, 'autocomplete']);
 
 // TRACKING
 Router::add('POST', 'track_interaction', [$trackingController, 'trackInteraction']);

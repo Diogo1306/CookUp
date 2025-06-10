@@ -73,9 +73,17 @@ class UserStats
         while ($row = $result->fetch_assoc()) {
             $row['categories'] = explode(',', $row['category_names']);
             unset($row['category_names']);
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         $stmt->close();
         return $recipes;
+    }
+
+    private static function buildImageUrl($image)
+    {
+        if (empty($image)) return BASE_URL . DEFAULT_IMAGE;
+        if (substr($image, 0, 4) === 'http') return $image;
+        return BASE_URL . UPLOADS_FOLDER . RECIPES_FOLDER . $image;
     }
 }

@@ -22,5 +22,6 @@ define('UPLOADS_FOLDER', 'uploads/');
 define('INGREDIENTS_FOLDER', 'ingredients/');
 define('CATEGORIES_FOLDER', 'categories/');
 define('DEFAULT_IMAGE', 'uploads/default.png');
+define('RECIPES_FOLDER', 'recipes/');
 define('PROFILE_PICTURES', 'profile_pictures/');
 define('PROFILE_PICTURE_PATH', BASE_URL . UPLOADS_FOLDER . PROFILE_PICTURES);

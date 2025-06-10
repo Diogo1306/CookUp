@@ -4,89 +4,147 @@ require_once __DIR__ . '/../core/Database.php';
 
 class Recipe
 {
-    public static function save($data): bool
+    public static function saveOrUpdate($data)
     {
         $db = Database::connect();
 
-        $stmt = $db->prepare("
-            INSERT INTO recipes (
-                recipe_id, author_id, title, description, instructions,
-                preparation_time, servings, image, utensils, difficulty, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-            ON DUPLICATE KEY UPDATE 
-                title = VALUES(title),
-                description = VALUES(description),
-                instructions = VALUES(instructions),
-                preparation_time = VALUES(preparation_time),
-                servings = VALUES(servings),
-                image = VALUES(image),
-                utensils = VALUES(utensils),
-                difficulty = VALUES(difficulty),
-                updated_at = NOW()
-        ");
-        $stmt->bind_param(
-            "iisssissss",
-            $data['recipe_id'],
-            $data['author_id'],
-            $data['title'],
-            $data['description'],
-            $data['instructions'],
-            $data['preparation_time'],
-            $data['servings'],
-            $data['image'],
-            $data['utensils'],
-            $data['difficulty']
-        );
+        $image = $data['image'] ?? 'default.png';
+        $author_id = $data['author_id'] ?? 1;
 
-        $success = $stmt->execute();
-        $stmt->close();
-
-        if (!$success) return false;
-
-        // Lida com categorias (troca todas)
-        $recipeId = $data['recipe_id'] ?: $db->insert_id;
-        $db->query("DELETE FROM recipe_category WHERE recipe_id = $recipeId");
-        if (!empty($data['categories']) && is_array($data['categories'])) {
-            $insert = $db->prepare("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?, ?)");
-            foreach ($data['categories'] as $catId) {
-                $insert->bind_param("ii", $recipeId, $catId);
-                $insert->execute();
-            }
-            $insert->close();
+        if (!empty($data['recipe_id'])) {
+            // UPDATE
+            $stmt = $db->prepare("UPDATE recipes SET title=?, description=?, instructions=?, difficulty=?, preparation_time=?, servings=?, image=?, updated_at=NOW() WHERE recipe_id=?");
+            $stmt->bind_param(
+                "sssssssi",
+                $data['title'],
+                $data['description'],
+                $data['instructions'],
+                $data['difficulty'],
+                $data['preparation_time'],
+                $data['servings'],
+                $image,
+                $data['recipe_id']
+            );
+            $stmt->execute();
+            $stmt->close();
+            return $data['recipe_id'];
+        } else {
+            // INSERT
+            $stmt = $db->prepare("INSERT INTO recipes (author_id, title, description, instructions, difficulty, preparation_time, servings, image, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+            $stmt->bind_param(
+                "isssssis",
+                $author_id,
+                $data['title'],
+                $data['description'],
+                $data['instructions'],
+                $data['difficulty'],
+                $data['preparation_time'],
+                $data['servings'],
+                $image
+            );
+            $stmt->execute();
+            $id = $db->insert_id;
+            $stmt->close();
+            return $id;
         }
-
-        return true;
     }
 
-    /** Deleta uma receita (e tudo relacionado via cascade) */
+    public static function updateCategories($recipeId, $categories)
+    {
+        $db = Database::connect();
+        $db->query("DELETE FROM recipe_category WHERE recipe_id = $recipeId");
+        $stmt = $db->prepare("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?, ?)");
+        foreach ($categories as $catId) {
+            $stmt->bind_param("ii", $recipeId, $catId);
+            $stmt->execute();
+        }
+        $stmt->close();
+    }
+
+    public static function updateIngredients($recipeId, $ingredients)
+    {
+        $db = Database::connect();
+        $db->query("DELETE FROM recipe_ingredients WHERE recipe_id = $recipeId");
+        $stmt = $db->prepare("INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity) VALUES (?, ?, ?)");
+        foreach ($ingredients as $ing) {
+            $name = $ing['ingredient_name'];
+            $quantity = $ing['quantity'] ?? '';
+            $ingredientId = Ingredient::getOrCreate($name);
+            $stmt->bind_param("iis", $recipeId, $ingredientId, $quantity);
+            $stmt->execute();
+        }
+        $stmt->close();
+    }
+
+    public static function saveGalleryImages($recipeId, $galleryNames)
+    {
+        $db = Database::connect();
+        $db->query("DELETE FROM recipe_gallery WHERE recipe_id = $recipeId");
+
+        foreach ($galleryNames as $index => $imgName) {
+            $stmt = $db->prepare("INSERT INTO recipe_gallery (recipe_id, image_url, ordering) VALUES (?, ?, ?)");
+            $stmt->bind_param("isi", $recipeId, $imgName, $index);
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+
+
     public static function delete($recipeId): bool
     {
         $db = Database::connect();
-        $stmt = $db->prepare("DELETE FROM recipes WHERE recipe_id = ?");
+
+        $stmt = $db->prepare("SELECT image_url FROM recipe_gallery WHERE recipe_id = ?");
         $stmt->bind_param("i", $recipeId);
-        return $stmt->execute();
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $file = __DIR__ . '/../../uploads/recipes/' . $row['image_url'];
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+        $stmt->close();
+
+        $db->query("DELETE FROM recipe_gallery WHERE recipe_id = $recipeId");
+
+        $stmt2 = $db->prepare("SELECT image FROM recipes WHERE recipe_id = ?");
+        $stmt2->bind_param("i", $recipeId);
+        $stmt2->execute();
+        $result2 = $stmt2->get_result();
+        if ($row2 = $result2->fetch_assoc()) {
+            $file = __DIR__ . '/../../uploads/recipes/' . $row2['image'];
+            if (file_exists($file) && $row2['image'] !== 'default.png') {
+                unlink($file);
+            }
+        }
+        $stmt2->close();
+
+        $stmt3 = $db->prepare("DELETE FROM recipes WHERE recipe_id = ?");
+        $stmt3->bind_param("i", $recipeId);
+        return $stmt3->execute();
     }
 
-
-    /** 10 receitas com mais favoritos */
     public static function getMostFavoritedRecipes()
     {
         $db = Database::connect();
         $stmt = $db->prepare("
-        SELECT r.*, 
-            GROUP_CONCAT(c.category_id) AS category_ids,
-            GROUP_CONCAT(c.category_name) AS category_names
-        FROM recipes r
-        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-        LEFT JOIN categories c ON c.category_id = rc.category_id
-        GROUP BY r.recipe_id
-        ORDER BY r.favorites_count DESC
-        LIMIT 10
-    ");
+    SELECT r.*, 
+        GROUP_CONCAT(c.category_id) AS category_ids,
+        GROUP_CONCAT(c.category_name) AS category_names
+    FROM recipes r
+    LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+    LEFT JOIN categories c ON c.category_id = rc.category_id
+    GROUP BY r.recipe_id
+    ORDER BY r.favorites_count DESC
+    LIMIT 10
+");
         $stmt->execute();
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
@@ -111,6 +169,7 @@ class Recipe
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
@@ -138,6 +197,7 @@ class Recipe
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
@@ -149,22 +209,24 @@ class Recipe
     {
         $db = Database::connect();
         $query = "
-            SELECT r.*, 
-                GROUP_CONCAT(c.category_id) AS category_ids,
-                GROUP_CONCAT(c.category_name) AS category_names,
-                GROUP_CONCAT(c.color_hex) AS category_colors,
-                GROUP_CONCAT(c.image_url) AS category_images
-            FROM recipes r
-            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-            LEFT JOIN categories c ON c.category_id = rc.category_id
-            GROUP BY r.recipe_id
-        ";
+        SELECT r.*, 
+            GROUP_CONCAT(c.category_id) AS category_ids,
+            GROUP_CONCAT(c.category_name) AS category_names,
+            GROUP_CONCAT(c.color_hex) AS category_colors,
+            GROUP_CONCAT(c.image_url) AS category_images
+        FROM recipes r
+        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+        LEFT JOIN categories c ON c.category_id = rc.category_id
+        GROUP BY r.recipe_id
+    ";
         $stmt = $db->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            // Aqui ajusta a URL:
+            $row['image'] = self::buildImageUrl($row['image']);
             $row['categories'] = self::parseCategories($row);
             unset($row['category_ids'], $row['category_names'], $row['category_colors'], $row['category_images']);
             $recipes[] = $row;
@@ -176,45 +238,77 @@ class Recipe
     public static function getById($recipeId): ?array
     {
         $db = Database::connect();
+
         $stmt = $db->prepare("
-            SELECT r.*,
-                GROUP_CONCAT(c.category_id) AS category_ids,
-                GROUP_CONCAT(c.category_name) AS category_names,
-                GROUP_CONCAT(c.color_hex) AS category_colors,
-                GROUP_CONCAT(c.image_url) AS category_images
-            FROM recipes r
-            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-            LEFT JOIN categories c ON c.category_id = rc.category_id
-            WHERE r.recipe_id = ?
-            GROUP BY r.recipe_id
-        ");
+        SELECT r.*,
+            GROUP_CONCAT(c.category_id) AS category_ids,
+            GROUP_CONCAT(c.category_name) AS category_names,
+            GROUP_CONCAT(c.color_hex) AS category_colors,
+            GROUP_CONCAT(c.image_url) AS category_images
+        FROM recipes r
+        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+        LEFT JOIN categories c ON c.category_id = rc.category_id
+        WHERE r.recipe_id = ?
+        GROUP BY r.recipe_id
+    ");
         $stmt->bind_param("i", $recipeId);
         $stmt->execute();
         $result = $stmt->get_result();
         $recipe = $result->fetch_assoc();
+        $stmt->close();
         if (!$recipe) return null;
+
+        if (!empty($recipe['image'])) {
+            $recipe['image'] = BASE_URL . UPLOADS_FOLDER . RECIPES_FOLDER . $recipe['image'];
+        } else {
+            $recipe['image'] = BASE_URL . DEFAULT_IMAGE;
+        }
 
         $recipe['categories'] = self::parseCategories($recipe);
         unset($recipe['category_ids'], $recipe['category_names'], $recipe['category_colors'], $recipe['category_images']);
 
-        // Ingredientes
         $stmt2 = $db->prepare("
-            SELECT ri.quantity, ri.custom_name, i.ingredient_name, i.image_url
+            SELECT ri.quantity, i.ingredient_name, i.image_url
             FROM recipe_ingredients ri
             LEFT JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
             WHERE ri.recipe_id = ?
-        ");
+    ");
         $stmt2->bind_param("i", $recipeId);
         $stmt2->execute();
         $result2 = $stmt2->get_result();
 
         $ingredients = [];
         while ($row = $result2->fetch_assoc()) {
-            $name = $row['custom_name'] ?: ($row['ingredient_name'] ?? 'Ingrediente');
-            $image = !empty($row['image_url']) ? BASE_URL . UPLOADS_FOLDER . INGREDIENTS_FOLDER . $row['image_url'] : BASE_URL . DEFAULT_IMAGE;
-            $ingredients[] = ['ingredient_name' => $name, 'ingredient_quantity' => $row['quantity'], 'ingredient_image' => $image];
+            $name = $row['ingredient_name'] ?? 'Ingrediente';
+            $image = !empty($row['image_url'])
+                ? BASE_URL . UPLOADS_FOLDER . INGREDIENTS_FOLDER . $row['image_url']
+                : BASE_URL . DEFAULT_IMAGE;
+            $ingredients[] = [
+                'ingredient_name' => $name,
+                'ingredient_quantity' => $row['quantity'],
+                'ingredient_image' => $image
+            ];
         }
+        $stmt2->close();
         $recipe['ingredients'] = $ingredients;
+
+        $stmt3 = $db->prepare("
+        SELECT image_url
+        FROM recipe_gallery
+        WHERE recipe_id = ?
+        ORDER BY ordering ASC
+    ");
+        $stmt3->bind_param("i", $recipeId);
+        $stmt3->execute();
+        $result3 = $stmt3->get_result();
+
+        $gallery = [];
+        while ($row = $result3->fetch_assoc()) {
+            $gallery[] = BASE_URL . UPLOADS_FOLDER . RECIPES_FOLDER . $row['image_url'];
+        }
+        $stmt3->close();
+        $recipe['gallery'] = $gallery;
+
         return $recipe;
     }
 
@@ -224,18 +318,18 @@ class Recipe
         $offset = ($page - 1) * $limit;
         $db = Database::connect();
         $query = "
-            SELECT r.*, 
-                GROUP_CONCAT(DISTINCT c.category_id) AS category_ids,
-                GROUP_CONCAT(DISTINCT c.category_name) AS category_names,
-                GROUP_CONCAT(DISTINCT c.color_hex) AS category_colors,
-                GROUP_CONCAT(DISTINCT c.image_url) AS category_images
-            FROM recipes r
-            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-            LEFT JOIN categories c ON c.category_id = rc.category_id
-            GROUP BY r.recipe_id
-            ORDER BY r.views_count DESC
-            LIMIT ? OFFSET ?
-        ";
+        SELECT r.*, 
+            GROUP_CONCAT(DISTINCT c.category_id) AS category_ids,
+            GROUP_CONCAT(DISTINCT c.category_name) AS category_names,
+            GROUP_CONCAT(DISTINCT c.color_hex) AS category_colors,
+            GROUP_CONCAT(DISTINCT c.image_url) AS category_images
+        FROM recipes r
+        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+        LEFT JOIN categories c ON c.category_id = rc.category_id
+        GROUP BY r.recipe_id
+        ORDER BY r.views_count DESC
+        LIMIT ? OFFSET ?
+    ";
         $stmt = $db->prepare($query);
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
@@ -243,12 +337,14 @@ class Recipe
 
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $row['categories'] = self::parseCategories($row);
             unset($row['category_ids'], $row['category_names'], $row['category_colors'], $row['category_images']);
             $recipes[] = $row;
         }
         return $recipes;
     }
+
 
     /** Helpers privados */
 
@@ -281,6 +377,7 @@ class Recipe
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         return $recipes;
@@ -314,5 +411,27 @@ class Recipe
         $stmt->execute();
         $res = $stmt->get_result()->fetch_assoc();
         return intval($res['total_views'] ?? 0);
+    }
+
+    public static function getGalleryImages($recipeId)
+    {
+        $db = Database::connect();
+        $images = [];
+        $stmt = $db->prepare("SELECT image_url FROM recipe_gallery WHERE recipe_id = ?");
+        $stmt->bind_param("i", $recipeId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $images[] = $row['image_url'];
+        }
+        $stmt->close();
+        return $images;
+    }
+
+    private static function buildImageUrl($image)
+    {
+        if (empty($image)) return BASE_URL . DEFAULT_IMAGE;
+        if (substr($image, 0, 4) === 'http') return $image;
+        return BASE_URL . UPLOADS_FOLDER . RECIPES_FOLDER . $image;
     }
 }

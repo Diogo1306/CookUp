@@ -39,7 +39,6 @@ class User
         $db = Database::connect();
         $existingUser = self::getByUID($firebase_uid);
 
-        // Username único (exceto para o próprio)
         $stmt = $db->prepare("SELECT firebase_uid FROM users WHERE username = ? AND firebase_uid != ?");
         $stmt->bind_param("ss", $username, $firebase_uid);
         $stmt->execute();
@@ -49,7 +48,6 @@ class User
             return ["success" => false, "message" => "O nome de utilizador já está em uso."];
         }
 
-        // Email único (exceto para o próprio)
         $stmt = $db->prepare("SELECT firebase_uid FROM users WHERE email = ? AND firebase_uid != ?");
         $stmt->bind_param("ss", $email, $firebase_uid);
         $stmt->execute();
