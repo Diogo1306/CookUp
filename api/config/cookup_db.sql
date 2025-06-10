@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 06, 2025 at 10:01 PM
+-- Generation Time: Jun 11, 2025 at 01:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -90,16 +90,7 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`comment_id`, `user_id`, `recipe_id`, `comment`, `created_at`) VALUES
-(32, 1, 3, 'Fixe', '2025-05-11 18:40:24'),
-(33, 1, 3, 'gostei muito', '2025-05-11 18:40:37'),
 (34, 1, 18, 'Top', '2025-05-11 18:41:44'),
-(35, 1, 3, 'top', '2025-05-11 18:49:55'),
-(36, 1, 3, 'Acrecente mais sal se nao gosta do peixe', '2025-05-11 18:50:11'),
-(37, 1, 3, 'top', '2025-05-11 19:00:30'),
-(38, 1, 3, 'Gostei', '2025-05-11 19:00:35'),
-(39, 1, 3, 'xsg', '2025-06-04 20:25:35'),
-(40, 13, 3, 'nao gostei', '2025-06-05 08:37:16'),
-(41, 1, 3, 'top', '2025-06-05 09:10:21'),
 (42, 113, 18, 'Fiz essa recdita ficou muito giro meu....', '2025-06-05 16:23:41'),
 (43, 113, 18, 'Muito bom, mas faltou o.... Boinggg', '2025-06-05 16:24:07'),
 (44, 113, 18, 'iskd', '2025-06-05 16:24:36');
@@ -177,7 +168,13 @@ INSERT INTO `ingredients` (`ingredient_id`, `ingredient_name`, `category_id`, `i
 (221, 'Gengibre', 1, 'http://localhost/PAP/CookUp_Core/uploads/gengibre.png'),
 (222, 'Coentros', 1, 'http://localhost/PAP/CookUp_Core/uploads/coentros.png'),
 (223, 'Manjericão', 1, 'http://localhost/PAP/CookUp_Core/uploads/manjericao.png'),
-(224, 'Orégãos', 1, 'http://localhost/PAP/CookUp_Core/uploads/oregaos.png');
+(224, 'Orégãos', 1, 'http://localhost/PAP/CookUp_Core/uploads/oregaos.png'),
+(227, 'farinha', 14, 'flour.jpg'),
+(233, 'abacate', 14, 'avocado.jpg'),
+(234, 'hdhen', 14, 'default.png'),
+(235, 'bdhd', 14, 'default.png'),
+(236, 'hebd', 14, 'default.png'),
+(237, 'Ingrediente', 14, 'default.png');
 
 -- --------------------------------------------------------
 
@@ -229,9 +226,7 @@ CREATE TABLE `ratings` (
 --
 
 INSERT INTO `ratings` (`rating_id`, `user_id`, `recipe_id`, `rating`, `created_at`) VALUES
-(60, 13, 3, 5, '2025-06-05 09:00:43'),
 (61, 13, 18, 5, '2025-06-05 09:00:47'),
-(62, 1, 3, 5, '2025-06-05 09:12:14'),
 (64, 113, 18, 5, '2025-06-05 16:24:36');
 
 --
@@ -318,10 +313,9 @@ CREATE TABLE `recipes` (
 --
 
 INSERT INTO `recipes` (`recipe_id`, `author_id`, `title`, `description`, `instructions`, `difficulty`, `preparation_time`, `servings`, `image`, `created_at`, `updated_at`, `favorites_count`, `views_count`, `average_rating`, `ratings_count`) VALUES
-(3, 1, 'Churros Recheados', 'Churros crocantes por fora e macios por dentro, recheados com diversos sabores como Nutella, doce de leite e baunilha.ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', '1. Aqueça a água com manteiga, açúcar e sal.\n2. Adicione a farinha e mexa até formar uma massa homogênea.\n3. Deixe esfriar e misture o ovo.\n4. Modele com bico de confeitar e frite até dourar.\n5. Passe no açúcar e canela.\n6. Recheie com Nutella, doce de leite, creme de baunilha ou geleia.\n7. Sirva quente e aproveite!', 'dificil', 30, 6, 'https://static.itdg.com.br/images/640-440/b0a2d7797c9b1174ec771c88d64d2322/324392-original.jpg', '2025-04-25 17:56:39', '2025-06-05 16:25:54', 42, 239, 5, 2),
-(18, 1, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-06-05 16:25:20', 47, 207, 5, 2),
+(18, 1, 'Panquecas de Aveia', 'Panquecas saudáveis feitas com aveia e banana.', '1. Mistura a aveia, o leite e os ovos... 2. Cozinha numa frigideira antiaderente...', NULL, 15, 2, 'https://www.anitahealthy.com/wp-content/uploads/2020/11/Panquecas-de-aveia-3.jpg', '2025-04-25 17:56:39', '2025-06-10 22:50:59', 47, 209, 5, 2),
 (19, 1, 'Pizza Caseira', 'Pizza caseira com molho de tomate e queijo.', '1. Prepara a massa... 2. Acrescenta os ingredientes e leva ao forno...', NULL, 50, 4, 'https://images.mrcook.app/recipe-image/01932b85-f423-78fc-aeb1-dc2e3c50f40c?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-06-05 09:00:16', 0, 6, 0, 0),
-(20, 1, 'Salada Caesar', 'Salada clássica com molho Caesar.', '1. Junta a alface, o frango grelhado e os croutons... 2. Mistura o molho e serve...', NULL, 10, 2, 'https://cdn.okchef.com/recipes/01j98qy4vamemvk9d964k15hdd/01jaqcwsn1rg9vy3byy2yf8n8y.jpg', '2025-02-19 00:26:47', '2025-06-05 09:00:19', 0, 10, 0, 0),
+(20, 1, 'Salada Caesar', 'Salada clássica com molho Caesar.', '1. Junta a alface, o frango grelhado e os croutons... 2. Mistura o molho e serve...', NULL, 10, 2, 'https://cdn.okchef.com/recipes/01j98qy4vamemvk9d964k15hdd/01jaqcwsn1rg9vy3byy2yf8n8y.jpg', '2025-02-19 00:26:47', '2025-06-10 20:36:16', 0, 11, 0, 0),
 (21, 1, 'Tacos Mexicanos', 'Tacos recheados com carne temperada e guacamole.', '1. Cozinha a carne com os temperos... 2. Preenche as tortilhas e adiciona os acompanhamentos...', NULL, 25, 3, 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2022/03/15/672899432-aprenda-como-fazer-tacos-mexicanos-em-casa-fonte-my-quiet-kitchen-500x500.jpg', '2025-02-19 00:26:47', '2025-06-05 09:00:22', 0, 6, 0, 0),
 (22, 1, 'Sushi Tradicional', 'Sushi japonês feito com arroz e peixe fresco.', '1. Cozinha o arroz com vinagre de arroz... 2. Enrola com a alga e corta em pedaços...', NULL, 50, 4, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_1RcR6sp-afOKD4L5OcZ-pUb5rumF9f2NGQ&s', '2025-02-19 00:26:47', '2025-06-05 09:00:35', 0, 6, 0, 0),
 (23, 1, 'Esparguete à Bolonhesa', 'Massa italiana com molho de carne e tomate.', '1. Cozinha a massa em água a ferver... 2. Prepara o molho de carne e mistura...', NULL, 35, 5, 'https://images.mrcook.app/recipe-image/0192a1c0-4f98-7c74-b4de-251935c92401?cacheKey=U3VuLCAxMiBKYW4gMjAyNSAwMzozODoyNCBHTVQ=', '2025-02-19 00:26:47', '2025-04-25 18:58:24', 0, 0, 0, 0),
@@ -332,7 +326,6 @@ INSERT INTO `recipes` (`recipe_id`, `author_id`, `title`, `description`, `instru
 (33, 1, 'Sapiente reprehenderit', 'Quod quasi assumenda iusto. Nemo ratione possimus ex voluptatum repellendus sit.', '1. Eos minus ipsum sed ratione eum totam.\r\n2. Et a eveniet dignissimos hic deserunt cumque.', NULL, 52, 7, 'sapiente_reprehenderit.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 19, 41, 0, 0),
 (34, 1, 'Iure similique', 'Soluta quasi quos. Labore voluptatum consequatur accusamus exercitationem odio voluptatem nostrum.', '1. Quae officiis eius dolorum aperiam dolores minima.\r\n2. Minima praesentium aperiam vero porro.', 'Fácil', 27, 3, 'iure_similique.jpg', '0000-00-00 00:00:00', '2025-04-26 00:01:01', 27, 11, 0, 0),
 (35, 1, 'Cupiditate non nihil', 'Asperiores aut sed facilis dolorem officiis adipisci.', '1. Officiis voluptas molestias aspernatur sequi consectetur deserunt.\r\n2. Eos modi eligendi hic voluptatem.', 'Difícil', 39, 2, 'cupiditate_non_nihil.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 34, 79, 0, 0),
-(36, 1, 'Omnis assumenda', 'Iure sit beatae veritatis sequi provident blanditiis.', '1. Sapiente veniam eum necessitatibus cumque praesentium doloribus.\r\n2. Tempora in vero illo rerum tempore quod.', 'Difícil', 83, 2, 'omnis_assumenda.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 19, 161, 0, 0),
 (37, 1, 'Blanditiis debitis', 'Quibusdam beatae perferendis repellat vero atque illo.', '1. Molestiae odit officia quam ad sed fuga.\r\n2. Laboriosam saepe non nisi itaque odio totam.', 'Fácil', 48, 4, 'blanditiis_debitis.jpg', '2025-04-25 17:56:39', '2025-04-26 12:00:01', 17, 202, 0, 0),
 (38, 1, 'Ad hic dicta', 'Unde sed accusamus quae. Natus iure ipsam.', '1. Quaerat perspiciatis perspiciatis ipsum at in nam.\r\n2. Possimus ullam temporibus necessitatibus.', NULL, 86, 8, 'ad_hic_dicta.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 16, 21, 0, 0),
 (39, 1, 'Voluptas autem', 'Vel deserunt consequuntur nulla odit eaque.', '1. Aliquam libero vitae assumenda quia inventore.\r\n2. Aperiam itaque unde labore.', 'Médio', 76, 7, 'voluptas_autem.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 40, 6, 0, 0),
@@ -354,9 +347,7 @@ INSERT INTO `recipes` (`recipe_id`, `author_id`, `title`, `description`, `instru
 (55, 1, 'Reiciendis ratione corporis', 'Error aut qui soluta.', '1. Minus nesciunt non quae.\r\n2. Impedit reprehenderit dolore assumenda quis.', 'Difícil', 76, 8, 'reiciendis_ratione_corporis.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 47, 101, 0, 0),
 (56, 1, 'Quia delectus eos', 'Possimus rem officiis hic. Earum harum deleniti saepe repellat ullam.', '1. Eos tempore voluptas ea beatae quibusdam.\r\n2. Repellat ipsa consequuntur corrupti sequi cum corrupti quas.', 'Fácil', 33, 3, 'quia_delectus_eos.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 21, 138, 0, 0),
 (57, 1, 'Inventore exercitationem', 'Nihil dicta quidem voluptate aspernatur magni veniam.', '1. Sapiente voluptatum aperiam expedita ex ratione suscipit adipisci.\r\n2. Quo excepturi possimus eveniet officiis facilis dolorem.', NULL, 50, 7, 'inventore_exercitationem.jpg', '0000-00-00 00:00:00', '2025-05-01 17:21:36', 0, 175, 0, 0),
-(58, 1, 'Deserunt reiciendis', 'Quasi excepturi esse natus iusto. Repudiandae dicta minus porro.', '1. Doloribus odio repudiandae.\r\n2. Porro ducimus blanditiis dolorum eius neque.', NULL, 75, 2, 'deserunt_reiciendis.jpg', '0000-00-00 00:00:00', '2025-05-05 16:44:13', 31, 126, 0, 0),
-(59, 1, 'Dolorem quo', 'Mollitia earum cum pariatur. Corrupti quod iste mollitia atque.', '1. Ab architecto enim molestiae quae eius.\r\n2. Fuga suscipit explicabo magnam.', 'Médio', 62, 6, 'dolorem_quo.jpg', '0000-00-00 00:00:00', '2025-04-26 11:56:02', 3, 78, 0, 0),
-(60, 1, 'Illo eos', 'Accusantium nostrum illo. Voluptatum est ratione facilis aliquam commodi.', '1. Amet quis velit aspernatur exercitationem reiciendis.\r\n2. Dolorum dolor ab laboriosam exercitationem rerum repudiandae.', 'Fácil', 21, 7, 'illo_eos.jpg', '0000-00-00 00:00:00', '2025-05-02 03:06:37', 23, 122, 0, 0);
+(58, 1, 'Deserunt reiciendis', 'Quasi excepturi esse natus iusto. Repudiandae dicta minus porro.', '1. Doloribus odio repudiandae.\r\n2. Porro ducimus blanditiis dolorum eius neque.', NULL, 75, 2, 'deserunt_reiciendis.jpg', '0000-00-00 00:00:00', '2025-05-05 16:44:13', 31, 126, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -374,8 +365,6 @@ CREATE TABLE `recipe_category` (
 --
 
 INSERT INTO `recipe_category` (`recipe_id`, `category_id`) VALUES
-(3, 23),
-(3, 41),
 (18, 22),
 (18, 33),
 (18, 42),
@@ -390,6 +379,20 @@ INSERT INTO `recipe_category` (`recipe_id`, `category_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `recipe_gallery`
+--
+
+CREATE TABLE `recipe_gallery` (
+  `image_id` int(11) NOT NULL,
+  `recipe_id` int(11) NOT NULL,
+  `image_url` varchar(255) NOT NULL,
+  `caption` varchar(100) DEFAULT NULL,
+  `ordering` int(11) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `recipe_ingredients`
 --
 
@@ -397,18 +400,8 @@ CREATE TABLE `recipe_ingredients` (
   `recipe_ingredient_id` int(11) NOT NULL,
   `recipe_id` int(11) NOT NULL,
   `ingredient_id` int(11) DEFAULT NULL,
-  `custom_name` varchar(100) DEFAULT NULL,
   `quantity` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `recipe_ingredients`
---
-
-INSERT INTO `recipe_ingredients` (`recipe_ingredient_id`, `recipe_id`, `ingredient_id`, `custom_name`, `quantity`) VALUES
-(1, 3, 213, NULL, '200g'),
-(2, 3, 184, NULL, '1 kg'),
-(3, 3, NULL, 'bala de amenduim', '3 balas');
 
 -- --------------------------------------------------------
 
@@ -431,172 +424,46 @@ INSERT INTO `recipe_views` (`view_id`, `user_id`, `recipe_id`, `viewed_at`) VALU
 (137, 13, 18, '2025-05-11 18:45:39'),
 (138, 13, 18, '2025-05-11 18:45:56'),
 (139, 13, 18, '2025-05-11 18:46:16'),
-(140, 13, 3, '2025-05-11 18:57:29'),
 (141, 13, 18, '2025-05-11 19:02:22'),
-(142, 13, 3, '2025-05-11 19:02:25'),
 (143, 13, 18, '2025-05-11 19:02:27'),
 (144, 1, 18, '2025-05-11 19:14:43'),
-(145, 1, 3, '2025-05-11 19:14:53'),
-(146, 1, 3, '2025-05-11 19:14:55'),
 (147, 1, 18, '2025-05-11 19:14:57'),
-(148, 1, 3, '2025-05-11 19:14:59'),
 (149, 1, 18, '2025-05-11 19:15:02'),
 (150, 1, 18, '2025-05-11 19:29:17'),
-(151, 1, 3, '2025-05-11 19:29:55'),
-(152, 1, 3, '2025-05-11 19:30:53'),
-(153, 1, 3, '2025-05-11 19:31:01'),
 (154, 1, 18, '2025-05-11 19:31:12'),
-(155, 1, 3, '2025-05-11 19:31:33'),
-(156, 1, 3, '2025-05-11 19:31:37'),
-(157, 1, 3, '2025-05-11 19:39:29'),
-(158, 1, 3, '2025-05-11 19:41:06'),
 (159, 1, 18, '2025-05-11 19:41:39'),
-(160, 1, 3, '2025-05-11 19:49:03'),
-(161, 1, 3, '2025-05-11 19:50:55'),
-(162, 1, 3, '2025-05-11 19:59:58'),
-(163, 1, 3, '2025-05-11 20:00:51'),
 (164, 1, 18, '2025-05-17 13:46:42'),
-(165, 1, 3, '2025-05-17 18:14:44'),
-(166, 1, 3, '2025-05-17 18:22:53'),
-(167, 1, 3, '2025-05-17 18:38:26'),
-(168, 1, 3, '2025-05-17 18:38:37'),
 (169, 1, 18, '2025-05-17 18:38:39'),
-(170, 1, 3, '2025-05-17 18:38:42'),
-(171, 1, 3, '2025-05-17 18:41:52'),
-(172, 1, 3, '2025-05-17 18:46:46'),
-(173, 1, 3, '2025-05-17 18:46:53'),
-(174, 1, 3, '2025-05-17 18:53:52'),
-(175, 1, 3, '2025-05-17 18:54:01'),
-(176, 1, 3, '2025-05-17 19:00:04'),
-(177, 1, 3, '2025-05-17 19:00:16'),
-(178, 1, 3, '2025-05-17 19:02:53'),
-(179, 1, 3, '2025-05-17 19:10:36'),
-(180, 1, 3, '2025-05-17 19:12:41'),
-(181, 1, 3, '2025-05-17 19:13:56'),
-(182, 1, 3, '2025-05-17 19:19:28'),
-(183, 1, 3, '2025-05-17 19:19:36'),
-(184, 1, 3, '2025-05-17 19:30:53'),
-(185, 1, 3, '2025-05-17 19:31:00'),
-(186, 1, 3, '2025-05-17 19:34:11'),
-(187, 1, 3, '2025-05-17 19:35:11'),
-(188, 1, 3, '2025-05-17 19:36:50'),
-(189, 1, 3, '2025-05-17 19:37:55'),
-(190, 1, 3, '2025-05-17 19:38:51'),
-(191, 1, 3, '2025-05-17 19:39:10'),
-(192, 1, 3, '2025-05-17 19:53:27'),
-(193, 1, 3, '2025-05-19 18:32:02'),
-(194, 1, 3, '2025-05-19 18:39:21'),
-(195, 1, 3, '2025-05-19 18:43:16'),
 (196, 1, 18, '2025-05-19 18:43:25'),
-(197, 1, 3, '2025-05-19 19:04:12'),
-(198, 1, 3, '2025-05-19 19:04:38'),
-(199, 1, 3, '2025-05-19 19:04:43'),
-(200, 1, 3, '2025-05-19 20:28:47'),
 (201, 1, 18, '2025-05-19 20:28:53'),
-(202, 1, 3, '2025-05-19 20:29:13'),
-(203, 1, 3, '2025-05-23 10:52:53'),
-(204, 1, 3, '2025-05-23 10:52:56'),
-(205, 1, 3, '2025-05-23 11:43:58'),
-(206, 1, 3, '2025-05-23 12:14:55'),
-(207, 1, 3, '2025-05-23 12:15:01'),
 (208, 1, 18, '2025-05-23 12:15:03'),
 (209, 1, 18, '2025-05-23 13:53:54'),
 (210, 1, 18, '2025-05-23 13:54:50'),
-(211, 1, 3, '2025-05-23 16:18:59'),
-(212, 1, 3, '2025-05-23 16:19:21'),
 (213, 1, 18, '2025-05-24 14:16:58'),
-(214, 1, 3, '2025-05-24 14:17:00'),
-(215, 1, 3, '2025-05-24 17:27:51'),
-(216, 1, 3, '2025-05-25 15:52:18'),
-(217, 1, 3, '2025-05-26 17:29:34'),
-(218, 1, 3, '2025-05-26 17:29:39'),
-(219, 1, 3, '2025-05-26 17:56:59'),
-(220, 1, 3, '2025-05-26 17:57:41'),
-(221, 1, 3, '2025-05-26 18:43:39'),
-(222, 1, 3, '2025-05-26 18:52:32'),
-(223, 1, 3, '2025-05-26 18:56:41'),
-(224, 1, 3, '2025-05-26 18:56:43'),
-(225, 1, 3, '2025-05-26 20:42:18'),
-(226, 1, 3, '2025-05-26 20:48:03'),
-(227, 1, 3, '2025-05-26 21:26:48'),
-(228, 1, 3, '2025-05-26 21:45:54'),
-(229, 1, 3, '2025-05-26 21:45:55'),
-(230, 1, 3, '2025-05-26 21:51:52'),
-(231, 1, 3, '2025-05-26 23:04:18'),
-(232, 1, 3, '2025-05-26 23:04:21'),
 (233, 1, 18, '2025-06-02 11:37:13'),
 (234, 1, 18, '2025-06-02 11:37:15'),
-(235, 1, 3, '2025-06-02 17:01:12'),
-(236, 1, 3, '2025-06-02 18:50:00'),
-(237, 1, 3, '2025-06-02 18:50:02'),
-(238, 1, 3, '2025-06-02 18:58:57'),
-(239, 1, 3, '2025-06-02 19:01:52'),
-(240, 1, 3, '2025-06-02 19:34:21'),
 (241, 1, 18, '2025-06-02 20:29:35'),
-(242, 1, 3, '2025-06-02 20:29:42'),
-(243, 1, 3, '2025-06-02 20:29:43'),
-(244, 1, 3, '2025-06-02 20:33:53'),
-(245, 1, 3, '2025-06-02 22:08:25'),
-(246, 1, 3, '2025-06-02 23:56:23'),
-(247, 1, 3, '2025-06-02 23:56:25'),
-(248, 1, 3, '2025-06-04 20:59:20'),
-(249, 1, 3, '2025-06-04 21:25:17'),
-(250, 1, 3, '2025-06-04 21:25:37'),
-(251, 1, 3, '2025-06-04 22:18:29'),
-(252, 1, 3, '2025-06-04 22:18:32'),
-(253, 1, 3, '2025-06-04 22:18:37'),
-(254, 1, 3, '2025-06-04 23:51:23'),
 (255, 1, 18, '2025-06-04 23:51:29'),
-(256, 1, 3, '2025-06-05 00:07:23'),
-(257, 1, 3, '2025-06-05 00:07:26'),
-(258, 1, 3, '2025-06-05 00:07:31'),
-(259, 1, 3, '2025-06-05 00:07:38'),
 (260, 1, 18, '2025-06-05 00:08:22'),
-(261, 1, 3, '2025-06-05 00:08:24'),
-(262, 1, 3, '2025-06-05 00:13:07'),
 (263, 1, 18, '2025-06-05 00:13:15'),
-(264, 1, 3, '2025-06-05 00:13:17'),
-(265, 1, 3, '2025-06-05 00:27:00'),
 (266, 1, 18, '2025-06-05 00:27:12'),
-(267, 1, 3, '2025-06-05 09:36:16'),
-(268, 13, 3, '2025-06-05 09:36:59'),
-(269, 13, 3, '2025-06-05 09:37:25'),
-(270, 13, 3, '2025-06-05 09:39:53'),
 (271, 13, 18, '2025-06-05 09:40:03'),
 (272, 13, 18, '2025-06-05 09:40:19'),
-(273, 13, 3, '2025-06-05 09:45:36'),
 (274, 13, 18, '2025-06-05 09:45:59'),
 (275, 13, 18, '2025-06-05 09:46:10'),
 (276, 13, 18, '2025-06-05 09:46:12'),
-(277, 13, 3, '2025-06-05 09:47:46'),
 (278, 13, 18, '2025-06-05 09:47:49'),
-(279, 13, 3, '2025-06-05 09:48:01'),
-(280, 13, 3, '2025-06-05 09:48:03'),
-(281, 13, 3, '2025-06-05 09:48:13'),
-(282, 13, 3, '2025-06-05 09:48:24'),
-(283, 13, 3, '2025-06-05 10:00:41'),
 (284, 13, 18, '2025-06-05 10:00:45'),
-(285, 1, 3, '2025-06-05 10:10:18'),
-(286, 1, 3, '2025-06-05 10:12:12'),
-(287, 13, 3, '2025-06-05 12:27:59'),
-(288, 13, 3, '2025-06-05 12:40:30'),
-(289, 13, 3, '2025-06-05 12:43:12'),
-(290, 13, 3, '2025-06-05 12:43:38'),
-(291, 13, 3, '2025-06-05 15:20:08'),
-(292, 13, 3, '2025-06-05 15:20:10'),
-(293, 13, 3, '2025-06-05 15:20:15'),
-(294, 13, 3, '2025-06-05 15:20:17'),
 (295, 13, 18, '2025-06-05 15:20:23'),
 (296, 13, 18, '2025-06-05 15:20:25'),
 (297, 13, 18, '2025-06-05 15:20:31'),
-(298, 13, 3, '2025-06-05 15:20:39'),
 (299, 13, 18, '2025-06-05 15:20:46'),
 (300, 113, 18, '2025-06-05 17:21:45'),
 (301, 113, 18, '2025-06-05 17:24:27'),
 (302, 113, 18, '2025-06-05 17:25:20'),
-(303, 113, 3, '2025-06-05 17:25:40'),
-(304, 113, 3, '2025-06-05 17:25:52'),
-(305, 113, 3, '2025-06-05 17:25:54');
+(312, 1, 18, '2025-06-10 15:12:32'),
+(324, 1, 20, '2025-06-10 21:36:16'),
+(344, 1, 18, '2025-06-10 23:50:59');
 
 --
 -- Triggers `recipe_views`
@@ -660,12 +527,9 @@ INSERT INTO `saved_recipes` (`saved_id`, `list_id`, `recipe_id`, `added_at`) VAL
 (363, 63, 47, '2025-05-11 17:45:27'),
 (364, 63, 43, '2025-05-11 17:45:29'),
 (372, 35, 22, '2025-05-11 19:00:47'),
-(387, 35, 23, '2025-06-02 18:02:00'),
-(391, 35, 3, '2025-06-02 22:56:29'),
 (395, 63, 54, '2025-06-05 08:46:40'),
 (396, 63, 44, '2025-06-05 08:46:41'),
 (398, 63, 18, '2025-06-05 08:47:42'),
-(399, 63, 3, '2025-06-05 08:48:21'),
 (400, 67, 18, '2025-06-05 16:22:51');
 
 -- --------------------------------------------------------
@@ -712,11 +576,15 @@ CREATE TABLE `user_category_stats` (
 --
 
 INSERT INTO `user_category_stats` (`user_id`, `category_id`, `views_count`, `favorites_count`, `finished_count`) VALUES
-(1, 22, 21, 7, 1),
-(1, 23, 107, 15, 7),
-(1, 33, 21, 7, 1),
-(1, 41, 107, 14, 7),
-(1, 42, 21, 7, 1),
+(1, 21, 9, 1, 0),
+(1, 22, 31, 8, 1),
+(1, 23, 142, 16, 8),
+(1, 33, 23, 7, 1),
+(1, 36, 1, 0, 0),
+(1, 40, 1, 0, 0),
+(1, 41, 135, 14, 8),
+(1, 42, 24, 7, 1),
+(1, 52, 1, 0, 0),
 (13, 22, 6, 1, 5),
 (13, 23, 15, 2, 3),
 (13, 33, 6, 1, 5),
@@ -746,19 +614,9 @@ CREATE TABLE `user_recipe_finished` (
 --
 
 INSERT INTO `user_recipe_finished` (`id`, `user_id`, `recipe_id`, `finished_at`) VALUES
-(11, 1, 3, '2025-05-11 19:30:45'),
-(12, 1, 3, '2025-05-11 19:40:37'),
 (13, 1, 18, '2025-05-11 19:41:48'),
-(14, 1, 3, '2025-05-11 19:49:55'),
-(15, 1, 3, '2025-05-11 20:00:30'),
-(16, 1, 3, '2025-06-04 21:25:35'),
-(22, 13, 3, '2025-06-05 09:47:48'),
 (23, 13, 18, '2025-06-05 09:47:51'),
-(24, 13, 3, '2025-06-05 09:48:26'),
-(25, 13, 3, '2025-06-05 10:00:43'),
 (26, 13, 18, '2025-06-05 10:00:47'),
-(27, 1, 3, '2025-06-05 10:10:21'),
-(28, 1, 3, '2025-06-05 10:12:14'),
 (29, 13, 18, '2025-06-05 15:20:33'),
 (30, 13, 18, '2025-06-05 15:20:34'),
 (31, 13, 18, '2025-06-05 15:20:48'),
@@ -820,6 +678,13 @@ ALTER TABLE `recipes`
 ALTER TABLE `recipe_category`
   ADD PRIMARY KEY (`recipe_id`,`category_id`),
   ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `recipe_gallery`
+--
+ALTER TABLE `recipe_gallery`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `recipe_id` (`recipe_id`);
 
 --
 -- Indexes for table `recipe_ingredients`
@@ -890,13 +755,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `ingredients`
 --
 ALTER TABLE `ingredients`
-  MODIFY `ingredient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=225;
+  MODIFY `ingredient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
 
 --
 -- AUTO_INCREMENT for table `ingredient_categories`
@@ -914,19 +779,25 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `recipes`
 --
 ALTER TABLE `recipes`
-  MODIFY `recipe_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `recipe_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+
+--
+-- AUTO_INCREMENT for table `recipe_gallery`
+--
+ALTER TABLE `recipe_gallery`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT for table `recipe_ingredients`
 --
 ALTER TABLE `recipe_ingredients`
-  MODIFY `recipe_ingredient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `recipe_ingredient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT for table `recipe_views`
 --
 ALTER TABLE `recipe_views`
-  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=306;
+  MODIFY `view_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=345;
 
 --
 -- AUTO_INCREMENT for table `saved_lists`
@@ -938,7 +809,7 @@ ALTER TABLE `saved_lists`
 -- AUTO_INCREMENT for table `saved_recipes`
 --
 ALTER TABLE `saved_recipes`
-  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=401;
+  MODIFY `saved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=403;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -950,7 +821,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_recipe_finished`
 --
 ALTER TABLE `user_recipe_finished`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- Constraints for dumped tables
@@ -988,6 +859,12 @@ ALTER TABLE `recipes`
 ALTER TABLE `recipe_category`
   ADD CONSTRAINT `recipe_category_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`recipe_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `recipe_category_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `recipe_gallery`
+--
+ALTER TABLE `recipe_gallery`
+  ADD CONSTRAINT `recipe_gallery_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`recipe_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `recipe_ingredients`
