@@ -34,14 +34,32 @@ public interface ApiService {
     Call<ApiResponse<Void>> deleteUser(@Query("route") String route, @Query("user_id") int userId);
 
     // === RECIPES ===
+    @Multipart
+    @POST("api.php?route=recipes")
+    Call<ApiResponse<RecipeData>> saveOrUpdateRecipe(
+            @Part("recipe_id") RequestBody recipeId,
+            @Part("author_id") RequestBody authorId,
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part("instructions") RequestBody instructions,
+            @Part("difficulty") RequestBody difficulty,
+            @Part("preparation_time") RequestBody preparationTime,
+            @Part("servings") RequestBody servings,
+            @Part("categories") RequestBody categoriesJson,
+            @Part("ingredients") RequestBody ingredientsJson,
+            @Part List<MultipartBody.Part> gallery,
+            @Part("old_gallery") RequestBody oldGallery
+    );
+
+    @FormUrlEncoded
+    @POST("api.php")
+    Call<ApiResponse<Void>> deleteRecipe(@Query("route") String route, @Field("recipe_id") int recipeId);
+
     @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getAllRecipes(@Query("route") String route);
 
     @GET("api.php")
     Call<ApiResponse<RecipeData>> getRecipeById(@Query("route") String route, @Query("recipe_id") int recipeId);
-
-    @POST("api.php")
-    Call<ApiResponse<Void>> saveRecipe(@Query("route") String route, @Body RecipeData recipe);
 
     @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getPopularRecipesWithPage(@Query("route") String route, @Query("page") int page);
@@ -91,6 +109,10 @@ public interface ApiService {
 
     @GET("api.php")
     Call<ApiResponse<List<CommentData>>> getComments(@Query("route") String route, @Query("recipe_id") int recipeId);
+
+    // === INGREDIENTS ===
+    @GET("api.php")
+    Call<List<IngredientData>> autocompleteIngredients(@Query("route") String route, @Query("q") String query);
 
     // === RATINGS ===
     @POST("api.php")

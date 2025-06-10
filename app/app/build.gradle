@@ -61,6 +61,10 @@ dependencies {
     // Animated icons
     implementation libs.lottie
 
+    // Gallery
+    implementation libs.viewpager2
+    implementation libs.material.v1120
+
     implementation libs.glide
     implementation libs.navigation.fragment
     implementation libs.navigation.ui

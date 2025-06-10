@@ -1,5 +1,6 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,6 +61,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+
     private void setupViews(View view) {
         btnSettings = view.findViewById(R.id.btn_settings);
         btnEditProfile = view.findViewById(R.id.btn_editprofile);
@@ -85,22 +88,33 @@ public class ProfileFragment extends Fragment {
                 new ProfileRecipeAdapter.OnRecipeActionListener() {
                     @Override
                     public void onEdit(RecipeData recipe) {
-                        // TODO: abrir tela de edição (ou BottomSheet)
+                        // CORRIGIDO: Navega para a tela de edição passando o ID da receita
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("recipe_id", recipe.getRecipeId());
+                        NavHostFragment.findNavController(ProfileFragment.this)
+                                .navigate(R.id.action_profileFragment_to_recipeSaveOrUpdateFragment, bundle);
                     }
-
                     @Override
                     public void onDelete(RecipeData recipe) {
-                        // TODO: mostrar dialog de confirmação e deletar
+                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                                .setTitle("Excluir Receita")
+                                .setMessage("Tem certeza que deseja excluir esta receita?")
+                                .setPositiveButton("Sim", (dialog, which) -> {
+                                    profileViewModel.deleteRecipe(recipe.getRecipeId());
+                                })
+                                .setNegativeButton("Cancelar", null)
+                                .show();
                     }
-
                     @Override
                     public void onRecipeClick(RecipeData recipe) {
-                        // TODO: abrir detalhe da receita
+                        Bundle args = new Bundle();
+                        args.putInt("recipe_id", recipe.getRecipeId());
+                        NavHostFragment.findNavController(ProfileFragment.this)
+                                .navigate(R.id.action_profileFragment_to_recipeDetailFragment, args);
                     }
                 }
         );
         UserRecipesRecyclerView.setAdapter(adapter);
-
     }
 
     private void loadUserFromLocalStorage() {
@@ -139,6 +153,23 @@ public class ProfileFragment extends Fragment {
                 adapter.setRecipeList(recipes);
             }
         });
+
+        profileViewModel.getDeleteSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (Boolean.TRUE.equals(success)) {
+                Toast.makeText(requireContext(), "Receita excluída com sucesso", Toast.LENGTH_SHORT).show();
+                UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+                if (user != null) {
+                    profileViewModel.loadProfileRecipes(user.getUserId());
+                    profileViewModel.loadProfileSummary(user.getUserId());
+                }
+            }
+        });
+        profileViewModel.getDeleteError().observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     private void openSaveRecipesFragment() {

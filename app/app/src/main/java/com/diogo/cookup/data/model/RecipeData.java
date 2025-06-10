@@ -40,6 +40,9 @@ public class RecipeData implements Serializable {
     @SerializedName("image")
     private String image;
 
+    @SerializedName("gallery")
+    private List<String> gallery;
+
     @SerializedName("ingredients")
     private List<IngredientData> ingredients;
 
@@ -49,13 +52,12 @@ public class RecipeData implements Serializable {
     @SerializedName("average_rating")
     private float averageRating;
 
-
-    public RecipeData() {
-    }
+    public RecipeData() {}
 
     public RecipeData(int recipeId, int authorId, String title, String description, String instructions,
                       List<CategoryData> categories, int preparationTime, int servings,
-                      int viewsCount, String difficulty, String image, float averageRating) {
+                      int viewsCount, String difficulty, String image, List<String> gallery,
+                      List<IngredientData> ingredients, List<CommentData> comments, float averageRating) {
         this.recipeId = recipeId;
         this.authorId = authorId;
         this.title = title;
@@ -67,119 +69,43 @@ public class RecipeData implements Serializable {
         this.viewsCount = viewsCount;
         this.difficulty = difficulty;
         this.image = image;
-        this.averageRating = averageRating;
-    }
-
-    public int getRecipeId() {
-        return recipeId;
-    }
-
-    public int getAuthorId() {
-        return authorId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public List<CategoryData> getCategories() {
-        return categories;
-    }
-
-    public int getPreparationTime() {
-        return preparationTime;
-    }
-
-    public int getServings() {
-        return servings;
-    }
-
-    public int getViewsCount() {
-        return viewsCount;
-    }
-
-    public String getDifficulty() {
-        return difficulty;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public List<IngredientData> getIngredients() {
-        return ingredients;
-    }
-
-    public List<CommentData> getComments() {
-        return comments;
-    }
-
-    public float getAverageRating() {
-        return averageRating;
-    }
-
-
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
-    }
-
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
-    public void setCategories(List<CategoryData> categories) {
-        this.categories = categories;
-    }
-
-    public void setPreparationTime(int preparationTime) {
-        this.preparationTime = preparationTime;
-    }
-
-    public void setServings(int servings) {
-        this.servings = servings;
-    }
-
-    public void setViewsCount(int viewsCount) {
-        this.viewsCount = viewsCount;
-    }
-
-    public void setDifficulty(String difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setIngredients(List<IngredientData> ingredients) {
+        this.gallery = gallery;
         this.ingredients = ingredients;
-    }
-
-    public void setComments(List<CommentData> comments) {
         this.comments = comments;
-    }
-
-    public void setAverageRating(float averageRating) {
         this.averageRating = averageRating;
     }
+
+    // Getters
+    public int getRecipeId() { return recipeId; }
+    public int getAuthorId() { return authorId; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public String getInstructions() { return instructions; }
+    public List<CategoryData> getCategories() { return categories; }
+    public int getPreparationTime() { return preparationTime; }
+    public int getServings() { return servings; }
+    public int getViewsCount() { return viewsCount; }
+    public String getDifficulty() { return difficulty; }
+    public String getImage() { return image; }
+    public List<String> getGallery() { return gallery; }
+    public List<IngredientData> getIngredients() { return ingredients; }
+    public List<CommentData> getComments() { return comments; }
+    public float getAverageRating() { return averageRating; }
+
+    // Setters
+    public void setRecipeId(int recipeId) { this.recipeId = recipeId; }
+    public void setAuthorId(int authorId) { this.authorId = authorId; }
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setInstructions(String instructions) { this.instructions = instructions; }
+    public void setCategories(List<CategoryData> categories) { this.categories = categories; }
+    public void setPreparationTime(int preparationTime) { this.preparationTime = preparationTime; }
+    public void setServings(int servings) { this.servings = servings; }
+    public void setViewsCount(int viewsCount) { this.viewsCount = viewsCount; }
+    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
+    public void setImage(String image) { this.image = image; }
+    public void setGallery(List<String> gallery) { this.gallery = gallery; }
+    public void setIngredients(List<IngredientData> ingredients) { this.ingredients = ingredients; }
+    public void setComments(List<CommentData> comments) { this.comments = comments; }
+    public void setAverageRating(float averageRating) { this.averageRating = averageRating; }
 }

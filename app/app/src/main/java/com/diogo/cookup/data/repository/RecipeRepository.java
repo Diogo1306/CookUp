@@ -9,14 +9,20 @@ import com.diogo.cookup.data.model.ApiResponse;
 import com.diogo.cookup.data.model.ApiResponseWithFilled;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.CommentRequest;
+import com.diogo.cookup.data.model.IngredientData;
 import com.diogo.cookup.data.model.RatingRequest;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +33,70 @@ public class RecipeRepository {
     public RecipeRepository() {
         apiService = ApiRetrofit.getApiService();
     }
+
+    public Call<ApiResponse<RecipeData>> saveOrUpdateRecipe(
+            Integer recipeId,
+            Integer authorId,
+            String title,
+            String description,
+            String instructions,
+            String difficulty,
+            Integer preparationTime,
+            Integer servings,
+            List<Integer> categories,
+            List<IngredientData> ingredients,
+            List<File> imagensNovas,
+            List<String> imagensAntigas
+    ) {
+        // Sempre envie todos os campos obrigatórios como RequestBody
+        RequestBody rbAuthorId = RequestBody.create(MediaType.parse("text/plain"), authorId.toString());
+        RequestBody rbTitle = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody rbDescription = RequestBody.create(MediaType.parse("text/plain"), description);
+        RequestBody rbInstructions = RequestBody.create(MediaType.parse("text/plain"), instructions);
+        RequestBody rbDifficulty = RequestBody.create(MediaType.parse("text/plain"), difficulty);
+        RequestBody rbPrepTime = RequestBody.create(MediaType.parse("text/plain"), preparationTime.toString());
+        RequestBody rbServings = RequestBody.create(MediaType.parse("text/plain"), servings.toString());
+        RequestBody rbCategories = RequestBody.create(
+                MediaType.parse("text/plain"),
+                new Gson().toJson(categories)
+        );
+        RequestBody rbIngredients = RequestBody.create(
+                MediaType.parse("text/plain"),
+                new Gson().toJson(ingredients)
+        );
+        RequestBody rbOldGallery = RequestBody.create(
+                MediaType.parse("text/plain"),
+                new Gson().toJson(imagensAntigas)
+        );
+
+        // Só envie recipeId se não for null (para editar). Se for criar, envie "".
+        RequestBody rbRecipeId = recipeId != null
+                ? RequestBody.create(MediaType.parse("text/plain"), recipeId.toString())
+                : RequestBody.create(MediaType.parse("text/plain"), "");
+
+        // Novas imagens como arquivos
+        List<MultipartBody.Part> galleryParts = new ArrayList<>();
+        for (File file : imagensNovas) {
+            RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), file);
+            galleryParts.add(MultipartBody.Part.createFormData("gallery[]", file.getName(), fileBody));
+        }
+
+        return apiService.saveOrUpdateRecipe(
+                rbRecipeId,
+                rbAuthorId,
+                rbTitle,
+                rbDescription,
+                rbInstructions,
+                rbDifficulty,
+                rbPrepTime,
+                rbServings,
+                rbCategories,
+                rbIngredients,
+                galleryParts,
+                rbOldGallery
+        );
+    }
+
 
     public void getAllRecipes(MutableLiveData<List<RecipeData>> recipesLiveData, MutableLiveData<String> errorMessage) {
         apiService.getAllRecipes("recipe").enqueue(new Callback<ApiResponse<List<RecipeData>>>() {
@@ -65,32 +135,12 @@ public class RecipeRepository {
                 });
     }
 
-    public void loadWeeklyRecipes(MutableLiveData<List<RecipeData>> liveData, MutableLiveData<String> error) {
-        apiService.getWeeklyRecipes("weekly").enqueue(new Callback<ApiResponseWithFilled<List<RecipeData>>>() {
-            @Override
-            public void onResponse(Call<ApiResponseWithFilled<List<RecipeData>>> call, Response<ApiResponseWithFilled<List<RecipeData>>> response) {
-
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    liveData.postValue(response.body().getData());
-                } else {
-                    error.postValue("Erro ao buscar receitas da semana.");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponseWithFilled<List<RecipeData>>> call, Throwable t) {
-                error.postValue("Falha: " + t.getMessage());
-            }
-        });
-    }
-
     public void getRecipeDetail(int recipeId, MutableLiveData<RecipeData> recipeData, MutableLiveData<String> errorMessage) {
         apiService.getRecipeById("recipe", recipeId)
                 .enqueue(new Callback<ApiResponse<RecipeData>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<RecipeData>> call, Response<ApiResponse<RecipeData>> response) {
                         if (response.isSuccessful() && response.body() != null) {
-
                             if (response.body().isSuccess()) {
                                 recipeData.postValue(response.body().getData());
                             } else {
