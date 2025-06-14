@@ -59,7 +59,7 @@ Router::add('GET',  'user_categories',       [$categoryController, 'getUserCateg
 Router::add('POST', 'comment',   [$commentController, 'submit']);
 Router::add('GET',  'comment',   [$commentController, 'getByRecipe']);
 
-// i ngredients API spoonacular Tests
+// ingredients API spoonacular Tests
 Router::add('POST', 'add_recipe_ingredient', [$ingredientController, 'addIngredientToRecipe']);
 Router::add('POST', 'translate', [$translationController, 'translate']);
 Router::add('GET', 'autocomplete_ingredient', [$ingredientController, 'autocomplete']);

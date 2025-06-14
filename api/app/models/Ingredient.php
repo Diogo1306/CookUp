@@ -65,7 +65,7 @@ class Ingredient
 
         $ingredientNameEn = Translation::translate($ingredientName, 'pt', 'en');
         $image_url = self::fetchAndSaveImage($ingredientNameEn);
-        $category_id = 14; // "Outros"
+        $category_id = 14;
 
         $stmt = $db->prepare("INSERT INTO ingredients (ingredient_name, category_id, image_url) VALUES (?, ?, ?)");
         $stmt->bind_param("sis", $ingredientName, $category_id, $image_url);

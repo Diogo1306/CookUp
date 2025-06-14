@@ -14,20 +14,16 @@ class RecipeController
             if (isset($data['categories'])) $data['categories'] = json_decode($data['categories'], true);
             if (isset($data['ingredients'])) $data['ingredients'] = json_decode($data['ingredients'], true);
 
-            // --- NOVO: Recebe a galeria antiga (pode ser nomes ou URLs) ---
             $oldGallery = [];
             if (isset($data['old_gallery'])) {
                 $oldGallery = json_decode($data['old_gallery'], true);
             }
 
-            // Só nomes dos arquivos (ajuste se vierem URLs inteiras)
             $oldGalleryNames = [];
             foreach ($oldGallery as $img) {
-                // Se vier url, pegue só o nome do arquivo
                 $oldGalleryNames[] = basename($img);
             }
 
-            // --- Recebe novas imagens e salva ---
             $galleryNames = [];
             if (isset($_FILES['gallery'])) {
                 $uploadDir = __DIR__ . '/../../uploads/recipes/';
@@ -42,14 +38,10 @@ class RecipeController
                 }
             }
 
-            // --- ATUALIZAÇÃO DA GALERIA NO EDIT ---
-            // Se for edição (tem recipe_id) e enviou old_gallery
             if (!empty($data['recipe_id'])) {
-                // Busca galeria atual da receita (ajuste para o seu banco)
                 $currentGallery = Recipe::getGalleryImages($data['recipe_id']); // deve retornar array de nomes de arquivos
                 $toRemove = array_diff($currentGallery, $oldGalleryNames);
                 $uploadDir = __DIR__ . '/../../uploads/recipes/';
-                // Apaga imagens não usadas mais
                 foreach ($toRemove as $imgName) {
                     if ($imgName !== 'default.png' && file_exists($uploadDir . $imgName)) {
                         @unlink($uploadDir . $imgName);
@@ -57,10 +49,8 @@ class RecipeController
                 }
             }
 
-            // Galeria final = antigas que ficaram + novas upadas
             $finalGallery = array_merge($oldGalleryNames, $galleryNames);
 
-            // define a principal (image) depois do upload!
             if (!empty($finalGallery)) {
                 $data['image'] = $finalGallery[0];
             } else {

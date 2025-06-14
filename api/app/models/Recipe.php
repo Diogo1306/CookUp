@@ -64,12 +64,13 @@ class Recipe
 
     public static function updateIngredients($recipeId, $ingredients)
     {
+
         $db = Database::connect();
         $db->query("DELETE FROM recipe_ingredients WHERE recipe_id = $recipeId");
         $stmt = $db->prepare("INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity) VALUES (?, ?, ?)");
         foreach ($ingredients as $ing) {
             $name = $ing['ingredient_name'];
-            $quantity = $ing['quantity'] ?? '';
+            $quantity = $ing['quantity'] ?? $ing['ingredient_quantity'] ?? '';
             $ingredientId = Ingredient::getOrCreate($name);
             $stmt->bind_param("iis", $recipeId, $ingredientId, $quantity);
             $stmt->execute();
@@ -240,17 +241,20 @@ class Recipe
         $db = Database::connect();
 
         $stmt = $db->prepare("
-        SELECT r.*,
-            GROUP_CONCAT(c.category_id) AS category_ids,
-            GROUP_CONCAT(c.category_name) AS category_names,
-            GROUP_CONCAT(c.color_hex) AS category_colors,
-            GROUP_CONCAT(c.image_url) AS category_images
-        FROM recipes r
-        LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
-        LEFT JOIN categories c ON c.category_id = rc.category_id
-        WHERE r.recipe_id = ?
-        GROUP BY r.recipe_id
-    ");
+            SELECT r.*,
+                u.username AS author_name,   -- <--- aqui!
+                GROUP_CONCAT(c.category_id) AS category_ids,
+                GROUP_CONCAT(c.category_name) AS category_names,
+                GROUP_CONCAT(c.color_hex) AS category_colors,
+                GROUP_CONCAT(c.image_url) AS category_images
+            FROM recipes r
+            LEFT JOIN users u ON r.author_id = u.user_id
+            LEFT JOIN recipe_category rc ON rc.recipe_id = r.recipe_id
+            LEFT JOIN categories c ON c.category_id = rc.category_id
+            WHERE r.recipe_id = ?
+            GROUP BY r.recipe_id
+        ");
+
         $stmt->bind_param("i", $recipeId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -378,10 +382,12 @@ class Recipe
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
             $row['image'] = self::buildImageUrl($row['image']);
+            $row['finished_count'] = Tracking::countUniqueUsersFinishedRecipe($row['recipe_id']);
             $recipes[] = $row;
         }
         return $recipes;
     }
+
 
     // Retorna só os IDs das receitas de um autor (por user_id)
     public static function getIdsByAuthor($user_id)

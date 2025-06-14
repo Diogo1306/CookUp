@@ -115,4 +115,14 @@ class Tracking
         $res = $stmt->get_result()->fetch_assoc();
         return intval($res['finished_count'] ?? 0);
     }
+
+    public static function countUniqueUsersFinishedRecipe($recipeId)
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT COUNT(DISTINCT user_id) as user_count FROM user_recipe_finished WHERE recipe_id = ?");
+        $stmt->bind_param("i", $recipeId);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
+        return intval($res['user_count'] ?? 0);
+    }
 }
