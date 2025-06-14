@@ -25,9 +25,12 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.adapter.ProfileRecipeAdapter;
+import com.diogo.cookup.utils.NumberFormatUtils;
 import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.ProfileViewModel;
+import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -46,6 +49,23 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), userData -> {
+            if (userData != null) {
+                user_name.setText(userData.getUsername());
+                String photoUrl = userData.getProfilePicture();
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    Glide.with(this)
+                            .load(photoUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
+                            .into(profile_image);
+                } else {
+                    profile_image.setImageResource(R.drawable.placeholder);
+                }
+            }
+        });
 
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null) {
@@ -88,7 +108,6 @@ public class ProfileFragment extends Fragment {
                 new ProfileRecipeAdapter.OnRecipeActionListener() {
                     @Override
                     public void onEdit(RecipeData recipe) {
-                        // CORRIGIDO: Navega para a tela de edição passando o ID da receita
                         Bundle bundle = new Bundle();
                         bundle.putInt("recipe_id", recipe.getRecipeId());
                         NavHostFragment.findNavController(ProfileFragment.this)
@@ -119,11 +138,11 @@ public class ProfileFragment extends Fragment {
 
     private void loadUserFromLocalStorage() {
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+        Log.d("ProfileFragment", "UserData recuperado: " + user);
         if (user != null) {
             user_name.setText(user.getUsername());
-
+            Log.d("ProfileFragment", "Nome: " + user.getUsername() + " | Foto: " + user.getProfilePicture());
             String photoUrl = user.getProfilePicture();
-            Log.d("UserData", "URL da imagem: " + user.getProfilePicture());
             if (photoUrl != null && !photoUrl.isEmpty()) {
                 Glide.with(this)
                         .load(photoUrl)
@@ -136,15 +155,16 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+
     private void observeViewModels() {
 
         profileViewModel.getProfileSummary().observe(getViewLifecycleOwner(), profileData -> {
             if (profileData != null) {
                 user_rating.setText(String.valueOf(profileData.getAverageRating()));
-                user_total_views.setText(String.valueOf(profileData.getTotalViews()));
-                total_finished_my_recipes.setText(String.valueOf(profileData.getFinishedCount()));
+                user_total_views.setText(NumberFormatUtils.formatCompact(profileData.getTotalViews()));
+                total_finished_my_recipes.setText(NumberFormatUtils.formatCompact(profileData.getFinishedCount()));
                 TextView totalRecipesTextView = requireView().findViewById(R.id.total_recipes);
-                totalRecipesTextView.setText(String.valueOf(profileData.getTotalRecipes()));
+                totalRecipesTextView.setText(NumberFormatUtils.formatCompact(profileData.getTotalRecipes()));
             }
         });
 
@@ -186,4 +206,17 @@ public class ProfileFragment extends Fragment {
         NavHostFragment.findNavController(this)
                 .navigate(R.id.action_profileFragment_to_settingsFragment);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("ProfileFragment", "onResume chamado");
+
+        FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            UserViewModel userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+            userViewModel.loadUser(currentUser.getUid());
+        }
+        loadUserFromLocalStorage();
+    }
+
 }

@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.CategoryData;
@@ -24,7 +25,6 @@ import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.adapter.CategoryAdapter;
 import com.diogo.cookup.ui.adapter.RecipeAdapterDefault;
-import com.diogo.cookup.ui.adapter.RecipeSkeletonAdapter;
 import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.CategoryViewModel;
 import com.diogo.cookup.viewmodel.HomeFeedViewModel;
@@ -43,12 +43,11 @@ public class HomeFragment extends Fragment {
     private RecipeViewModel recipeViewModel;
     private SavedListViewModel savedListViewModel;
     private HomeFeedViewModel homeFeedViewModel;
-    private boolean firstLoad = true;
 
     private RecyclerView recyclerCategories, recyclerRecommended, recyclerWeekly, recyclerPopular, recyclerCat1, recyclerCat2, recyclerCat3;
-    private TextView tvNameHome , tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3, seeMoreCat1, seeMoreCat2, seeMoreCat3;
-
+    private TextView tvNameHome, tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3, seeMoreCat1, seeMoreCat2, seeMoreCat3;
     private EditText searchEditText;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private final List<RecipeData> recipeList = new ArrayList<>();
     private final List<CategoryData> categoryList = new ArrayList<>();
@@ -66,7 +65,6 @@ public class HomeFragment extends Fragment {
         initViewModels();
         initViews(view);
         setupSearchBar(view);
-        showSkeletons();
 
         new Handler().postDelayed(() -> {
             if (!isAdded()) return;
@@ -74,14 +72,13 @@ public class HomeFragment extends Fragment {
             setAdapters();
             observeViewModels();
             loadInitialData();
-        }, 400);
+        }, 200);
     }
 
     private void setupSearchBar(View view) {
         if (searchEditText != null) {
-            View.OnClickListener navigateToSearch = v ->
-                    NavHostFragment.findNavController(this)
-                            .navigate(R.id.action_homeFragment_to_searchSuggestionsFragment);
+            View.OnClickListener navigateToSearch = v -> NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_homeFragment_to_searchSuggestionsFragment);
 
             searchEditText.setOnClickListener(navigateToSearch);
             searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
@@ -105,7 +102,6 @@ public class HomeFragment extends Fragment {
         recyclerCat1 = view.findViewById(R.id.recyclerCat1);
         recyclerCat2 = view.findViewById(R.id.recyclerCat2);
         recyclerCat3 = view.findViewById(R.id.recyclerCat3);
-
         tvCategoryTitle1 = view.findViewById(R.id.tvCategoryTitle1);
         tvCategoryTitle2 = view.findViewById(R.id.tvCategoryTitle2);
         tvCategoryTitle3 = view.findViewById(R.id.tvCategoryTitle3);
@@ -115,11 +111,20 @@ public class HomeFragment extends Fragment {
         tvNameHome = view.findViewById(R.id.tvNameHome);
         searchEditText = view.findViewById(R.id.searchEditText);
 
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+            if (user != null) {
+                int userId = user.getUserId();
+                savedListViewModel.reloadSavedRecipeData(userId);
+                homeFeedViewModel.loadHomeFeed(userId);
+            }
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 800);
+        });
+
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null) {
-            String name = user.getUsername();
-            String greeting = "Olá, " + name + " 👋";
-            tvNameHome.setText(greeting);
+            tvNameHome.setText("Olá, " + user.getUsername() + " 👋");
         }
 
         recyclerCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -131,39 +136,36 @@ public class HomeFragment extends Fragment {
         recyclerCat3.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
-    private void showSkeletons() {
-        RecipeSkeletonAdapter recipeSkeleton = new RecipeSkeletonAdapter(5);
-        recyclerRecommended.setAdapter(recipeSkeleton);
-        recyclerWeekly.setAdapter(recipeSkeleton);
-        recyclerPopular.setAdapter(recipeSkeleton);
-        recyclerCat1.setAdapter(recipeSkeleton);
-        recyclerCat2.setAdapter(recipeSkeleton);
-        recyclerCat3.setAdapter(recipeSkeleton);
-
-        categoryAdapter = new CategoryAdapter(categoryList, category -> {
-            recipeViewModel.loadRecipesByCategory(category.getCategoryId());
-        });
-        categoryAdapter.setSkeletonMode(true);
-        recyclerCategories.setAdapter(categoryAdapter);
+    private void fadeInWithAdapter(RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
+        if (recyclerView.getAdapter() != adapter) {
+            recyclerView.setAlpha(0f);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.animate().alpha(1f).setDuration(300).withEndAction(() -> animateRecycler(recyclerView)).start();
+        }
     }
 
     private void initAdapters() {
-        recipeAdapter = createRecipeAdapter();
-        adapterWeekly = createRecipeAdapter();
-        adapterPopular = createRecipeAdapter();
-        adapterCat1 = createRecipeAdapter();
-        adapterCat2 = createRecipeAdapter();
-        adapterCat3 = createRecipeAdapter();
+        recipeAdapter = createRecipeAdapter(R.layout.item_recipe_default);
+        adapterWeekly = createRecipeAdapter(R.layout.item_recipe_meduim);
+        adapterPopular = createRecipeAdapter(R.layout.item_recipe_default);
+        adapterCat1 = createRecipeAdapter(R.layout.item_recipe_default);
+        adapterCat2 = createRecipeAdapter(R.layout.item_recipe_default);
+        adapterCat3 = createRecipeAdapter(R.layout.item_recipe_default);
+        categoryAdapter = new CategoryAdapter(categoryList, category -> {
+            HomeFragmentDirections.ActionHomeFragmentToSearchResultFragment action =
+                    HomeFragmentDirections.actionHomeFragmentToSearchResultFragment(category.getCategoryName());
+            Navigation.findNavController(requireView()).navigate(action);
+        });
+        recyclerCategories.setAdapter(categoryAdapter);
     }
 
-    private RecipeAdapterDefault createRecipeAdapter() {
-        return new RecipeAdapterDefault(
-                new ArrayList<>(),
-                savedRecipeIds,
+    private RecipeAdapterDefault createRecipeAdapter(int layoutResId) {
+        return new RecipeAdapterDefault(new ArrayList<>(), savedRecipeIds,
                 this::openRecipeDetail,
-                recipeId -> SaveRecipeBottomSheet.newInstance(recipeId, HomeFragment.this)
-                        .show(requireActivity().getSupportFragmentManager(), "save_sheet")
-        );
+                recipeId -> SaveRecipeBottomSheet.newInstance(recipeId, this)
+                        .show(requireActivity().getSupportFragmentManager(), "save_sheet"),
+                layoutResId);
     }
 
     private void setAdapters() {
@@ -178,12 +180,18 @@ public class HomeFragment extends Fragment {
     private void observeViewModels() {
         if (!isAdded()) return;
 
+        categoryViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
+            if (categories != null && !categories.isEmpty()) {
+                categoryAdapter.setData(categories);
+            }
+        });
+
         homeFeedViewModel.getRecommendedRecipes().observe(getViewLifecycleOwner(), list -> {
             if (list != null && !list.isEmpty()) {
-                recipeAdapter.setSkeletonMode(false);
                 recipeList.clear();
                 recipeList.addAll(list);
                 recipeAdapter.updateData(list, savedRecipeIds);
+                fadeInWithAdapter(recyclerRecommended, recipeAdapter);
             }
         });
 
@@ -205,16 +213,16 @@ public class HomeFragment extends Fragment {
         });
 
         homeFeedViewModel.getWeeklyRecipes().observe(getViewLifecycleOwner(), list -> {
-            if (list != null) {
-                adapterWeekly.setSkeletonMode(false);
+            if (list != null && !list.isEmpty()) {
                 adapterWeekly.updateData(list, savedRecipeIds);
+                fadeInWithAdapter(recyclerWeekly, adapterWeekly);
             }
         });
 
         homeFeedViewModel.getPopularRecipes().observe(getViewLifecycleOwner(), list -> {
-            if (list != null) {
-                adapterPopular.setSkeletonMode(false);
+            if (list != null && !list.isEmpty()) {
                 adapterPopular.updateData(list, savedRecipeIds);
+                fadeInWithAdapter(recyclerPopular, adapterPopular);
             }
         });
 
@@ -223,10 +231,9 @@ public class HomeFragment extends Fragment {
             tvCategoryTitle1.setVisibility(hasData ? View.VISIBLE : View.GONE);
             recyclerCat1.setVisibility(hasData ? View.VISIBLE : View.GONE);
             seeMoreCat1.setVisibility(hasData ? View.VISIBLE : View.GONE);
-
             if (hasData) {
-                adapterCat1.setSkeletonMode(false);
                 adapterCat1.updateData(list, savedRecipeIds);
+                fadeInWithAdapter(recyclerCat1, adapterCat1);
             }
         });
 
@@ -235,10 +242,9 @@ public class HomeFragment extends Fragment {
             tvCategoryTitle2.setVisibility(hasData ? View.VISIBLE : View.GONE);
             recyclerCat2.setVisibility(hasData ? View.VISIBLE : View.GONE);
             seeMoreCat2.setVisibility(hasData ? View.VISIBLE : View.GONE);
-
             if (hasData) {
-                adapterCat2.setSkeletonMode(false);
                 adapterCat2.updateData(list, savedRecipeIds);
+                fadeInWithAdapter(recyclerCat2, adapterCat2);
             }
         });
 
@@ -247,32 +253,15 @@ public class HomeFragment extends Fragment {
             tvCategoryTitle3.setVisibility(hasData ? View.VISIBLE : View.GONE);
             recyclerCat3.setVisibility(hasData ? View.VISIBLE : View.GONE);
             seeMoreCat3.setVisibility(hasData ? View.VISIBLE : View.GONE);
-
             if (hasData) {
-                adapterCat3.setSkeletonMode(false);
                 adapterCat3.updateData(list, savedRecipeIds);
+                fadeInWithAdapter(recyclerCat3, adapterCat3);
             }
         });
 
         homeFeedViewModel.getCategoryTitle1().observe(getViewLifecycleOwner(), tvCategoryTitle1::setText);
         homeFeedViewModel.getCategoryTitle2().observe(getViewLifecycleOwner(), tvCategoryTitle2::setText);
         homeFeedViewModel.getCategoryTitle3().observe(getViewLifecycleOwner(), tvCategoryTitle3::setText);
-
-        categoryViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
-            if (categories != null && isAdded()) {
-                if (categoryAdapter == null) {
-                    categoryAdapter = new CategoryAdapter(categoryList, category -> {
-                        recipeViewModel.loadRecipesByCategory(category.getCategoryId());
-                    });
-                    recyclerCategories.setAdapter(categoryAdapter);
-                }
-
-                categoryAdapter.setSkeletonMode(false);
-                categoryList.clear();
-                categoryList.addAll(categories);
-                categoryAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     private void setupAllAdapters(List<Integer> savedIds) {
@@ -306,8 +295,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void openRecipeDetail(RecipeData recipe) {
-        HomeFragmentDirections.ActionHomeFragmentToRecipeDetailFragment action = HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId());
-        Navigation.findNavController(requireView()).navigate(action);
+        Navigation.findNavController(requireView()).navigate(
+                HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId())
+        );
     }
 
     private void animateRecycler(RecyclerView recyclerView) {
@@ -322,12 +312,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null && user.getUserId() > 0) {
             int userId = user.getUserId();
             savedListViewModel.reloadSavedRecipeData(userId);
             homeFeedViewModel.loadHomeFeed(userId);
+            categoryViewModel.loadUserCategories(userId);
         }
     }
 }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background"
     android:fillViewport="true">
 
@@ -10,134 +11,154 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:gravity="center_horizontal">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="24dp">
 
+        <!-- Galeria de Imagens -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Galeria de Imagens"
+            android:text="Imagens da Receita"
             android:textStyle="bold"
-            android:layout_marginTop="12dp"/>
-
+            android:textSize="16sp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="4dp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_gallery"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:orientation="horizontal"
             android:overScrollMode="never"
-            android:layout_marginBottom="12dp"/>
-
+            android:layout_marginBottom="8dp"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_gallery_image"/>
         <Button
             android:id="@+id/btn_add_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Adicionar Imagem"
+            android:drawableLeft="@drawable/ic_add"
+            android:drawablePadding="8dp"
             android:backgroundTint="@color/primary"
             android:textColor="@android:color/white"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:drawableLeft="@drawable/ic_add"
-            android:drawablePadding="8dp"/>
+            android:layout_gravity="start"
+            android:layout_marginBottom="18dp"/>
 
-        <!-- TÍTULO -->
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Título da Receita"
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="2dp"/>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp">
-
+            app:boxCornerRadiusTopStart="14dp"
+            app:boxCornerRadiusTopEnd="14dp"
+            app:boxCornerRadiusBottomStart="14dp"
+            app:boxCornerRadiusBottomEnd="14dp"
+            android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Título da Receita"/>
+                android:hint="Digite o nome da receita"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- CATEGORIAS (Sugestão: usar ChipGroup) -->
+        <!-- Categorias -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Categorias"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="6dp"/>
-
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="2dp"/>
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="6dp"
             app:singleSelection="false"
-            app:chipSpacing="8dp"/>
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="4dp"/>
+        <Button
+            android:id="@+id/btn_add_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adicionar Categoria"
+            android:textSize="13sp"
+            android:drawableLeft="@drawable/ic_add"
+            android:backgroundTint="@color/semi_transparent"
+            android:textColor="@color/text_primary"
+            android:layout_gravity="start"
+            android:layout_marginBottom="16dp"/>
 
-        <!-- DESCRIÇÃO -->
+        <!-- Descrição -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descrição"
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="2dp"/>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
-
+            app:boxCornerRadiusTopStart="14dp"
+            app:boxCornerRadiusTopEnd="14dp"
+            app:boxCornerRadiusBottomStart="14dp"
+            app:boxCornerRadiusBottomEnd="14dp"
+            android:layout_marginBottom="14dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Descrição"/>
+                android:hint="Descreva a receita"
+                android:minLines="2"
+                android:maxLines="6"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- INGREDIENTES -->
+        <!-- Ingredientes -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ingredientes"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
-
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="2dp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_ingredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="10dp"
-            android:layout_marginBottom="6dp"/>
-
+            android:layout_marginBottom="8dp"
+            tools:listitem="@layout/item_ingredient_edit"/>
         <Button
             android:id="@+id/btn_add_ingredient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Adicionar Ingrediente"
+            android:drawableLeft="@drawable/ic_add"
             android:backgroundTint="@color/primary"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="18dp"
+            android:layout_gravity="start"/>
 
-        <!-- INSTRUÇÕES -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_instructions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Instruções"
-                android:minLines="3"
-                android:maxLines="7"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- PORÇÕES E TEMPO -->
+        <!-- Porções e Tempo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="12dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp">
-
+                android:layout_marginEnd="8dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_servings"
                     android:layout_width="match_parent"
@@ -150,8 +171,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp">
-
+                android:layout_marginStart="8dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_preparation_time"
                     android:layout_width="match_parent"
@@ -161,43 +181,74 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- DIFICULDADE (opcional) -->
+        <!-- Dificuldade -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dificuldade"
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="2dp"/>
         <RadioGroup
             android:id="@+id/rg_difficulty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp">
-
+            android:layout_marginBottom="18dp">
             <RadioButton
                 android:id="@+id/rb_easy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fácil" />
-
+                android:text="Fácil"/>
             <RadioButton
                 android:id="@+id/rb_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Médio" />
-
+                android:text="Médio"/>
             <RadioButton
                 android:id="@+id/rb_hard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Difícil" />
+                android:text="Difícil"/>
         </RadioGroup>
 
-        <!-- BOTÃO SALVAR -->
+        <!-- Instruções -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Instruções"
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="2dp"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxCornerRadiusTopStart="14dp"
+            app:boxCornerRadiusTopEnd="14dp"
+            app:boxCornerRadiusBottomStart="14dp"
+            app:boxCornerRadiusBottomEnd="14dp"
+            android:layout_marginBottom="22dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Explique o passo a passo"
+                android:minLines="3"
+                android:maxLines="10"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botão Salvar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="Salvar Receita"
+            android:textSize="16sp"
+            android:fontFamily="@font/poppins_semibold"
             android:backgroundTint="@color/primary"
             android:textColor="@android:color/white"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="18dp"
+            app:cornerRadius="16dp"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

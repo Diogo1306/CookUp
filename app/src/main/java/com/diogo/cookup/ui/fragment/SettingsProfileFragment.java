@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,11 +18,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.utils.MessageUtils;
+import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.UserViewModel;
 
 import java.io.File;
@@ -32,6 +35,7 @@ import java.io.InputStream;
 public class SettingsProfileFragment extends Fragment {
 
     private ImageView imgProfile;
+    private ImageButton arrowBack, btnEditPhoto;
     private EditText editName;
     private Button btnSave;
     private Uri selectedImageUri = null;
@@ -47,7 +51,6 @@ public class SettingsProfileFragment extends Fragment {
                 }
             });
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -57,27 +60,43 @@ public class SettingsProfileFragment extends Fragment {
         imgProfile = view.findViewById(R.id.img_profile);
         editName = view.findViewById(R.id.edit_name);
         btnSave = view.findViewById(R.id.btn_save);
+        btnEditPhoto = view.findViewById(R.id.btn_edit_photo);
+        arrowBack = view.findViewById(R.id.arrow_back);
 
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
-        loadCurrentUser();
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            loadUserToUI(user);
+        });
+
+        userViewModel.getSuccessMessageLiveData().observe(getViewLifecycleOwner(), message -> {
+            if (message != null && !message.isEmpty()) {
+                MessageUtils.showSnackbar(requireView(), "Perfil salvo com sucesso!");
+                NavHostFragment.findNavController(SettingsProfileFragment.this).navigateUp();
+            }
+        });
+
+        UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+        if (user != null) {
+            currentUser = user;
+            loadUserToUI(user);
+        }
 
         imgProfile.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
+        btnEditPhoto.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
         btnSave.setOnClickListener(v -> saveProfile());
+
+        arrowBack.setOnClickListener(v -> NavHostFragment.findNavController(SettingsProfileFragment.this).navigateUp());
 
         return view;
     }
 
-    private void loadCurrentUser() {
-        currentUser = userViewModel.getUserLiveData().getValue();
-        if (currentUser == null) {
-            currentUser = new UserData();
-        }
-        editName.setText(currentUser.getUsername());
-
-        if (currentUser.getProfilePicture() != null && !currentUser.getProfilePicture().isEmpty()) {
-            Glide.with(this).load(currentUser.getProfilePicture()).placeholder(R.drawable.placeholder).into(imgProfile);
+    private void loadUserToUI(UserData user) {
+        if (user == null) return;
+        editName.setText(user.getUsername() != null ? user.getUsername() : "");
+        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+            Glide.with(this).load(user.getProfilePicture()).placeholder(R.drawable.placeholder).into(imgProfile);
         } else {
             imgProfile.setImageResource(R.drawable.placeholder);
         }
@@ -96,8 +115,6 @@ public class SettingsProfileFragment extends Fragment {
         if (selectedImageUri != null) {
             try {
                 File imageFile = getFileFromUri(requireContext(), selectedImageUri);
-                Log.d("UPLOAD", "userId=" + currentUser.getUserId() + ", username=" + newName + ", file=" + imageFile.getAbsolutePath() + ", exists=" + imageFile.exists());
-
                 userViewModel.updateUserWithImageFile(currentUser.getUserId(), newName, imageFile);
             } catch (IOException e) {
                 MessageUtils.showSnackbar(requireView(), "Erro ao processar imagem.");
@@ -110,8 +127,6 @@ public class SettingsProfileFragment extends Fragment {
             updatedUser.setProfilePicture(currentUser.getProfilePicture());
             userViewModel.updateUser(updatedUser);
         }
-
-        MessageUtils.showSnackbar(requireView(), "Perfil salvo! (aguarde sincronização)");
     }
 
     public static File getFileFromUri(Context context, Uri uri) throws IOException {

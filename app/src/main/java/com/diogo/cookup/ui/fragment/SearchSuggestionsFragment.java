@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
@@ -37,7 +37,7 @@ public class SearchSuggestionsFragment extends Fragment {
     private EditText editTextSearch;
     private ImageView buttonBack;
     private RecyclerView recyclerSuggestions;
-    private ExploreSearchAdapter suggestionAdapter;
+    private ExploreSearchAdapter adapter;
     private SearchViewModel viewModel;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -49,36 +49,47 @@ public class SearchSuggestionsFragment extends Fragment {
         editTextSearch = view.findViewById(R.id.editTextSearch);
         buttonBack = view.findViewById(R.id.buttonBack);
         recyclerSuggestions = view.findViewById(R.id.recyclerSuggestions);
-        viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 
-        String currentQuery = "";
+        viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        adapter = new ExploreSearchAdapter(requireContext(), (selectedText, recipe) -> openSearchResultFragment(selectedText));
+
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                int viewType = adapter.getItemViewType(position);
+                if (viewType == ExploreSearchAdapter.TYPE_RECIPE || viewType == ExploreSearchAdapter.TYPE_HEADER) {
+                    return 4;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        recyclerSuggestions.setLayoutManager(layoutManager);
+        recyclerSuggestions.setAdapter(adapter);
+
         if (getArguments() != null) {
-            SearchSuggestionsFragmentArgs args = SearchSuggestionsFragmentArgs.fromBundle(getArguments());
-            currentQuery = args.getQuery();
+            String currentQuery = SearchSuggestionsFragmentArgs.fromBundle(getArguments()).getQuery();
+            editTextSearch.setText(currentQuery);
+            editTextSearch.setSelection(currentQuery.length());
         }
-        editTextSearch.setText(currentQuery);
-        editTextSearch.setSelection(currentQuery.length());
 
         buttonBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
 
         editTextSearch.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 final int DRAWABLE_END = 2;
-
                 Drawable drawable = editTextSearch.getCompoundDrawables()[DRAWABLE_END];
                 if (drawable != null) {
                     int drawableWidth = drawable.getBounds().width();
-
                     int[] location = new int[2];
                     editTextSearch.getLocationOnScreen(location);
                     int editTextRight = location[0] + editTextSearch.getWidth();
-
                     int touchX = (int) event.getRawX();
-
                     if (touchX >= (editTextRight - drawableWidth - editTextSearch.getPaddingEnd())) {
                         editTextSearch.setText("");
                         editTextSearch.requestFocus();
-                        v.performClick();
                         return true;
                     }
                 }
@@ -96,14 +107,13 @@ public class SearchSuggestionsFragment extends Fragment {
                 if (!query.isEmpty()) {
                     viewModel.fetchSuggestions(query);
                 } else {
-                    suggestionAdapter.setSuggestions(new SearchData());
+                    adapter.setSuggestions(new SearchData());
                 }
             }
         });
 
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                 String query = editTextSearch.getText().toString().trim();
                 if (!query.isEmpty()) openSearchResultFragment(query);
                 return true;
@@ -119,30 +129,26 @@ public class SearchSuggestionsFragment extends Fragment {
             }
         }, 250);
 
-        setupSuggestions();
         viewModel.getSearchResult().observe(getViewLifecycleOwner(), response -> {
             if (response != null && response.getData() != null) {
-                suggestionAdapter.setSuggestions(response.getData());
+                adapter.setSuggestions(response.getData());
             } else {
-                suggestionAdapter.setSuggestions(new SearchData());
+                adapter.setSuggestions(new SearchData());
             }
         });
 
         return view;
     }
 
-    private void setupSuggestions() {
-        suggestionAdapter = new ExploreSearchAdapter(requireContext(), (selectedText, recipe) -> {
-            openSearchResultFragment(selectedText);
-        });
-        recyclerSuggestions.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerSuggestions.setAdapter(suggestionAdapter);
-    }
-
     private void openSearchResultFragment(String query) {
+        if (query == null || query.trim().isEmpty()) return;
+
         NavController navController = NavHostFragment.findNavController(this);
         navController.navigate(
-                SearchSuggestionsFragmentDirections.actionSearchSuggestionsFragmentToSearchResultFragment(query)
+                SearchSuggestionsFragmentDirections.actionSearchSuggestionsFragmentToSearchResultFragment(query),
+                new androidx.navigation.NavOptions.Builder()
+                        .setPopUpTo(R.id.searchSuggestionsFragment, true)
+                        .build()
         );
     }
 }

@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
             android:paddingHorizontal="@dimen/margin_small"
             android:paddingTop="@dimen/margin_large"
             android:paddingBottom="80dp">
@@ -30,7 +31,8 @@
                     android:id="@+id/btn_editprofile"
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_small"
                     android:background="@android:color/transparent"
                     android:contentDescription="Editar perfil"
                     android:src="@drawable/ic_profile_edit"
@@ -45,6 +47,8 @@
                     android:id="@+id/btn_settings"
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_small"
                     android:background="@android:color/transparent"
                     android:contentDescription="Configurações"
                     android:src="@drawable/ic_setting"
@@ -225,6 +229,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_container"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
                 android:orientation="vertical">
 
                 <TextView
@@ -234,8 +242,8 @@
                     android:layout_marginStart="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="Suas receitas postadas"
-                    android:textSize="@dimen/text_medium" />
+                    android:text="Suas receitas"
+                    android:textSize="@dimen/text_large_m" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/UserRecipesRecyclerView"

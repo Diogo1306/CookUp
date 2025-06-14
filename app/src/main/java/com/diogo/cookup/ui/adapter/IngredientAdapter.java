@@ -15,11 +15,12 @@ import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.IngredientData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
 
-    private final List<IngredientData> ingredients;
+    private List<IngredientData> ingredients;
     private final Context context;
 
     public IngredientAdapter(List<IngredientData> ingredients, Context context) {
@@ -56,6 +57,14 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     @Override
     public int getItemCount() {
         return ingredients.size();
+    }
+
+    public void updateList(List<IngredientData> newIngredients) {
+        this.ingredients.clear();
+        if (newIngredients != null) {
+            this.ingredients.addAll(newIngredients);
+        }
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

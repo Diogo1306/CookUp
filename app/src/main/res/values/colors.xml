@@ -9,19 +9,24 @@
     <color name="red">#E63946</color>
 
     <color name="background">#F7F7F7</color>
-    <color name="background_secondary">#FFFFFF</color> 
+    <color name="background_secondary">#FFFFFF</color>
+    <color name="background_soft">#FAFAFA</color>
+    <color name="background_card">#FCFCFC</color>
+    <color name="background_elevated">#F2F2F2</color>
+    <color name="background_overlay">#F5F6FA</color>
 
     <color name="text_primary">#3C444C</color>
     <color name="text_secondary">#9E9E9E</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="gray">#A6A6A6</color>
-    <color name="transparent">#00FFFFFF</color>
+    <color name="gray">#BDBDBD</color>
+
+    <color name="handle">#E8E8E8</color>
+
+    <color name="transparent">#00E8E8E8</color>
+    <color name="semi_transparent">#80E8E8E8</color>
 
     <color name="skeletonStartColor">#EAEAEA</color>
     <color name="skeletonCenterColor">#D6D6D6</color>
 </resources>
-
-
-

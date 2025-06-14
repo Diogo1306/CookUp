@@ -29,7 +29,7 @@ import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.IngredientData;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.adapter.IngredientSaveOrUpdateAdapter;
-import com.diogo.cookup.ui.adapter.RecipeGalleryAdapter;
+import com.diogo.cookup.ui.adapter.RecipeGalleryEditAdapter;
 import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.RecipeCreateEditViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -55,7 +55,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
     private RadioGroup rgDifficulty;
 
     private IngredientSaveOrUpdateAdapter ingredientSaveOrUpdateAdapter;
-    private RecipeGalleryAdapter galleryAdapter;
+    private RecipeGalleryEditAdapter galleryAdapter;
     private Integer editingRecipeId = null;
     // Usar List<Object> para suportar File (novas) e String (antigas/URLs)
     private final List<Object> imageFiles = new ArrayList<>();
@@ -117,7 +117,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
     }
 
     private void setupGalleryRecycler() {
-        galleryAdapter = new RecipeGalleryAdapter(imageFiles, position -> {
+        galleryAdapter = new RecipeGalleryEditAdapter(imageFiles, position -> {
             // Ao remover, sempre remova do imageFiles e atualize a ViewModel
             if (position >= 0 && position < imageFiles.size()) {
                 imageFiles.remove(position);
@@ -334,7 +334,6 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
 
         Integer recipeId = editingRecipeId;
 
-        // ==== NOVO: Separe arquivos e urls ====
         List<File> imagensNovas = new ArrayList<>();
         List<String> imagensAntigas = new ArrayList<>();
         for (Object img : imageFiles) {
@@ -345,7 +344,6 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
             }
         }
 
-        // ======= CHAME O NOVO MÉTODO DA VIEWMODEL (vamos ajustar lá!) ======
         viewModel.saveOrUpdateRecipe(
                         recipeId, authorId, title, description, instructions, difficulty,
                         prepTime, servings, selectedCats, imagensNovas, imagensAntigas

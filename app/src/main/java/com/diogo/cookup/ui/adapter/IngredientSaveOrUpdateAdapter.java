@@ -21,13 +21,11 @@ import com.diogo.cookup.data.model.IngredientData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IngredientSaveOrUpdateAdapter extends RecyclerView.Adapter<IngredientSaveOrUpdateAdapter.IngredientViewHolder> {
+public class IngredientSaveOrUpdateAdapter extends RecyclerView.Adapter<IngredientSaveOrUpdateAdapter.ViewHolder> {
 
-    private final List<IngredientData> ingredientList;
+    private final List<IngredientData> ingredients;
     private final OnRemoveClickListener onRemoveClickListener;
     private final OnNameTypedListener onNameTypedListener;
-    private final Handler handler = new Handler(Looper.getMainLooper());
-
     private List<String> suggestions = new ArrayList<>();
     private AutoCompleteTextView lastFocused = null;
 
@@ -42,27 +40,26 @@ public class IngredientSaveOrUpdateAdapter extends RecyclerView.Adapter<Ingredie
     public IngredientSaveOrUpdateAdapter(List<IngredientData> list,
                                          OnRemoveClickListener listener,
                                          OnNameTypedListener nameListener) {
-        this.ingredientList = list;
+        this.ingredients = list;
         this.onRemoveClickListener = listener;
         this.onNameTypedListener = nameListener;
     }
 
     @NonNull
     @Override
-    public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ingredient_save_update, parent, false);
-        return new IngredientViewHolder(v);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position) {
-        IngredientData ingredient = ingredientList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        IngredientData ingredient = ingredients.get(position);
 
-        if (holder.currentWatcherName != null)
-            holder.etName.removeTextChangedListener(holder.currentWatcherName);
-        if (holder.currentWatcherQty != null)
-            holder.etQuantity.removeTextChangedListener(holder.currentWatcherQty);
-
+        if (holder.nameWatcher != null)
+            holder.etName.removeTextChangedListener(holder.nameWatcher);
+        if (holder.qtyWatcher != null)
+            holder.etQuantity.removeTextChangedListener(holder.qtyWatcher);
 
         holder.etName.setText(ingredient.getName());
         holder.etQuantity.setText(ingredient.getQuantity());
@@ -77,31 +74,30 @@ public class IngredientSaveOrUpdateAdapter extends RecyclerView.Adapter<Ingredie
 
         holder.etName.setOnClickListener(v -> {
             holder.etName.requestFocus();
-            holder.etName.setSelection(holder.etName.getText().length());
+            holder.etName.showDropDown();
         });
 
-        // Watcher nome
-        holder.currentWatcherName = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        holder.nameWatcher = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ingredient.setName(s.toString());
+                ingredient.setName(s.toString().trim());
                 int pos = holder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && onNameTypedListener != null) {
                     onNameTypedListener.onNameTyped(pos, s.toString(), holder.etName);
                 }
             }
-            @Override public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) { }
         };
-        holder.etName.addTextChangedListener(holder.currentWatcherName);
+        holder.etName.addTextChangedListener(holder.nameWatcher);
 
-        holder.currentWatcherQty = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        holder.qtyWatcher = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ingredient.setQuantity(s.toString());
+                ingredient.setQuantity(s.toString().trim());
             }
-            @Override public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) { }
         };
-        holder.etQuantity.addTextChangedListener(holder.currentWatcherQty);
+        holder.etQuantity.addTextChangedListener(holder.qtyWatcher);
 
         holder.btnRemove.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
@@ -113,13 +109,13 @@ public class IngredientSaveOrUpdateAdapter extends RecyclerView.Adapter<Ingredie
 
     @Override
     public int getItemCount() {
-        return ingredientList.size();
+        return ingredients.size();
     }
 
     public void updateSuggestions(List<String> newSuggestions) {
         List<String> filtered = new ArrayList<>();
         List<String> currentNames = new ArrayList<>();
-        for (IngredientData i : ingredientList) {
+        for (IngredientData i : ingredients) {
             if (i.getName() != null) currentNames.add(i.getName().toLowerCase());
         }
         for (String s : newSuggestions) {
@@ -142,30 +138,24 @@ public class IngredientSaveOrUpdateAdapter extends RecyclerView.Adapter<Ingredie
         }
     }
 
-
     public void updateList(List<IngredientData> newList) {
-        for (int i = 0; i < ingredientList.size(); i++) {
-            if (i < newList.size()) {
-                IngredientData current = ingredientList.get(i);
-                newList.get(i).setName(current.getName());
-                newList.get(i).setQuantity(current.getQuantity());
-            }
-        }
-
-        ingredientList.clear();
-        ingredientList.addAll(newList);
-
-        handler.post(this::notifyDataSetChanged);
+        ingredients.clear();
+        ingredients.addAll(newList);
+        new Handler(Looper.getMainLooper()).post(this::notifyDataSetChanged);
     }
 
-    public static class IngredientViewHolder extends RecyclerView.ViewHolder {
+    public List<IngredientData> getIngredients() {
+        return ingredients;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         AutoCompleteTextView etName;
         EditText etQuantity;
         ImageButton btnRemove;
-        TextWatcher currentWatcherName;
-        TextWatcher currentWatcherQty;
+        TextWatcher nameWatcher;
+        TextWatcher qtyWatcher;
 
-        public IngredientViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             etName = itemView.findViewById(R.id.et_ingredient_name);
             etQuantity = itemView.findViewById(R.id.et_ingredient_quantity);

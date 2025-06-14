@@ -33,7 +33,7 @@ import com.diogo.cookup.data.model.TrackRequest;
 import com.diogo.cookup.data.repository.TrackingRepository;
 import com.diogo.cookup.ui.activity.MainActivity;
 import com.diogo.cookup.ui.adapter.CommentAdapter;
-import com.diogo.cookup.ui.adapter.GalleryPagerAdapter;
+import com.diogo.cookup.ui.adapter.RecipeGalleryDetailAdapter;
 import com.diogo.cookup.ui.adapter.IngredientAdapter;
 import com.diogo.cookup.ui.dialog.RatingBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
@@ -56,7 +56,7 @@ public class RecipeDetailFragment extends Fragment {
     private RecyclerView ingredientsRecyclerView;
     private ViewPager2 galleryPager;
     private TabLayout galleryIndicator;
-    private GalleryPagerAdapter galleryPagerAdapter;
+    private RecipeGalleryDetailAdapter galleryPagerAdapter;
 
     public static RecipeDetailFragment newInstance(int recipeId) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
@@ -87,12 +87,11 @@ public class RecipeDetailFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
 
-        galleryPager = view.findViewById(R.id.gallery_pager);
+        galleryPager = view.findViewById(R.id.viewPagerGallery);
         galleryIndicator = view.findViewById(R.id.gallery_indicator);
 
-        ImageView recipeImage = view.findViewById(R.id.recipe_image);
-
         TextView recipeTitle = view.findViewById(R.id.recipe_title);
+        TextView recipeAuthor = view.findViewById(R.id.recipe_author);
         TextView recipeDescription = view.findViewById(R.id.recipe_description);
         TextView recipeInstructions = view.findViewById(R.id.recipe_instructions);
         TextView txtTime = view.findViewById(R.id.txt_time);
@@ -147,33 +146,57 @@ public class RecipeDetailFragment extends Fragment {
 
             List<String> gallery = recipe.getGallery();
             if (gallery != null && !gallery.isEmpty()) {
-                if (galleryPager != null) galleryPager.setVisibility(View.VISIBLE);
-                if (galleryIndicator != null) galleryIndicator.setVisibility(View.VISIBLE);
-                if (recipeImage != null) recipeImage.setVisibility(View.GONE);
+                galleryPager.setVisibility(View.VISIBLE);
+                galleryIndicator.setVisibility(View.VISIBLE);
 
                 if (galleryPagerAdapter == null) {
-                    galleryPagerAdapter = new GalleryPagerAdapter(gallery);
-                    if (galleryPager != null) galleryPager.setAdapter(galleryPagerAdapter);
+                    galleryPagerAdapter = new RecipeGalleryDetailAdapter(gallery);
+                    galleryPager.setAdapter(galleryPagerAdapter);
                 } else {
                     galleryPagerAdapter.updateList(gallery);
                 }
 
-                if (galleryPager != null && galleryIndicator != null) {
-                    new TabLayoutMediator(galleryIndicator, galleryPager, (tab, position) -> {}).attach();
-                }
+                new TabLayoutMediator(galleryIndicator, galleryPager, (tab, position) -> {
+                    tab.setCustomView(R.layout.tab_dot_selector);
+                }).attach();
+
+                galleryPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        for (int i = 0; i < galleryIndicator.getTabCount(); i++) {
+                            TabLayout.Tab tab = galleryIndicator.getTabAt(i);
+                            if (tab != null && tab.getCustomView() != null) {
+                                View dot = tab.getCustomView().findViewById(R.id.dot);
+                                if (dot != null) {
+                                    dot.setBackgroundResource(
+                                            i == position ? R.drawable.tab_dot_selected : R.drawable.tab_dot_unselected
+                                    );
+                                }
+                            }
+                        }
+                    }
+                });
+                galleryPager.post(() -> {
+                    int pos = galleryPager.getCurrentItem();
+                    for (int i = 0; i < galleryIndicator.getTabCount(); i++) {
+                        TabLayout.Tab tab = galleryIndicator.getTabAt(i);
+                        if (tab != null && tab.getCustomView() != null) {
+                            View dot = tab.getCustomView().findViewById(R.id.dot);
+                            if (dot != null) {
+                                dot.setBackgroundResource(
+                                        i == pos ? R.drawable.tab_dot_selected : R.drawable.tab_dot_unselected
+                                );
+                            }
+                        }
+                    }
+                });
             } else {
-                if (galleryPager != null) galleryPager.setVisibility(View.GONE);
-                if (galleryIndicator != null) galleryIndicator.setVisibility(View.GONE);
-                if (recipeImage != null) {
-                    recipeImage.setVisibility(View.VISIBLE);
-                    Glide.with(requireContext())
-                            .load(recipe.getImage())
-                            .placeholder(R.drawable.placeholder)
-                            .into(recipeImage);
-                }
+                galleryPager.setVisibility(View.GONE);
+                galleryIndicator.setVisibility(View.GONE);
             }
 
             recipeTitle.setText(recipe.getTitle());
+            recipeAuthor.setText("Por " + recipe.getAuthorName());
             txtTime.setText(getString(R.string.preparation_time_minutes, recipe.getPreparationTime()));
             txtDifficulty.setText(recipe.getDifficulty());
 

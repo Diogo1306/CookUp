@@ -65,6 +65,15 @@ dependencies {
     implementation libs.viewpager2
     implementation libs.material.v1120
 
+    // Dots indicator
+    implementation(libs.dotsindicator.v510)
+
+    // rounded images
+    implementation libs.material.v1110
+
+    //transonic
+    implementation libs.material.v1120
+
     implementation libs.glide
     implementation libs.navigation.fragment
     implementation libs.navigation.ui

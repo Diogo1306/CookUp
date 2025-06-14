@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_homeFragment_to_searchSuggestionsFragment"
             app:destination="@id/searchSuggestionsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment" />
     </fragment>
 
     <!--  Explore Fragment -->

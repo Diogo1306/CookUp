@@ -3,6 +3,7 @@ package com.diogo.cookup.viewmodel;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -56,10 +57,9 @@ public class UserViewModel extends AndroidViewModel {
             @Override
             public void onSuccess(UserData user, String message) {
                 userLiveData.postValue(user);
-                sharedPrefHelper.saveUser(user);
+                SharedPrefHelper.getInstance(getApplication()).saveUser(user);
                 successMessage.postValue(message);
             }
-
             @Override
             public void onError(String message) {
                 errorMessage.postValue("Erro ao atualizar usuário: " + message);
@@ -88,7 +88,12 @@ public class UserViewModel extends AndroidViewModel {
             @Override
             public void onSuccess(UserData user, String message) {
                 userLiveData.postValue(user);
-                sharedPrefHelper.saveUser(user);
+                Log.d("UserViewModel", "Salvando no SharedPrefHelper: " + user);
+                if (user != null) {
+                    sharedPrefHelper.saveUser(user);
+                } else {
+                    Log.e("UserViewModel", "Tentou salvar usuário nulo!");
+                }
                 successMessage.postValue(message);
             }
 

@@ -4,7 +4,6 @@
     android:layout_width="150dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/card_recipe_img"
     android:padding="@dimen/padding_small"
     android:elevation="6dp"
     android:layout_marginEnd="6dp">
@@ -44,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_very_small"
         android:fontFamily="@font/poppins_semibold"
-        android:textSize="@dimen/text_very_small"
+        android:textSize="@dimen/text_small"
         android:text="Nome da Receita"
         android:textColor="@color/text_primary"
         android:maxLines="1"
@@ -54,56 +53,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="start|center_vertical">
+        android:gravity="start|center_vertical"
+        android:paddingVertical="4dp">
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="@dimen/icon_size_very_small"
+            android:layout_height="@dimen/icon_size_very_small"
+            android:src="@drawable/ic_clock" />
+
+        <TextView
+            android:id="@+id/preparation_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/ic_clock" />
-
-            <TextView
-                android:id="@+id/preparation_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_very_small"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/poppins_regular"
-                android:text="20 min."
-                android:textSize="@dimen/text_very_small"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
+            android:layout_marginStart="@dimen/margin_very_small"
+            android:fontFamily="@font/poppins_regular"
+            android:includeFontPadding="false"
+            android:text="20 min."
+            android:textSize="@dimen/text_very_small"
+            android:textColor="@color/text_secondary" />
 
         <Space
-            android:layout_width="10dp"
+            android:layout_width="@dimen/margin_small"
             android:layout_height="0dp" />
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="@dimen/icon_size_very_small"
+            android:layout_height="@dimen/icon_size_very_small"
+            android:src="@drawable/ic_star" />
+
+        <TextView
+            android:id="@+id/rating_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/ic_star" />
-
-            <TextView
-                android:id="@+id/rating_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_very_small"
-                android:fontFamily="@font/poppins_regular"
-                android:includeFontPadding="false"
-                android:text="4.9"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_very_small" />
-        </LinearLayout>
+            android:layout_marginStart="@dimen/margin_very_small"
+            android:fontFamily="@font/poppins_regular"
+            android:includeFontPadding="false"
+            android:text="4.9"
+            android:textSize="@dimen/text_very_small"
+            android:textColor="@color/text_secondary" />
     </LinearLayout>
 </LinearLayout>

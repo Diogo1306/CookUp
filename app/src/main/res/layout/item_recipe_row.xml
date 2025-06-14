@@ -1,0 +1,114 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="6dp"
+    android:layout_marginHorizontal="16dp"
+    card_view:cardCornerRadius="@dimen/border_radius"
+    card_view:cardElevation="0dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_very_small"
+        android:background="@color/background_soft"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:background="@drawable/image_rounded_corner"
+            android:clipToOutline="true" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/recipe_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:baselineAligned="false">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_micro"
+                    android:layout_height="@dimen/icon_size_micro"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_clock" />
+
+                <TextView
+                    android:id="@+id/recipe_subtext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_micro"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"/>
+
+                <Space
+                    android:layout_width="@dimen/margin_small"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_micro"
+                    android:layout_height="@dimen/icon_size_micro"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_star" />
+
+                <TextView
+                    android:id="@+id/rating_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_micro"
+                    android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"/>
+
+                <Space
+                    android:layout_width="@dimen/margin_small"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_micro"
+                    android:layout_height="@dimen/icon_size_micro"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_bar_graph" />
+
+                <TextView
+                    android:id="@+id/difficulty_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_micro"
+                    android:fontFamily="@font/poppins_regular" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
