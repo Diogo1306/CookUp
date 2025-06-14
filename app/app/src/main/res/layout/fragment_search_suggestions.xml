@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    android:layout_marginTop="@dimen/margin_large">
+    android:layout_marginTop="@dimen/margin_extra_large">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,5 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="12dp" />
+        android:overScrollMode="never"
+        android:nestedScrollingEnabled="true"
+        android:layout_marginTop="12dp"/>
+
 </LinearLayout>

@@ -27,33 +27,16 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecyclerView.View
     private final OnItemClickListener itemClickListener;
     private final OnSaveClickListener saveClickListener;
 
-    private boolean skeletonMode = true;
-    private static final int SKELETON_COUNT = 6;
-    private static final int VIEW_TYPE_RECIPE = 0;
-    private static final int VIEW_TYPE_SKELETON = 1;
+    private final int layoutResId;
 
     public RecipeAdapterDefault(List<RecipeData> recipeList, List<Integer> savedRecipeIds,
-                                OnItemClickListener itemClickListener, OnSaveClickListener saveClickListener) {
+                                OnItemClickListener itemClickListener, OnSaveClickListener saveClickListener,
+                                int layoutResId) {
         this.recipeList = recipeList != null ? recipeList : new ArrayList<>();
         this.savedRecipeIdSet = new HashSet<>(savedRecipeIds);
         this.itemClickListener = itemClickListener;
         this.saveClickListener = saveClickListener;
-    }
-
-    public void setSkeletonMode(boolean skeletonMode) {
-        if (this.skeletonMode == skeletonMode) return;
-        this.skeletonMode = skeletonMode;
-        notifyDataSetChanged();
-    }
-
-    public boolean isSkeletonMode() {
-        return skeletonMode;
-    }
-
-    public void setData(List<RecipeData> recipes) {
-        recipeList.clear();
-        recipeList.addAll(recipes);
-        setSkeletonMode(false);
+        this.layoutResId = layoutResId;
     }
 
     public void updateSavedIds(List<Integer> newSavedIds) {
@@ -67,31 +50,18 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecyclerView.View
         recipeList.addAll(newRecipes);
         savedRecipeIdSet.clear();
         savedRecipeIdSet.addAll(newSavedIds);
-        setSkeletonMode(false);
+        notifyDataSetChanged();
     }
 
     public List<RecipeData> getCurrentRecipes() {
         return recipeList;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (skeletonMode && position >= recipeList.size()) {
-            return VIEW_TYPE_SKELETON;
-        }
-        return VIEW_TYPE_RECIPE;
-    }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_SKELETON) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe_skeleton, parent, false);
-            return new SkeletonViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe_default, parent, false);
-            return new RecipeViewHolder(view);
-        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
+        return new RecipeViewHolder(view);
     }
 
     @Override
@@ -103,13 +73,7 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return skeletonMode ? recipeList.size() + SKELETON_COUNT : recipeList.size();
-    }
-
-    static class SkeletonViewHolder extends RecyclerView.ViewHolder {
-        SkeletonViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
+        return recipeList.size();
     }
 
     class RecipeViewHolder extends RecyclerView.ViewHolder {

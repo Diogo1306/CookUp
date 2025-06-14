@@ -39,7 +39,6 @@ public class RecipeCreateEditViewModel extends ViewModel {
         categoryRepository.getCategories(categoriesLiveData, errorLiveData);
     }
 
-    // --- Para edição, carrega receita pelo ID ---
     public void fetchRecipeById(int recipeId) {
         recipeRepository.getRecipeDetail(recipeId, recipeToEditLiveData, errorLiveData);
         recipeToEditLiveData.observeForever(recipe -> {
@@ -47,14 +46,13 @@ public class RecipeCreateEditViewModel extends ViewModel {
                 setIngredients(recipe.getIngredients() != null ? recipe.getIngredients() : new ArrayList<>());
                 List<Object> galeria = new ArrayList<>();
                 if (recipe.getGallery() != null) {
-                    galeria.addAll(recipe.getGallery()); // URLs
+                    galeria.addAll(recipe.getGallery());
                 }
                 imagesLiveData.setValue(galeria);
             }
         });
     }
 
-    // Métodos seguros para modificar dados do formulário
     public void addIngredient(IngredientData ingredient) {
         List<IngredientData> list = new ArrayList<>(ingredientsLiveData.getValue());
         list.add(ingredient);
@@ -77,12 +75,10 @@ public class RecipeCreateEditViewModel extends ViewModel {
         }
     }
 
-    // Use apenas este para setar ingredientes!
     public void setIngredients(List<IngredientData> ingredients) {
         ingredientsLiveData.setValue(ingredients);
     }
 
-    // Imagens agora aceitam File OU String
     public void addImage(Object image) {
         List<Object> list = new ArrayList<>(imagesLiveData.getValue());
         list.add(image);

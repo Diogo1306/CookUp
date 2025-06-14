@@ -15,7 +15,7 @@ import com.diogo.cookup.R;
 import java.io.File;
 import java.util.List;
 
-public class RecipeGalleryAdapter extends RecyclerView.Adapter<RecipeGalleryAdapter.GalleryViewHolder> {
+public class RecipeGalleryEditAdapter extends RecyclerView.Adapter<RecipeGalleryEditAdapter.GalleryViewHolder> {
 
     private List<Object> images;
     private OnRemoveClickListener onRemoveClickListener;
@@ -25,7 +25,7 @@ public class RecipeGalleryAdapter extends RecyclerView.Adapter<RecipeGalleryAdap
         void onRemove(int position);
     }
 
-    public RecipeGalleryAdapter(List<Object> images, OnRemoveClickListener onRemoveClickListener) {
+    public RecipeGalleryEditAdapter(List<Object> images, OnRemoveClickListener onRemoveClickListener) {
         this.images = images;
         this.onRemoveClickListener = onRemoveClickListener;
     }
@@ -39,7 +39,7 @@ public class RecipeGalleryAdapter extends RecyclerView.Adapter<RecipeGalleryAdap
     @Override
     public GalleryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_gallery_thumbnail, parent, false); // <-- miniaturas
+                .inflate(R.layout.item_gallery_thumbnail, parent, false);
         return new GalleryViewHolder(v);
     }
 

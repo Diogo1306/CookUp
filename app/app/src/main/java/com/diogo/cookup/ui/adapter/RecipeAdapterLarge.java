@@ -1,8 +1,9 @@
 package com.diogo.cookup.ui.adapter;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class RecipeAdapterLarge extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int SKELETON_COUNT = 6;
 
     private boolean skeletonMode = true;
+    private boolean isPaginating = false;
 
     public interface OnItemClickListener {
         void onItemClick(RecipeData recipe);
@@ -52,6 +54,19 @@ public class RecipeAdapterLarge extends RecyclerView.Adapter<RecyclerView.ViewHo
         savedRecipeIdSet.clear();
         if (newSavedIds != null) savedRecipeIdSet.addAll(newSavedIds);
         notifyDataSetChanged();
+    }
+
+    public void setPaginating(boolean paginating) {
+        this.isPaginating = paginating;
+        notifyItemChanged(getItemCount() - 1);
+    }
+
+    public void setDataWithAnimation(List<RecipeData> newData) {
+        int previousSize = recipeList.size();
+        recipeList.clear();
+        recipeList.addAll(newData);
+        notifyItemRangeInserted(previousSize, newData.size());
+        setSkeletonMode(false);
     }
 
     public void setSkeletonMode(boolean enabled) {
@@ -77,9 +92,9 @@ public class RecipeAdapterLarge extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        return (skeletonMode && position >= recipeList.size())
-                ? VIEW_TYPE_SKELETON
-                : VIEW_TYPE_RECIPE;
+        if (skeletonMode && position >= recipeList.size()) return VIEW_TYPE_SKELETON;
+        if (isPaginating && position == recipeList.size()) return VIEW_TYPE_SKELETON;
+        return VIEW_TYPE_RECIPE;
     }
 
     @NonNull
@@ -105,13 +120,12 @@ public class RecipeAdapterLarge extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return skeletonMode ? recipeList.size() + SKELETON_COUNT : recipeList.size();
+        return skeletonMode ? recipeList.size() + SKELETON_COUNT : recipeList.size() + (isPaginating ? 1 : 0);
     }
 
     static class SkeletonViewHolder extends RecyclerView.ViewHolder {
         public SkeletonViewHolder(@NonNull View itemView) {
             super(itemView);
-            Log.d("SKELETON", "SkeletonViewHolder criado");
         }
     }
 

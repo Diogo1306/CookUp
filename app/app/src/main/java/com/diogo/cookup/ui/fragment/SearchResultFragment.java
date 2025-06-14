@@ -82,7 +82,13 @@ public class SearchResultFragment extends Fragment {
             }
         });
 
-        buttonBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack(R.id.exploreFragment, false));
+        buttonBack.setOnClickListener(v -> {
+            if (NavHostFragment.findNavController(this).getPreviousBackStackEntry() != null) {
+                NavHostFragment.findNavController(this).popBackStack();
+            } else {
+                requireActivity().onBackPressed();
+            }
+        });
 
         editTextSearch.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {

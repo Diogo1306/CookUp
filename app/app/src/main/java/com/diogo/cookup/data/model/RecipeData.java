@@ -13,6 +13,9 @@ public class RecipeData implements Serializable {
     @SerializedName("author_id")
     private int authorId;
 
+    @SerializedName("author_name")
+    private String author_name;
+
     @SerializedName("title")
     private String title;
 
@@ -30,6 +33,9 @@ public class RecipeData implements Serializable {
 
     @SerializedName("servings")
     private int servings;
+
+    @SerializedName("finished_count")
+    private int finishedcount;
 
     @SerializedName("views_count")
     private int viewsCount;
@@ -54,12 +60,13 @@ public class RecipeData implements Serializable {
 
     public RecipeData() {}
 
-    public RecipeData(int recipeId, int authorId, String title, String description, String instructions,
+    public RecipeData(int recipeId, int authorId, String author_name, String title, String description, String instructions,
                       List<CategoryData> categories, int preparationTime, int servings,
-                      int viewsCount, String difficulty, String image, List<String> gallery,
+                      int viewsCount, int finishedcount, String difficulty, String image, List<String> gallery,
                       List<IngredientData> ingredients, List<CommentData> comments, float averageRating) {
         this.recipeId = recipeId;
         this.authorId = authorId;
+        this.author_name = author_name;
         this.title = title;
         this.description = description;
         this.instructions = instructions;
@@ -67,6 +74,7 @@ public class RecipeData implements Serializable {
         this.preparationTime = preparationTime;
         this.servings = servings;
         this.viewsCount = viewsCount;
+        this.finishedcount = finishedcount;
         this.difficulty = difficulty;
         this.image = image;
         this.gallery = gallery;
@@ -78,9 +86,11 @@ public class RecipeData implements Serializable {
     // Getters
     public int getRecipeId() { return recipeId; }
     public int getAuthorId() { return authorId; }
+    public String getAuthorName() {return author_name; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public String getInstructions() { return instructions; }
+    public int getFinishedcount() { return finishedcount; }
     public List<CategoryData> getCategories() { return categories; }
     public int getPreparationTime() { return preparationTime; }
     public int getServings() { return servings; }
@@ -95,6 +105,7 @@ public class RecipeData implements Serializable {
     // Setters
     public void setRecipeId(int recipeId) { this.recipeId = recipeId; }
     public void setAuthorId(int authorId) { this.authorId = authorId; }
+    public void SetAuthorName() { this.author_name = author_name; }
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
     public void setInstructions(String instructions) { this.instructions = instructions; }
@@ -104,6 +115,7 @@ public class RecipeData implements Serializable {
     public void setViewsCount(int viewsCount) { this.viewsCount = viewsCount; }
     public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
     public void setImage(String image) { this.image = image; }
+    public void setFinishedcount(int finishedcount) { this.finishedcount = finishedcount; }
     public void setGallery(List<String> gallery) { this.gallery = gallery; }
     public void setIngredients(List<IngredientData> ingredients) { this.ingredients = ingredients; }
     public void setComments(List<CommentData> comments) { this.comments = comments; }

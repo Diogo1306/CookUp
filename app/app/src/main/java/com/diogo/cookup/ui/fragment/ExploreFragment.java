@@ -1,13 +1,11 @@
 package com.diogo.cookup.ui.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,7 +14,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import android.view.animation.AnimationUtils;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.ui.adapter.CategoryAdapter;
@@ -38,11 +37,8 @@ public class ExploreFragment extends Fragment {
     private RecyclerView recyclerCategories, recyclerRecipes;
     private TextView textEndMessage;
     private EditText searchEditText;
-
-    private boolean categoriasProntas = false;
-    private boolean receitasProntas = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isLoadingMore = false;
-    private boolean carregandoPrimeiraVez = true;
 
     @Nullable
     @Override
@@ -61,16 +57,12 @@ public class ExploreFragment extends Fragment {
         recyclerCategories = view.findViewById(R.id.recyclerCategories);
         recyclerRecipes = view.findViewById(R.id.recyclerRecipes);
         textEndMessage = view.findViewById(R.id.textEndMessage);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         setupSearchBar(view);
         setupCategoryRecycler(view);
         setupRecipeRecycler();
 
-        categoriasProntas = false;
-        receitasProntas = false;
-        carregandoPrimeiraVez = true;
-        categoryAdapter.setSkeletonMode(true);
-        recipeAdapter.setSkeletonMode(true);
         textEndMessage.setVisibility(View.GONE);
 
         savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), savedIds -> {
@@ -82,13 +74,17 @@ public class ExploreFragment extends Fragment {
             savedListViewModel.loadUserSavedRecipeIds(user.getUserId());
         }
 
-        new Handler().postDelayed(() -> {
-            if (!isAdded()) return;
-            observeViewModel();
+        swipeRefreshLayout.setOnRefreshListener(() -> {
             viewModel.resetPagination();
             viewModel.loadCategories();
             viewModel.loadNextPage();
-        }, 400);
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+        observeViewModel();
+        viewModel.resetPagination();
+        viewModel.loadCategories();
+        viewModel.loadNextPage();
     }
 
     private void setupSearchBar(View view) {
@@ -113,6 +109,8 @@ public class ExploreFragment extends Fragment {
 
         recyclerCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerCategories.setAdapter(categoryAdapter);
+        recyclerCategories.setLayoutAnimation(
+                AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_animation_fade_slide_up));
     }
 
     private void setupRecipeRecycler() {
@@ -124,6 +122,8 @@ public class ExploreFragment extends Fragment {
         );
         recyclerRecipes.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerRecipes.setAdapter(recipeAdapter);
+        recyclerRecipes.setLayoutAnimation(
+                AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_animation_fade_slide_up));
 
         recyclerRecipes.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -139,10 +139,8 @@ public class ExploreFragment extends Fragment {
                 if (!isLoadingMore && lastVisibleItem >= totalItemCount - 2
                         && Boolean.FALSE.equals(viewModel.getIsLastPage().getValue())) {
                     isLoadingMore = true;
-                    recipeAdapter.setSkeletonMode(true);
-                    new Handler().postDelayed(() -> {
-                        viewModel.loadNextPage();
-                    }, 300);
+                    recipeAdapter.setPaginating(true); // trigger footer
+                    viewModel.loadNextPage();
                 }
             }
         });
@@ -152,17 +150,16 @@ public class ExploreFragment extends Fragment {
         viewModel.getPopularCategories().observe(getViewLifecycleOwner(), response -> {
             if (response != null && response.getData() != null) {
                 categoryAdapter.setData(response.getData());
-                categoriasProntas = true;
-                verificarEEsconderSkeletons();
+                recyclerCategories.scheduleLayoutAnimation();
             }
         });
 
         viewModel.getAllRecipes().observe(getViewLifecycleOwner(), recipes -> {
             if (recipes != null) {
-                recipeAdapter.setData(recipes);
-                receitasProntas = true;
-                verificarEEsconderSkeletons();
-                carregandoPrimeiraVez = false;
+                recipeAdapter.setDataWithAnimation(recipes);
+                if (recipeAdapter.getItemCount() <= 6) {
+                    recyclerRecipes.scheduleLayoutAnimation();
+                }
             }
         });
 
@@ -177,16 +174,6 @@ public class ExploreFragment extends Fragment {
                 textEndMessage.setVisibility(View.GONE);
             }
         });
-    }
-
-    private void verificarEEsconderSkeletons() {
-        if (categoriasProntas && receitasProntas) {
-            categoryAdapter.setSkeletonMode(false);
-            recipeAdapter.setSkeletonMode(false);
-        }
-        else if (!carregandoPrimeiraVez && receitasProntas) {
-            recipeAdapter.setSkeletonMode(false);
-        }
     }
 
     private void openRecipeDetail(RecipeData recipe) {

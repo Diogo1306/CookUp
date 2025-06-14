@@ -48,7 +48,6 @@ public class RecipeRepository {
             List<File> imagensNovas,
             List<String> imagensAntigas
     ) {
-        // Sempre envie todos os campos obrigatórios como RequestBody
         RequestBody rbAuthorId = RequestBody.create(MediaType.parse("text/plain"), authorId.toString());
         RequestBody rbTitle = RequestBody.create(MediaType.parse("text/plain"), title);
         RequestBody rbDescription = RequestBody.create(MediaType.parse("text/plain"), description);
@@ -69,12 +68,10 @@ public class RecipeRepository {
                 new Gson().toJson(imagensAntigas)
         );
 
-        // Só envie recipeId se não for null (para editar). Se for criar, envie "".
         RequestBody rbRecipeId = recipeId != null
                 ? RequestBody.create(MediaType.parse("text/plain"), recipeId.toString())
                 : RequestBody.create(MediaType.parse("text/plain"), "");
 
-        // Novas imagens como arquivos
         List<MultipartBody.Part> galleryParts = new ArrayList<>();
         for (File file : imagensNovas) {
             RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), file);
@@ -96,7 +93,6 @@ public class RecipeRepository {
                 rbOldGallery
         );
     }
-
 
     public void getAllRecipes(MutableLiveData<List<RecipeData>> recipesLiveData, MutableLiveData<String> errorMessage) {
         apiService.getAllRecipes("recipe").enqueue(new Callback<ApiResponse<List<RecipeData>>>() {

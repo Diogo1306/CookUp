@@ -1,7 +1,6 @@
 package com.diogo.cookup.ui.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +8,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
-import com.diogo.cookup.ui.fragment.ProfileFragment;
+import com.diogo.cookup.utils.NumberFormatUtils;
 
 import java.util.List;
 
@@ -49,8 +47,9 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
         RecipeData recipe = recipeList.get(position);
 
         holder.recipeTitle.setText(recipe.getTitle());
-        holder.recipeViews.setText(String.valueOf(recipe.getViewsCount()));
+        holder.recipeViews.setText(NumberFormatUtils.formatCompact(recipe.getViewsCount())); // aqui
         holder.ratingText.setText(String.format("%.1f", recipe.getAverageRating()));
+        holder.textFinishedCount.setText(NumberFormatUtils.formatCompact(recipe.getFinishedcount())); // aqui
 
         Glide.with(context)
                 .load(recipe.getImage())
@@ -80,7 +79,7 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
 
     static class ProfileRecipeViewHolder extends RecyclerView.ViewHolder {
         ImageView recipeImage;
-        TextView recipeTitle, recipeViews, ratingText;
+        TextView recipeTitle, recipeViews, ratingText, textFinishedCount;
         ImageButton buttonEdit, buttonDelete;
 
         public ProfileRecipeViewHolder(@NonNull View itemView) {
@@ -91,6 +90,8 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
             ratingText = itemView.findViewById(R.id.rating_text);
             buttonEdit = itemView.findViewById(R.id.button_edit_recipe);
             buttonDelete = itemView.findViewById(R.id.button_delete_recipe);
+            textFinishedCount = itemView.findViewById(R.id.recipe_finished);
+
         }
     }
 }
