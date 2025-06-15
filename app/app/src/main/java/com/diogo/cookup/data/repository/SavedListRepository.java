@@ -50,4 +50,8 @@ public class SavedListRepository {
         api.getSavedRecipeIds("savedRecipeIds", userId).enqueue(callback);
     }
 
+    public void getListsWithRecipes(int userId, Callback<ApiResponse<List<SavedListData>>> callback) {
+        api.getListsWithRecipes("lists_with_recipes", userId).enqueue(callback);
+    }
+
 }

@@ -15,7 +15,6 @@
         android:paddingEnd="20dp"
         android:paddingBottom="24dp">
 
-        <!-- Galeria de Imagens -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +44,6 @@
             android:layout_gravity="start"
             android:layout_marginBottom="18dp"/>
 
-        <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +66,6 @@
                 android:hint="Digite o nome da receita"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Categorias -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,19 +81,7 @@
             app:singleSelection="false"
             app:chipSpacingHorizontal="8dp"
             app:chipSpacingVertical="4dp"/>
-        <Button
-            android:id="@+id/btn_add_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Adicionar Categoria"
-            android:textSize="13sp"
-            android:drawableLeft="@drawable/ic_add"
-            android:backgroundTint="@color/semi_transparent"
-            android:textColor="@color/text_primary"
-            android:layout_gravity="start"
-            android:layout_marginBottom="16dp"/>
 
-        <!-- Descrição -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,7 +106,6 @@
                 android:maxLines="6"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Ingredientes -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -147,7 +131,6 @@
             android:layout_marginBottom="18dp"
             android:layout_gravity="start"/>
 
-        <!-- Porções e Tempo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -181,7 +164,6 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- Dificuldade -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -212,7 +194,6 @@
                 android:text="Difícil"/>
         </RadioGroup>
 
-        <!-- Instruções -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -237,7 +218,6 @@
                 android:maxLines="10"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Botão Salvar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
             android:layout_width="match_parent"

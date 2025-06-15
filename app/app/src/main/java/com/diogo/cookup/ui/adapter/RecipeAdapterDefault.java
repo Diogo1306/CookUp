@@ -92,11 +92,6 @@ public class RecipeAdapterDefault extends RecyclerView.Adapter<RecyclerView.View
         }
 
         public void bind(RecipeData recipe) {
-            title.setBackground(null);
-            preparationTime.setBackground(null);
-            ratingText.setBackground(null);
-            image.setBackground(null);
-
             title.setText(recipe.getTitle());
             preparationTime.setText(recipe.getPreparationTime() + " min");
             ratingText.setText(String.valueOf(recipe.getAverageRating()));

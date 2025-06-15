@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,42 +19,65 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends BaseConnectivityActivity {
 
     private UserViewModel userViewModel;
     private FirebaseAuth auth;
     private SharedPreferences preferences;
+    private final Map<String, NavHostFragment> navHostFragments = new HashMap<>();
+    private String currentTag = null;
+    private static final String TAG_HOME = "home";
+    private static final String TAG_EXPLORE = "explore";
+    private static final String TAG_SAVES = "saves";
+    private static final String TAG_PROFILE = "profile";
+
+    @Override
+    public void onBackPressed() {
+        NavHostFragment currentNavHost = (NavHostFragment) getSupportFragmentManager().findFragmentByTag(currentTag);
+        if (currentNavHost != null) {
+            NavController navController = currentNavHost.getNavController();
+            if (!navController.popBackStack()) {
+                if (!TAG_HOME.equals(currentTag)) {
+                    switchToFragment(TAG_HOME);
+                    BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+                    bottomNav.setSelectedItemId(R.id.navigation_home);
+                } else {
+                    super.onBackPressed();
+                }
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        preferences = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        int savedTheme = preferences.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        AppCompatDelegate.setDefaultNightMode(savedTheme);
+        com.diogo.cookup.utils.ThemeManager.applySavedTheme(this);
 
         super.onCreate(savedInstanceState);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_main);
 
         View layoutNetworkError = findViewById(R.id.layout_network_error);
         View layoutServerError = findViewById(R.id.layout_server_error);
-        View layoutContent = findViewById(R.id.nav_host_fragment);
+        View layoutContent = findViewById(R.id.nav_host_container);
 
         ApiService apiService = ApiRetrofit.getApiService();
-
         initConnectivityLayouts(layoutNetworkError, layoutServerError, layoutContent, apiService);
 
         View tryAgainNetwork = layoutNetworkError.findViewById(R.id.button_try_again);
         if (tryAgainNetwork != null) {
             tryAgainNetwork.setOnClickListener(v -> {
                 showCheckingNetwork(layoutNetworkError);
-                new Handler().postDelayed(() -> {
-                    recheckConnection();
-                }, 1200);
+                new Handler().postDelayed(this::recheckConnection, 1200);
             });
         }
 
@@ -64,15 +86,7 @@ public class MainActivity extends BaseConnectivityActivity {
             tryAgainServer.setOnClickListener(v -> recheckConnection());
         }
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment);
-        if (navHostFragment == null) {
-            throw new IllegalStateException("NavHostFragment não encontrado! Verifique o id/nav_host_fragment no layout.");
-        }
-        NavController navController = navHostFragment.getNavController();
-
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        setupBottomNavigation();
 
         auth = FirebaseAuth.getInstance();
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -80,6 +94,66 @@ public class MainActivity extends BaseConnectivityActivity {
         handleEmailVerification(getIntent());
     }
 
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        Map<String, Integer> graphMap = new HashMap<>();
+        graphMap.put(TAG_HOME, R.navigation.nav_graph_home);
+        graphMap.put(TAG_EXPLORE, R.navigation.nav_graph_explore);
+        graphMap.put(TAG_SAVES, R.navigation.nav_graph_saves);
+        graphMap.put(TAG_PROFILE, R.navigation.nav_graph_profile);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        for (Map.Entry<String, Integer> entry : graphMap.entrySet()) {
+            NavHostFragment navHostFragment = (NavHostFragment) fragmentManager.findFragmentByTag(entry.getKey());
+            if (navHostFragment == null) {
+                navHostFragment = NavHostFragment.create(entry.getValue());
+                fragmentManager.beginTransaction()
+                        .add(R.id.nav_host_container, navHostFragment, entry.getKey())
+                        .hide(navHostFragment)
+                        .commitNow();
+            }
+            navHostFragments.put(entry.getKey(), navHostFragment);
+        }
+
+        switchToFragment(TAG_HOME);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.navigation_home) {
+                switchToFragment(TAG_HOME);
+                return true;
+            } else if (itemId == R.id.navigation_explore) {
+                switchToFragment(TAG_EXPLORE);
+                return true;
+            } else if (itemId == R.id.navigation_saves) {
+                switchToFragment(TAG_SAVES);
+                return true;
+            } else if (itemId == R.id.navigation_profile) {
+                switchToFragment(TAG_PROFILE);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void switchToFragment(String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        for (Map.Entry<String, NavHostFragment> entry : navHostFragments.entrySet()) {
+            Fragment fragment = entry.getValue();
+            fragmentManager.beginTransaction()
+                    .hide(fragment)
+                    .commitNow();
+        }
+        Fragment selectedFragment = navHostFragments.get(tag);
+        if (selectedFragment != null) {
+            fragmentManager.beginTransaction()
+                    .show(selectedFragment)
+                    .commitNow();
+            currentTag = tag;
+        }
+    }
 
     public void setBottomNavVisibility(boolean visible) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

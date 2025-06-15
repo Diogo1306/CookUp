@@ -57,7 +57,6 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
     private IngredientSaveOrUpdateAdapter ingredientSaveOrUpdateAdapter;
     private RecipeGalleryEditAdapter galleryAdapter;
     private Integer editingRecipeId = null;
-    // Usar List<Object> para suportar File (novas) e String (antigas/URLs)
     private final List<Object> imageFiles = new ArrayList<>();
 
     private Set<Integer> categoriesToCheck = new HashSet<>();
@@ -118,11 +117,10 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
 
     private void setupGalleryRecycler() {
         galleryAdapter = new RecipeGalleryEditAdapter(imageFiles, position -> {
-            // Ao remover, sempre remova do imageFiles e atualize a ViewModel
             if (position >= 0 && position < imageFiles.size()) {
                 imageFiles.remove(position);
                 galleryAdapter.notifyDataSetChanged();
-                viewModel.setImages(new ArrayList<>(imageFiles)); // sempre mande cópia nova
+                viewModel.setImages(new ArrayList<>(imageFiles));
             }
         });
         rvGallery.setAdapter(galleryAdapter);
@@ -158,13 +156,12 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
             etServings.setText(String.valueOf(recipe.getServings()));
             etPreparationTime.setText(String.valueOf(recipe.getPreparationTime()));
 
-            // Mantém as imagens antigas na lista, sem substituir
             imageFiles.clear();
             if (recipe.getGallery() != null) {
                 imageFiles.addAll(recipe.getGallery());
             }
             galleryAdapter.notifyDataSetChanged();
-            viewModel.setImages(new ArrayList<>(imageFiles)); // sincroniza com VM
+            viewModel.setImages(new ArrayList<>(imageFiles));
 
             if (recipe.getDifficulty() != null) {
                 switch (recipe.getDifficulty()) {
@@ -208,7 +205,6 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
         });
 
         viewModel.getImages().observe(getViewLifecycleOwner(), images -> {
-            // Não faça clear aqui! Só atualize se mudou de fora!
             if (images != null) {
                 imageFiles.clear();
                 imageFiles.addAll(images);
@@ -251,7 +247,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
                     uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             File file = copyUriToFile(uri);
             if (file != null && file.length() < 2 * 1024 * 1024) {
-                imageFiles.add(file); // só ADICIONA, não substitui
+                imageFiles.add(file);
             } else {
                 Toast.makeText(getContext(), "Imagem ignorada: muito pesada ou falha na leitura.", Toast.LENGTH_SHORT).show();
             }

@@ -97,8 +97,6 @@ public class SavedListAdapterSelect extends RecyclerView.Adapter<SavedListAdapte
         public void bind(SavedListData list) {
             listName.setText(list.list_name);
 
-            Log.d("SELECT_ADAPTER", "Lista: " + list.list_name + ", contém receita? " + listIdsWithRecipe.contains(list.list_id));
-
             try {
                 int colorParsed = Color.parseColor(list.color);
                 container.setBackgroundColor(colorParsed);

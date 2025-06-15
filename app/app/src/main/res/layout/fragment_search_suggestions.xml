@@ -2,6 +2,7 @@
     android:id="@+id/suggestionsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
     android:orientation="vertical"
     android:background="@color/background"
     android:layout_marginTop="@dimen/margin_extra_large">

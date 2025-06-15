@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment {
             UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
             if (user != null) {
                 int userId = user.getUserId();
-                savedListViewModel.reloadSavedRecipeData(userId);
+                savedListViewModel.reloadAll(userId);
                 homeFeedViewModel.loadHomeFeed(userId);
             }
             new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 800);
@@ -206,7 +206,7 @@ public class HomeFragment extends Fragment {
                 UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
                 if (user != null) {
                     int userId = user.getUserId();
-                    savedListViewModel.reloadSavedRecipeData(userId);
+                    savedListViewModel.reloadAll(userId);
                     homeFeedViewModel.loadHomeFeed(userId);
                 }
             }
@@ -315,7 +315,7 @@ public class HomeFragment extends Fragment {
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null && user.getUserId() > 0) {
             int userId = user.getUserId();
-            savedListViewModel.reloadSavedRecipeData(userId);
+            savedListViewModel.reloadAll(userId);
             homeFeedViewModel.loadHomeFeed(userId);
             categoryViewModel.loadUserCategories(userId);
         }

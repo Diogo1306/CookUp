@@ -153,6 +153,9 @@ public interface ApiService {
     @GET("api.php")
     Call<ApiResponse<List<Integer>>> getSavedRecipeIds(@Query("route") String route, @Query("user_id") int userId);
 
+    @GET("api.php")
+    Call<ApiResponse<List<SavedListData>>> getListsWithRecipes(@Query("route") String route, @Query("user_id") int userId);
+
     // === TRACKING ===
     @POST("api.php")
     Call<ApiResponse<Void>> trackInteraction(@Query("route") String route, @Body TrackRequest trackRequest);

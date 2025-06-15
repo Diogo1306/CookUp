@@ -3,40 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_small"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_marginVertical="@dimen/margin_micro"
+    android:layout_marginHorizontal="@dimen/margin_small"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:background="@color/background_soft"
         android:orientation="horizontal"
-        android:background="@color/background"
-        android:padding="8dp">
+        android:gravity="center_vertical">
 
-        <FrameLayout
-            android:layout_width="90dp"
-            android:layout_height="110dp"
-            android:layout_marginEnd="12dp">
-
-            <ImageView
-                android:id="@+id/recipe_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_rounded_corner" />
-
-            <ImageButton
-                android:id="@+id/button_save_recipe"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_margin="6dp"
-                android:layout_gravity="top|end"
-                android:background="@drawable/bg_circle"
-                android:src="@drawable/ic_bookmark"
-                android:focusable="false"
-                android:clickable="true"/>
-        </FrameLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:scaleType="centerCrop"
+            android:contentDescription="Imagem da Receita"
+            app:shapeAppearanceOverlay="@style/RoundedRecipeImage" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -44,62 +31,72 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/recipe_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nome da Receita"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/text_primary"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
-            <!-- Info: tempo, dificuldade, nota -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="4dp"
                 android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/recipe_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Título da Receita"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <ImageButton
+                    android:id="@+id/button_save_recipe"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_bookmark"
+                    android:contentDescription="Favoritar"
+                    android:padding="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:gravity="start|center_vertical">
 
                 <ImageView
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/ic_clock" />
+                    android:src="@drawable/ic_clock"
+                    android:layout_marginEnd="4dp"/>
 
                 <TextView
                     android:id="@+id/preparation_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
                     android:text="25 min"
                     android:textSize="12sp"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="@color/text_secondary"
+                    android:fontFamily="@font/poppins_regular"/>
 
-                <TextView
-                    android:id="@+id/difficulty_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="Fácil"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_primary" />
+                <Space android:layout_width="16dp" android:layout_height="0dp" />
 
                 <ImageView
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:layout_marginStart="12dp"
-                    android:src="@drawable/ic_star" />
+                    android:src="@drawable/ic_star"
+                    android:layout_marginEnd="4dp"/>
 
                 <TextView
                     android:id="@+id/rating_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
                     android:text="4.9"
                     android:textSize="12sp"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="@color/text_secondary"
+                    android:fontFamily="@font/poppins_regular"/>
             </LinearLayout>
 
             <TextView
@@ -107,11 +104,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Deliciosa receita caseira..."
-                android:textSize="13sp"
+                android:text="Descrição da receita ou subtítulo..."
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
                 android:maxLines="2"
-                android:ellipsize="end"
-                android:textColor="@color/text_secondary" />
+                android:ellipsize="end" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
