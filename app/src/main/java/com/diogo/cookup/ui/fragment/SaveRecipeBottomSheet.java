@@ -91,7 +91,7 @@ public class SaveRecipeBottomSheet extends BottomSheetDialogFragment {
                     );
 
                     new Handler().postDelayed(() -> {
-                        viewModel.reloadSavedRecipeData(userId);
+                        viewModel.reloadAll(userId);
                         viewModel.notifyRecipeChanged(recipeId1);
                     }, 500);
 

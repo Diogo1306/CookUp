@@ -31,6 +31,8 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.SearchData;
 import com.diogo.cookup.ui.adapter.ExploreSearchAdapter;
 import com.diogo.cookup.viewmodel.SearchViewModel;
+import com.diogo.cookup.ui.fragment.SearchSuggestionsFragmentDirections;
+
 
 public class SearchSuggestionsFragment extends Fragment {
 

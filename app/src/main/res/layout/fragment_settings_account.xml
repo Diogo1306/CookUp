@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_large"
     android:background="@color/background"
+    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.SettingsAccountFragment">
 

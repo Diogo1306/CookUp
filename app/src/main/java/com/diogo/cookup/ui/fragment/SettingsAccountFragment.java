@@ -125,16 +125,35 @@ public class SettingsAccountFragment extends Fragment {
 
         btn_deleteAccount.setOnClickListener(v -> showDeleteAccountDialog());
     }
-
-    // ----- DELETE ACCOUNT FLOW -----
-
+    
     private void showDeleteAccountDialog() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Eliminar conta")
-                .setMessage("Tem certeza que deseja eliminar a sua conta? Esta ação é irreversível.")
-                .setPositiveButton("Eliminar", (dialog, which) -> deleteFromFirebaseAndBackend())
-                .setNegativeButton("Cancelar", null)
-                .show();
+        View dialogView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_confirm_delete, null);
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        TextView cancelButton = dialogView.findViewById(R.id.button_cancel);
+        TextView deleteButton = dialogView.findViewById(R.id.button_delete);
+        TextView title = dialogView.findViewById(R.id.dialog_title);
+        TextView message = dialogView.findViewById(R.id.dialog_message);
+
+        title.setText("Eliminar conta");
+        message.setText("Tem certeza que deseja eliminar a sua conta? Esta ação é irreversível.");
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+
+        deleteButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            deleteFromFirebaseAndBackend();
+        });
+
+        dialog.show();
     }
 
     private void deleteFromFirebaseAndBackend() {

@@ -16,8 +16,10 @@
         android:paddingBottom="100dp">
 
         <LinearLayout
+            android:id="@+id/detailContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout

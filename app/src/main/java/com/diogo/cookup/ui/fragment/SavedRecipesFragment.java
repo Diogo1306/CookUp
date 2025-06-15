@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogo.cookup.R;
-import com.diogo.cookup.ui.adapter.RecipeAdapterSaved;
+import com.diogo.cookup.ui.adapter.RecipeAdapterSavedInList;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class SavedRecipesFragment extends Fragment {
 
     private SavedListViewModel viewModel;
-    private RecipeAdapterSaved adapter;
+    private RecipeAdapterSavedInList adapter;
     private int listId;
     private String listName;
 
@@ -46,21 +46,22 @@ public class SavedRecipesFragment extends Fragment {
         listNameText.setText(listName);
 
         view.findViewById(R.id.arrow_back).setOnClickListener(v -> {
-            androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack();
+            NavHostFragment.findNavController(this).popBackStack();
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_saved_recipes);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        adapter = new RecipeAdapterSaved(
-                new ArrayList<>(),
+        adapter = new RecipeAdapterSavedInList(
                 recipe -> {
                     viewModel.removeRecipeFromList(listId, recipe.getRecipeId());
+                    adapter.removeRecipe(recipe);
                     Toast.makeText(requireContext(), "Receita removida da lista", Toast.LENGTH_SHORT).show();
                 },
                 recipe -> {
                     NavHostFragment.findNavController(this)
-                            .navigate(SavedRecipesFragmentDirections.actionSavedRecipesFragmentToRecipeDetailFragment(recipe.getRecipeId()));
+                            .navigate(SavedRecipesFragmentDirections
+                                    .actionSavedRecipesFragmentToRecipeDetailFragment(recipe.getRecipeId()));
                 }
         );
 
@@ -70,7 +71,7 @@ public class SavedRecipesFragment extends Fragment {
 
         viewModel.getRecipesFromList().observe(getViewLifecycleOwner(), recipes -> {
             if (recipes != null) {
-                adapter.updateData(recipes);
+                adapter.submitList(new ArrayList<>(recipes));
             }
         });
 

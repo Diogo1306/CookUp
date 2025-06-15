@@ -1,0 +1,95 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_explore"
+    app:startDestination="@id/exploreFragment">
+
+    <!-- Explore -->
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.diogo.cookup.ui.fragment.ExploreFragment"
+        android:label="Explorar"
+        tools:layout="@layout/fragment_explore">
+
+        <!-- para SearchSuggestions -->
+        <action
+            android:id="@+id/action_exploreFragment_to_searchSuggestionsFragment"
+            app:destination="@id/searchSuggestionsFragment">
+            <argument
+                android:name="query"
+                app:argType="string"
+                android:defaultValue="" />
+        </action>
+
+        <!-- para SearchResult -->
+        <action
+            android:id="@+id/action_exploreFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment">
+            <argument
+                android:name="query"
+                app:argType="string" />
+        </action>
+
+        <!-- para RecipeDetail -->
+        <action
+            android:id="@+id/action_exploreFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment">
+            <argument
+                android:name="recipe_id"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <!-- SearchSuggestions -->
+    <fragment
+        android:id="@+id/searchSuggestionsFragment"
+        android:name="com.diogo.cookup.ui.fragment.SearchSuggestionsFragment"
+        android:label="Sugestões de Busca"
+        tools:layout="@layout/fragment_search_suggestions">
+        <argument
+            android:name="query"
+            android:defaultValue=""
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchSuggestionsFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment">
+            <argument
+                android:name="query"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <!-- SearchResult -->
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="com.diogo.cookup.ui.fragment.SearchResultFragment"
+        android:label="Resultados"
+        tools:layout="@layout/fragment_search_result">
+        <argument
+            android:name="query"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_searchResultFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment">
+            <argument
+                android:name="recipe_id"
+                app:argType="integer" />
+        </action>
+
+        <action
+            android:id="@+id/action_searchResultFragment_to_searchSuggestionsFragment"
+            app:destination="@id/searchSuggestionsFragment" />
+    </fragment>
+
+    <!-- RecipeDetail -->
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.diogo.cookup.ui.fragment.RecipeDetailFragment"
+        android:label="Detalhes da Receita"
+        tools:layout="@layout/fragment_recipe_detail">
+        <argument
+            android:name="recipe_id"
+            app:argType="integer" />
+    </fragment>
+</navigation>

@@ -47,7 +47,6 @@ public class RecipeAdapterLarge extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.context = context;
         this.listener = listener;
         this.saveClickListener = saveClickListener;
-        this.skeletonMode = true;
     }
 
     public void updateSavedIds(List<Integer> newSavedIds) {
@@ -146,30 +145,34 @@ public class RecipeAdapterLarge extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         public void bind(RecipeData recipe) {
-            recipeTitle.setText(recipe.getTitle());
-            recipeDescription.setText(recipe.getDescription());
-            preparationTime.setText(recipe.getPreparationTime() + " min");
-            difficultyText.setText(recipe.getDifficulty() != null ? recipe.getDifficulty() : "");
-            ratingText.setText(recipe.getAverageRating() > 0
+            if (recipeTitle != null) recipeTitle.setText(recipe.getTitle());
+            if (recipeDescription != null) recipeDescription.setText(recipe.getDescription());
+            if (preparationTime != null) preparationTime.setText(recipe.getPreparationTime() + " min");
+            if (difficultyText != null) difficultyText.setText(recipe.getDifficulty() != null ? recipe.getDifficulty() : "");
+            if (ratingText != null) ratingText.setText(recipe.getAverageRating() > 0
                     ? String.valueOf(recipe.getAverageRating())
                     : "—");
 
-            String imageUrl = recipe.getImage();
-            if (imageUrl != null && !imageUrl.trim().isEmpty()) {
-                Glide.with(context)
-                        .load(imageUrl)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.placeholder)
-                        .into(recipeImage);
-            } else {
-                recipeImage.setImageResource(R.drawable.placeholder);
+            if (recipeImage != null) {
+                String imageUrl = recipe.getImage();
+                if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                    Glide.with(context)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
+                            .into(recipeImage);
+                } else {
+                    recipeImage.setImageResource(R.drawable.placeholder);
+                }
             }
 
-            boolean isSaved = savedRecipeIdSet.contains(recipe.getRecipeId());
-            saveButton.setImageResource(isSaved ? R.drawable.ic_bookmark_selected : R.drawable.ic_bookmark);
+            if (saveButton != null) {
+                boolean isSaved = savedRecipeIdSet.contains(recipe.getRecipeId());
+                saveButton.setImageResource(isSaved ? R.drawable.ic_bookmark_selected : R.drawable.ic_bookmark);
+                saveButton.setOnClickListener(v -> saveClickListener.onSaveClick(recipe.getRecipeId()));
+            }
 
             itemView.setOnClickListener(v -> listener.onItemClick(recipe));
-            saveButton.setOnClickListener(v -> saveClickListener.onSaveClick(recipe.getRecipeId()));
         }
     }
 }

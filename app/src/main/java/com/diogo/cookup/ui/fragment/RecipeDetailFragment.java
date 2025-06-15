@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.CommentData;
@@ -69,6 +68,7 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_recipe_detail, container, false);
+
     }
 
     @Override
@@ -328,6 +328,20 @@ public class RecipeDetailFragment extends Fragment {
             TrackingRepository trackingRepository = new TrackingRepository();
             trackingRepository.sendTracking(new TrackRequest(userId, recipeId, "view"), new MutableLiveData<>());
         }
+
+        View detailContent = view.findViewById(R.id.detailContent);
+
+        detailContent.setAlpha(0f);
+        detailContent.setTranslationY(50f);
+        detailContent.setVisibility(View.VISIBLE);
+
+        detailContent.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(350)
+                .setStartDelay(100)
+                .start();
+
     }
 
     private int dpToPx(int dp) {

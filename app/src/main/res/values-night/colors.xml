@@ -22,6 +22,7 @@
     <color name="black">#000000</color>
     <color name="gray">#949494</color>
 
+    <color name="overlay_background">#33000000</color>
     <color name="handle">#262626</color>
 
     <color name="transparent">#00FFFFFF</color>

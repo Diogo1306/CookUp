@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
     android:padding="@dimen/padding_large"
     android:background="@drawable/bg_dialog_rounded">
 

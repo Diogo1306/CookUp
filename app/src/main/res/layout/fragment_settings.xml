@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
     android:layout_marginTop="@dimen/margin_large"
     android:background="@color/background"
     tools:context=".ui.fragment.SettingsFragment">

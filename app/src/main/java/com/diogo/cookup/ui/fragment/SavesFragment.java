@@ -4,15 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.ui.adapter.SavedListAdapterManage;
@@ -38,13 +39,34 @@ public class SavesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_saved_lists);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 1));
+        recyclerView.setClipToPadding(false);
+
+        TextView greeting = view.findViewById(R.id.text_saved_greeting);
+        TextView intro = view.findViewById(R.id.text_saved_intro);
 
         viewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
 
-        if (viewModel.getUserLiveData().getValue() == null && SharedPrefHelper.getInstance(requireContext()).getUser() != null) {
+        if (viewModel.getUserLiveData().getValue() == null &&
+                SharedPrefHelper.getInstance(requireContext()).getUser() != null) {
             viewModel.setUser(SharedPrefHelper.getInstance(requireContext()).getUser());
         }
+
+        if (viewModel.getUserLiveData().getValue() != null) {
+            String firstName = viewModel.getUserLiveData().getValue().getUsername().split(" ")[0];
+            greeting.setText("Olá, " + firstName + " 👋");
+        }
+
+        View fab = view.findViewById(R.id.fab_add_list);
+        fab.setOnClickListener(v -> {
+            CreateListDialog.show(requireContext(), (name, color) -> {
+                if (viewModel.getUserLiveData().getValue() != null) {
+                    int userId = viewModel.getUserLiveData().getValue().getUserId();
+                    viewModel.createList(userId, name, color);
+                    viewModel.loadListsWithRecipes(userId);
+                }
+            });
+        });
 
         adapter = new SavedListAdapterManage(list -> {
             Bundle args = new Bundle();
@@ -54,16 +76,6 @@ public class SavesFragment extends Fragment {
                     .navigate(R.id.action_savesFragment_to_savedRecipesFragment, args);
         });
 
-        adapter.setOnAddClickListener(() -> {
-            CreateListDialog.show(requireContext(), (name, color) -> {
-                if (viewModel.getUserLiveData().getValue() != null) {
-                    int userId = viewModel.getUserLiveData().getValue().getUserId();
-                    viewModel.createList(userId, name, color);
-                    viewModel.loadLists(userId);
-                }
-            });
-        });
-
         adapter.setOnEditClickListener(list -> {
             CreateListDialog.show(requireContext(), list, (listId, name, color) -> {
                 viewModel.updateList(listId, name, color);
@@ -71,28 +83,48 @@ public class SavesFragment extends Fragment {
         });
 
         adapter.setOnDeleteClickListener(list -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Eliminar lista")
-                    .setMessage("Tem a certeza que deseja eliminar esta lista?")
-                    .setPositiveButton("Eliminar", (dialog, which) -> {
-                        viewModel.deleteList(list.list_id);
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
+            View dialogView = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.dialog_confirm_delete, null);
+
+            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                    .setView(dialogView)
+                    .create();
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            TextView cancelButton = dialogView.findViewById(R.id.button_cancel);
+            TextView deleteButton = dialogView.findViewById(R.id.button_delete);
+            TextView title = dialogView.findViewById(R.id.dialog_title);
+            TextView message = dialogView.findViewById(R.id.dialog_message);
+
+            title.setText("Eliminar lista");
+            message.setText("Tem a certeza que deseja eliminar esta lista?");
+
+            cancelButton.setOnClickListener(v -> dialog.dismiss());
+            deleteButton.setOnClickListener(v -> {
+                viewModel.deleteList(list.list_id);
+                dialog.dismiss();
+            });
+
+            dialog.show();
         });
 
         recyclerView.setAdapter(adapter);
 
         viewModel.getSavedLists().observe(getViewLifecycleOwner(), lists -> {
             if (lists != null && !lists.isEmpty()) {
+                intro.setText("Você tem " + lists.size() + " coleções salvas!");
                 adapter.submitList(lists);
             } else {
+                intro.setText("Você ainda não criou nenhuma lista.");
                 adapter.submitList(new ArrayList<>());
             }
         });
 
         if (viewModel.getUserLiveData().getValue() != null) {
-            viewModel.loadLists(viewModel.getUserLiveData().getValue().getUserId());
+            viewModel.loadListsWithRecipes(viewModel.getUserLiveData().getValue().getUserId());
         }
     }
 }

@@ -1,0 +1,71 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_profile"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.diogo.cookup.ui.fragment.ProfileFragment">
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsProfileFragment"
+            app:destination="@id/settingsProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_saveRecipesFragment"
+            app:destination="@id/RecipeSaveOrUpdateFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_recipeSaveOrUpdateFragment"
+            app:destination="@id/RecipeSaveOrUpdateFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.diogo.cookup.ui.fragment.SettingsFragment">
+        <action
+            android:id="@+id/action_settingsFragment_to_settingsAccountFragment"
+            app:destination="@id/settingsAccountFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_settingsAppearanceFragment"
+            app:destination="@id/settingsAppearanceFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_settingsProfileFragment"
+            app:destination="@id/settingsProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsAccountFragment"
+        android:name="com.diogo.cookup.ui.fragment.SettingsAccountFragment">
+        <action
+            android:id="@+id/action_settingsAccountFragment_to_changeEmailFragment"
+            app:destination="@id/changeEmailFragment" />
+        <action
+            android:id="@+id/action_settingsAccountFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+
+    <fragment android:id="@+id/settingsAppearanceFragment"
+        android:name="com.diogo.cookup.ui.fragment.SettingsAppearanceFragment" />
+
+    <fragment android:id="@+id/settingsProfileFragment"
+        android:name="com.diogo.cookup.ui.fragment.SettingsProfileFragment" />
+
+    <fragment android:id="@+id/changeEmailFragment"
+        android:name="com.diogo.cookup.ui.fragment.ChangeEmailFragment" />
+
+    <fragment android:id="@+id/changePasswordFragment"
+        android:name="com.diogo.cookup.ui.fragment.ChangePasswordFragment" />
+
+    <fragment android:id="@+id/RecipeSaveOrUpdateFragment"
+        android:name="com.diogo.cookup.ui.fragment.RecipeSaveOrUpdateFragment" />
+
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.diogo.cookup.ui.fragment.RecipeDetailFragment">
+        <argument android:name="recipe_id" app:argType="integer" />
+    </fragment>
+</navigation>

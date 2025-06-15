@@ -5,6 +5,7 @@
     android:padding="20dp"
     android:background="@drawable/bg_bottom_sheet"
     android:layout_width="match_parent"
+    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
     android:layout_height="wrap_content">
 
     <TextView

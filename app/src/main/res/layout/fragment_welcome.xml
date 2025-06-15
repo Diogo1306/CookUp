@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layoutAnimation="@anim/layout_animation_fade_slide_up"
         android:gravity="center"
         android:padding="@dimen/padding_large"
         android:layout_marginTop="60dp">
