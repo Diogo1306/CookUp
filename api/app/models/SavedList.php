@@ -88,23 +88,27 @@ class SavedList
     /** Retorna receitas de uma lista */
     public static function getRecipes(int $list_id): array
     {
+        require_once __DIR__ . '/Recipe.php'; // importante garantir que Recipe está incluso
+
         $db = Database::connect();
         $stmt = $db->prepare("
-            SELECT r.* 
-            FROM recipes r 
-            JOIN saved_recipes sr ON r.recipe_id = sr.recipe_id 
-            WHERE sr.list_id = ?
-        ");
+        SELECT r.* 
+        FROM recipes r 
+        JOIN saved_recipes sr ON r.recipe_id = sr.recipe_id 
+        WHERE sr.list_id = ?
+    ");
         $stmt->bind_param("i", $list_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
             $recipes[] = $row;
         }
         $stmt->close();
         return $recipes;
     }
+
 
     /** Retorna IDs de listas onde uma receita está */
     public static function getListIdsByRecipe(int $recipe_id): array
@@ -141,5 +145,63 @@ class SavedList
         }
         $stmt->close();
         return $recipeIds;
+    }
+
+    public static function getListsWithRecipesByUser(int $user_id): array
+    {
+        require_once __DIR__ . '/Recipe.php';
+        $db = Database::connect();
+
+        $stmt = $db->prepare("
+        SELECT 
+            sl.list_id,
+            sl.user_id,
+            sl.list_name,
+            sl.color,
+            r.recipe_id,
+            r.title,
+            r.image
+        FROM saved_lists sl
+        LEFT JOIN saved_recipes sr ON sl.list_id = sr.list_id
+        LEFT JOIN recipes r ON sr.recipe_id = r.recipe_id
+        WHERE sl.user_id = ?
+        ORDER BY sl.list_id DESC
+    ");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $lists = [];
+        while ($row = $result->fetch_assoc()) {
+            $list_id = $row['list_id'];
+            if (!isset($lists[$list_id])) {
+                $lists[$list_id] = [
+                    'list_id' => $list_id,
+                    'user_id' => $row['user_id'],
+                    'list_name' => $row['list_name'],
+                    'color' => $row['color'],
+                    'recipes' => []
+                ];
+            }
+
+            if (!empty($row['recipe_id'])) {
+                $lists[$list_id]['recipes'][] = [
+                    'recipe_id' => $row['recipe_id'],
+                    'title' => $row['title'],
+                    'image' => self::buildImageUrl($row['image'])
+                ];
+            }
+        }
+        $stmt->close();
+
+        return array_values($lists);
+    }
+
+
+    private static function buildImageUrl($image)
+    {
+        if (empty($image)) return BASE_URL . DEFAULT_IMAGE;
+        if (substr($image, 0, 4) === 'http') return $image;
+        return BASE_URL . UPLOADS_FOLDER . RECIPES_FOLDER . $image;
     }
 }

@@ -100,6 +100,7 @@ Router::add('GET',  'list_recipes',        [$savedListController, 'getRecipes'])
 Router::add('POST', 'list_recipes',        [$savedListController, 'addRecipe']);
 Router::add('GET',  'recipeLists',         [$savedListController, 'getRecipeLists']);
 Router::add('GET',  'savedRecipeIds',      [$savedListController, 'getUserSavedRecipeIds']);
+Router::add('GET', 'lists_with_recipes', [$savedListController, 'getListsWithRecipes']);
 
 // Execute route
 Router::dispatch();

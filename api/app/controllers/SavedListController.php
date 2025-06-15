@@ -129,4 +129,14 @@ class SavedListController
         $recipeIds = SavedList::getRecipeIdsByUser($user_id);
         return Response::json(["success" => true, "data" => $recipeIds]);
     }
+
+    public function getListsWithRecipes()
+    {
+        $user_id = $_GET['user_id'] ?? null;
+        if (!$user_id) {
+            return Response::json(["success" => false, "message" => "ID do utilizador em falta."], 422);
+        }
+        $lists = SavedList::getListsWithRecipesByUser($user_id);
+        return Response::json(["success" => true, "data" => $lists]);
+    }
 }
