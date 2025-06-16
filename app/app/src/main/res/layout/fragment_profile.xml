@@ -259,7 +259,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
+        android:layout_margin="@dimen/margin_large"
         android:backgroundTint="@color/background_secondary"
         android:contentDescription="Criar nova receita"
         android:src="@drawable/ic_add"

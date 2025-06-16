@@ -77,41 +77,23 @@ public class UserRepository {
         });
     }
 
-    public void updateProfileWithImageFile(int userId, String username, File imageFile, UserCallback callback) {
-        Log.d("UserRepository", "updateProfileWithImageFile: file=" + imageFile.getAbsolutePath() + ", exists=" + imageFile.exists());
+    public void updateProfile(int userId, String username, File imageFileOrNull, UserCallback callback) {
+        RequestBody userIdBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(userId));
+        RequestBody usernameBody = RequestBody.create(MediaType.parse("text/plain"), username);
 
-        if (imageFile == null || !imageFile.exists()) {
-            callback.onError("Arquivo de imagem não encontrado para upload.");
-            return;
+        MultipartBody.Part imagePart = null;
+        if (imageFileOrNull != null && imageFileOrNull.exists()) {
+            RequestBody fileBody = RequestBody.create(imageFileOrNull, MediaType.parse("image/*"));
+            imagePart = MultipartBody.Part.createFormData("profile_picture", imageFileOrNull.getName(), fileBody);
         }
 
-        RequestBody requestFile = RequestBody.create(imageFile, MediaType.parse("image/*"));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("profile_picture", imageFile.getName(), requestFile);
-
-        RequestBody userIdBody = RequestBody.create(String.valueOf(userId), MediaType.parse("text/plain"));
-        RequestBody usernameBody = RequestBody.create(username, MediaType.parse("text/plain"));
-
-        apiService.updateProfile(userIdBody, usernameBody, body).enqueue(new Callback<ApiResponse<UserData>>() {
+        apiService.updateProfile(userIdBody, usernameBody, imagePart).enqueue(new Callback<ApiResponse<UserData>>() {
             @Override
             public void onResponse(Call<ApiResponse<UserData>> call, Response<ApiResponse<UserData>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse<UserData> apiResponse = response.body();
-                    Log.d("UserRepository", "API Response success: " + apiResponse.isSuccess());
-                    Log.d("UserRepository", "API Message: " + apiResponse.getMessage());
-                    if (apiResponse.isSuccess()) {
-                        callback.onSuccess(apiResponse.getData(), apiResponse.getMessage());
-                    } else {
-                        callback.onError(apiResponse.getMessage());
-                    }
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    callback.onSuccess(response.body().getData(), response.body().getMessage());
                 } else {
-                    String msg = "Falha na resposta do servidor.";
-                    try {
-                        if (response.errorBody() != null) {
-                            msg = response.errorBody().string();
-                        }
-                    } catch (Exception e) {
-                    }
-                    callback.onError(msg);
+                    callback.onError("Erro ao atualizar perfil.");
                 }
             }
 

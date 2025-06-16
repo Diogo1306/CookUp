@@ -161,12 +161,10 @@ public class SettingsAccountFragment extends Fragment {
         if (user != null) {
             user.delete().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    // Firebase Auth deleted, now delete in backend
                     deleteUserOnBackend();
                 } else {
                     if (task.getException() instanceof FirebaseAuthRecentLoginRequiredException) {
                         MessageUtils.showSnackbar(requireView(), "É necessário relogar para eliminar a conta.");
-                        // Aqui pode mostrar tela para reautenticar, se quiser.
                     } else {
                         MessageUtils.showSnackbar(requireView(), "Erro ao eliminar do Firebase: " + task.getException().getMessage());
                     }

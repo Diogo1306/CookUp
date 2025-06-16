@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,6 +15,7 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
+import com.diogo.cookup.utils.NoShowBottomNavigationBehavior;
 import com.diogo.cookup.viewmodel.UserViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,9 +60,23 @@ public class MainActivity extends BaseConnectivityActivity {
         }
     }
 
+    private final NavController.OnDestinationChangedListener bottomNavListener = (controller, destination, arguments) -> {
+        if (destination.getId() == R.id.recipeDetailFragment) {
+            setBottomNavigationVisible(false);
+        } else {
+            setBottomNavigationVisible(true);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         com.diogo.cookup.utils.ThemeManager.applySavedTheme(this);
+
+        if (savedInstanceState != null) {
+            currentTag = savedInstanceState.getString("current_nav_tag", TAG_HOME);
+        } else {
+            currentTag = TAG_HOME;
+        }
 
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -117,7 +133,7 @@ public class MainActivity extends BaseConnectivityActivity {
             navHostFragments.put(entry.getKey(), navHostFragment);
         }
 
-        switchToFragment(TAG_HOME);
+        switchToFragment(currentTag);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -138,26 +154,38 @@ public class MainActivity extends BaseConnectivityActivity {
         });
     }
 
-    private void switchToFragment(String tag) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        for (Map.Entry<String, NavHostFragment> entry : navHostFragments.entrySet()) {
-            Fragment fragment = entry.getValue();
-            fragmentManager.beginTransaction()
-                    .hide(fragment)
-                    .commitNow();
-        }
-        Fragment selectedFragment = navHostFragments.get(tag);
-        if (selectedFragment != null) {
-            fragmentManager.beginTransaction()
-                    .show(selectedFragment)
-                    .commitNow();
-            currentTag = tag;
+    private void checkAndApplyBottomNavVisibility() {
+        NavHostFragment currentHost = navHostFragments.get(currentTag);
+        if (currentHost == null) return;
+
+        Fragment currentFragment = currentHost.getChildFragmentManager().getPrimaryNavigationFragment();
+        if (currentFragment != null && currentFragment.getClass().getSimpleName().equals("RecipeDetailFragment")) {
+            setBottomNavigationVisible(false);
+        } else {
+            setBottomNavigationVisible(true);
         }
     }
 
-    public void setBottomNavVisibility(boolean visible) {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    private void switchToFragment(String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        for (Map.Entry<String, NavHostFragment> entry : navHostFragments.entrySet()) {
+            fragmentManager.beginTransaction()
+                    .hide(entry.getValue())
+                    .commitNow();
+        }
+
+        NavHostFragment selectedNavHost = navHostFragments.get(tag);
+        if (selectedNavHost != null) {
+            fragmentManager.beginTransaction()
+                    .show(selectedNavHost)
+                    .commitNow();
+            currentTag = tag;
+
+            NavController navController = selectedNavHost.getNavController();
+            navController.removeOnDestinationChangedListener(bottomNavListener);
+            navController.addOnDestinationChangedListener(bottomNavListener);
+        }
     }
 
     private void handleEmailVerification(android.content.Intent intent) {
@@ -175,6 +203,25 @@ public class MainActivity extends BaseConnectivityActivity {
                                 Toast.makeText(this, "Erro ao verificar email.", Toast.LENGTH_LONG).show();
                             }
                         });
+            }
+        }
+    }
+
+    public void setBottomNavigationVisible(boolean visible) {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        if (bottomNav != null) {
+            if (visible) {
+                NoShowBottomNavigationBehavior.showAgain();
+                bottomNav.setVisibility(View.VISIBLE);
+
+                bottomNav.post(() -> {
+                    bottomNav.requestLayout();
+                    bottomNav.invalidate();
+                });
+
+            } else {
+                NoShowBottomNavigationBehavior.hideForever();
+                bottomNav.setVisibility(View.GONE);
             }
         }
     }
@@ -215,5 +262,11 @@ public class MainActivity extends BaseConnectivityActivity {
 
     private String getEmailFromPreferences() {
         return preferences.getString("pending_email", "");
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("current_nav_tag", currentTag);
     }
 }
