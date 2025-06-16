@@ -12,7 +12,6 @@ class Recipe
         $author_id = $data['author_id'] ?? 1;
 
         if (!empty($data['recipe_id'])) {
-            // UPDATE
             $stmt = $db->prepare("UPDATE recipes SET title=?, description=?, instructions=?, difficulty=?, preparation_time=?, servings=?, image=?, updated_at=NOW() WHERE recipe_id=?");
             $stmt->bind_param(
                 "sssssssi",
@@ -29,7 +28,6 @@ class Recipe
             $stmt->close();
             return $data['recipe_id'];
         } else {
-            // INSERT
             $stmt = $db->prepare("INSERT INTO recipes (author_id, title, description, instructions, difficulty, preparation_time, servings, image, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
             $stmt->bind_param(
@@ -226,7 +224,6 @@ class Recipe
 
         $recipes = [];
         while ($row = $result->fetch_assoc()) {
-            // Aqui ajusta a URL:
             $row['image'] = self::buildImageUrl($row['image']);
             $row['categories'] = self::parseCategories($row);
             unset($row['category_ids'], $row['category_names'], $row['category_colors'], $row['category_images']);

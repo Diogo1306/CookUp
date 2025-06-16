@@ -16,6 +16,7 @@ require_once __DIR__ . '/../app/controllers/SearchController.php';
 require_once __DIR__ . '/../app/controllers/ProfileController.php';
 require_once __DIR__ . '/../app/controllers/IngredientController.php';
 require_once __DIR__ . '/../app/controllers/TranslationController.php';
+require_once __DIR__ . '/../app/controllers/SearchFiltersController.php';
 
 // Instantiate controllers
 $recipeController       = new RecipeController();
@@ -31,7 +32,7 @@ $searchController       = new SearchController();
 $profileController      = new ProfileController();
 $ingredientController   = new IngredientController();
 $translationController = new TranslationController();
-
+$searchFiltersController = new SearchFiltersController();
 
 // RECIPES
 Router::add('GET',  'recipes',     [$recipeController, 'getAll']);
@@ -69,6 +70,7 @@ Router::add('POST', 'track_interaction', [$trackingController, 'trackInteraction
 
 // SEARCH
 Router::add('GET',  'search_all', [$searchController, 'searchAll']);
+Router::add('GET', 'search_recipes_filtered', [$searchFiltersController, 'searchFiltered']);
 
 // HOME FEED (algoritmo completo)
 Router::add('GET', 'home_feed',               [$homeFeedController, 'getHomeFeed']);
