@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:layout_marginEnd="@dimen/margin_small"
-            android:background="@drawable/image_rounded_corner"
+            android:background="@drawable/image_rounded"
             android:clipToOutline="true" />
 
         <LinearLayout

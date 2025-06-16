@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
     android:padding="@dimen/padding_large"
     android:background="@drawable/bg_dialog_rounded">
 
@@ -36,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
-            android:text="Crie sua Lista"
+            android:text="@string/CreateList"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/text_large"
             android:fontFamily="@font/poppins_semibold" />
@@ -50,7 +49,7 @@
         android:drawablePadding="@dimen/padding_small"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:hint="Nome da lista"
+        android:hint="@string/HintList"
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:singleLine="true"
@@ -61,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_small"
-        android:text="Cor da pasta"
+        android:text="@string/ColorPaste"
         android:textSize="@dimen/text_medium"
         android:textColor="@color/text_primary"
         android:fontFamily="@font/poppins_semibold"
@@ -72,7 +71,6 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/margin_small"
-
           android:columnCount="10"
           android:alignmentMode="alignMargins"
           android:useDefaultMargins="false"
@@ -86,7 +84,7 @@
         android:textColor="@color/white"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="24dp"
-        android:text="Criar"
+        android:text="@string/Create"
         android:layout_gravity="start"
         style="@style/button_primary" />
 </LinearLayout>

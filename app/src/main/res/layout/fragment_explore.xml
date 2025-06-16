@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        android:layoutAnimation="@anim/layout_animation_fade_slide_up"
-        android:paddingBottom="16dp">
+        android:paddingBottom="@dimen/padding_medium">
 
         <EditText
             android:id="@+id/searchEditText"
@@ -26,54 +25,71 @@
             android:drawablePadding="@dimen/padding_small"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:hint="Receitas, categorias, Alimentos.."
+            android:hint="@string/HintExplore"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/gray"
             tools:ignore="MissingConstraints" />
 
+        <TextView
+            android:id="@+id/titleCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/categories"
+            android:textSize="@dimen/text_medium"
+            android:textColor="@color/text_primary"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@id/searchEditText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/margin_medium" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCategories"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_micro"
         android:clipToPadding="false"
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/searchEditText"
+        app:layout_constraintTop_toBottomOf="@id/titleCategories"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/titleRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Explore mais receitas"
+            android:textSize="@dimen/text_medium"
+            android:textColor="@color/text_primary"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@id/recyclerCategories"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/margin_medium" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerRecipes"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="24dp"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_large"
         android:clipToPadding="false"
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/recyclerCategories"
+        app:layout_constraintTop_toBottomOf="@id/titleRecipes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/textEndMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Não há mais receitas para carregar"
-        android:textSize="14sp"
-        android:textColor="@color/text_secondary"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/recyclerRecipes"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

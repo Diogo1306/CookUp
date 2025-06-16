@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="O que vais cozinhar hoje?"
+                    android:text="@string/WhatAreYouGoingCook"
                     android:textSize="@dimen/text_large" />
 
             </LinearLayout>
@@ -58,7 +58,7 @@
                 android:drawablePadding="@dimen/padding_small"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="Receitas, categorias, Alimentos.."
+                android:hint="@string/HintExplore"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -71,7 +71,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:fontFamily="@font/poppins_semibold"
                 android:includeFontPadding="false"
-                android:text="Categorias"
+                android:text="@string/categories"
                 android:textSize="@dimen/text_medium" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -97,7 +97,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Recomendado para ti"
+                    android:text="@string/RecomendHome"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
@@ -109,7 +109,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Ver mais"
+                    android:text="@string/SeeMore"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_very_small" />
             </LinearLayout>
@@ -137,7 +137,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Receitas da semana"
+                    android:text="@string/WeeklyRecipes"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
@@ -149,7 +149,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Ver mais"
+                    android:text="@string/SeeMore"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_very_small" />
             </LinearLayout>
@@ -178,7 +178,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Ver Populares"
+                    android:text="@string/SeePopular"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
@@ -190,7 +190,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Ver mais"
+                    android:text="@string/SeeMore"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_very_small" />
             </LinearLayout>
@@ -231,7 +231,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Ver mais"
+                    android:text="@string/SeeMore"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_very_small" />
             </LinearLayout>
@@ -272,7 +272,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Ver mais"
+                    android:text="@string/SeeMore"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_very_small" />
             </LinearLayout>
@@ -313,7 +313,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Ver mais"
+                    android:text="@string/SeeMore"
                     android:textColor="@color/primary"
                     android:textSize="@dimen/text_very_small" />
             </LinearLayout>

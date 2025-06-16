@@ -12,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="24dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_large"
+        android:paddingEnd="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_small">
 
         <LinearLayout
             android:id="@+id/headerSavedLists"
@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginStart="@dimen/margin_medium"
-            android:paddingTop="24dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="@dimen/padding_large"
+            android:paddingBottom="@dimen/padding_small">
 
             <TextView
                 android:id="@+id/text_saved_greeting"
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="120dp"
-        android:padding="16dp"
+        android:padding="@dimen/padding_medium"
         android:clipToPadding="false" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
+        android:layout_margin="@dimen/margin_large"
         app:srcCompat="@drawable/ic_add"
         app:tint="@color/text_primary"
         app:backgroundTint="@color/background_soft" />

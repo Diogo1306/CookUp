@@ -21,7 +21,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/color_circle" />
+            android:background="@drawable/bg_circle" />
 
         <TextView
             android:id="@+id/text_list_name"

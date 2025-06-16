@@ -3,15 +3,15 @@ package com.diogo.cookup.ui.fragment;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,6 +27,8 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.adapter.RecipeAdapterLarge;
+import com.diogo.cookup.ui.dialog.FiltersBottomSheet;
+import com.diogo.cookup.ui.dialog.SaveRecipeBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 import com.diogo.cookup.viewmodel.SearchViewModel;
@@ -43,6 +45,11 @@ public class SearchResultFragment extends Fragment {
     private EditText editTextSearch;
     private ImageView buttonBack;
 
+    private String currentFilter = "";
+    private String currentDifficulty = "";
+    private int currentMaxTime = 0;
+    private int currentMaxIngredients = 0;
+
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
@@ -52,6 +59,28 @@ public class SearchResultFragment extends Fragment {
         editTextSearch = view.findViewById(R.id.editTextSearch);
         buttonBack = view.findViewById(R.id.buttonBack);
         recyclerView = view.findViewById(R.id.recycler_results);
+        ImageButton buttonFilters = view.findViewById(R.id.buttonFilters);
+
+        buttonFilters.setOnClickListener(v -> {
+            FiltersBottomSheet dialog = new FiltersBottomSheet();
+
+            Bundle args = new Bundle();
+            args.putString("filter", currentFilter);
+            args.putString("difficulty", currentDifficulty);
+            args.putInt("maxTime", currentMaxTime);
+            args.putInt("maxIngredients", currentMaxIngredients);
+            dialog.setArguments(args);
+
+            dialog.setOnFiltersAppliedListener((filter, difficulty, maxTime, maxIngredients) -> {
+                currentFilter = filter;
+                currentDifficulty = difficulty;
+                currentMaxTime = maxTime;
+                currentMaxIngredients = maxIngredients;
+                performSearch(editTextSearch.getText().toString().trim());
+            });
+
+            dialog.show(getChildFragmentManager(), "filters_bottom_sheet");
+        });
 
         recipeAdapter = new RecipeAdapterLarge(
                 requireContext(),
@@ -59,6 +88,7 @@ public class SearchResultFragment extends Fragment {
                 recipeId -> SaveRecipeBottomSheet.newInstance(recipeId, this)
                         .show(requireActivity().getSupportFragmentManager(), "save_sheet")
         );
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(recipeAdapter);
 
@@ -72,10 +102,10 @@ public class SearchResultFragment extends Fragment {
             savedListViewModel.loadUserSavedRecipeIds(user.getUserId());
         }
 
-        searchViewModel.getSearchResult().observe(getViewLifecycleOwner(), response -> {
+        searchViewModel.getFilteredRecipesResult().observe(getViewLifecycleOwner(), response -> {
             recipeAdapter.setSkeletonMode(false);
-            if (response != null && response.getData() != null && response.getData().getRecipes() != null) {
-                recipeAdapter.setData(response.getData().getRecipes());
+            if (response != null && response.getData() != null) {
+                recipeAdapter.setData(response.getData());
             } else {
                 recipeAdapter.setData(new ArrayList<>());
                 Toast.makeText(getContext(), "Nenhuma receita encontrada.", Toast.LENGTH_SHORT).show();
@@ -93,15 +123,12 @@ public class SearchResultFragment extends Fragment {
         editTextSearch.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 final int DRAWABLE_END = 2;
-
                 Drawable drawable = editTextSearch.getCompoundDrawables()[DRAWABLE_END];
                 if (drawable != null) {
                     int drawableWidth = drawable.getBounds().width();
-
                     int[] location = new int[2];
                     editTextSearch.getLocationOnScreen(location);
                     int editTextRight = location[0] + editTextSearch.getWidth();
-
                     int touchX = (int) event.getRawX();
 
                     if (touchX >= (editTextRight - drawableWidth - editTextSearch.getPaddingEnd())) {
@@ -126,8 +153,7 @@ public class SearchResultFragment extends Fragment {
         });
 
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                 String newQuery = editTextSearch.getText().toString().trim();
                 if (!newQuery.isEmpty()) performSearch(newQuery);
                 return true;
@@ -137,10 +163,15 @@ public class SearchResultFragment extends Fragment {
 
         SearchResultFragmentArgs args = SearchResultFragmentArgs.fromBundle(getArguments());
         String query = args.getQuery();
+        currentFilter = args.getFilter();
+        currentDifficulty = args.getDifficulty();
+        currentMaxTime = args.getMaxTime();
+        currentMaxIngredients = args.getMaxIngredients();
+
         editTextSearch.setText(query);
         editTextSearch.setSelection(query.length());
 
-        if (!query.isEmpty()) {
+        if (!query.isEmpty() || !currentFilter.isEmpty()) {
             performSearch(query);
         }
 
@@ -150,7 +181,21 @@ public class SearchResultFragment extends Fragment {
     private void performSearch(String query) {
         recipeAdapter.setSkeletonMode(true);
         recipeAdapter.setData(new ArrayList<>());
-        searchViewModel.searchRecipes(query);
+
+        UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+        int userId = (user != null) ? user.getUserId() : 0;
+
+        searchViewModel.searchRecipesWithFilters(
+                query,
+                currentFilter,
+                userId,
+                currentDifficulty,
+                null,
+                currentMaxTime > 0 ? currentMaxTime : null,
+                currentMaxIngredients > 0 ? currentMaxIngredients : null,
+                12,
+                0
+        );
     }
 
     private void openRecipeDetail(RecipeData recipe) {

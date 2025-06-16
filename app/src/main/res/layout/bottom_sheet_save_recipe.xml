@@ -2,21 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@drawable/bg_bottom_sheet"
+    android:padding="@dimen/padding_large"
+    android:background="@drawable/bg_dialog_rounded"
     android:layout_width="match_parent"
-    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/save_recipe_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar receita em..."
+        android:text="@string/AddRecipeOnList"
         android:textColor="@color/text_primary"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingBottom="12dp"
+        android:textSize="@dimen/text_large"
+        android:paddingBottom="@dimen/padding_small"
         android:fontFamily="@font/poppins_semibold" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,13 +23,13 @@
         android:layout_height="150dp"
         android:nestedScrollingEnabled="false"
         android:overScrollMode="never"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="@dimen/margin_medium" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_create_list"
         style="@style/button_primary"
         android:layout_margin="@dimen/margin_small"
         android:fontFamily="@font/poppins_semibold"
-        android:text="Criar nova lista"
+        android:text="@string/CreateList"
         android:textColor="@color/white" />
 </LinearLayout>
