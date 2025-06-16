@@ -25,6 +25,7 @@ import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.ui.adapter.CategoryAdapter;
 import com.diogo.cookup.ui.adapter.RecipeAdapterDefault;
+import com.diogo.cookup.ui.dialog.SaveRecipeBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.CategoryViewModel;
 import com.diogo.cookup.viewmodel.HomeFeedViewModel;
@@ -49,6 +50,10 @@ public class HomeFragment extends Fragment {
     private EditText searchEditText;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private String categoryName1 = "";
+    private String categoryName2 = "";
+    private String categoryName3 = "";
+
     private final List<RecipeData> recipeList = new ArrayList<>();
     private final List<CategoryData> categoryList = new ArrayList<>();
     private final List<Integer> savedRecipeIds = new ArrayList<>();
@@ -64,6 +69,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initViewModels();
         initViews(view);
+        initSeeMore(view);
         setupSearchBar(view);
 
         new Handler().postDelayed(() -> {
@@ -135,6 +141,37 @@ public class HomeFragment extends Fragment {
         recyclerCat2.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerCat3.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
     }
+
+    private void initSeeMore(View view) {
+        view.findViewById(R.id.see_more_recommended).setOnClickListener(v -> {
+            UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+            int userId = user != null ? user.getUserId() : 0;
+            navigateToFilteredSearch("", "recommended", "", 0, 0, userId);
+        });
+
+        view.findViewById(R.id.see_more_week).setOnClickListener(v -> {
+            UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+            int userId = user != null ? user.getUserId() : 0;
+            navigateToFilteredSearch("", "week", "", 0, 0, userId);
+        });
+
+        view.findViewById(R.id.see_more_popular).setOnClickListener(v -> {
+            UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+            int userId = user != null ? user.getUserId() : 0;
+            navigateToFilteredSearch("", "popular", "", 0, 0, userId);
+        });
+
+
+        seeMoreCat1.setOnClickListener(v -> navigateToFilteredSearch(categoryName1, "", "", 0, 0));
+        seeMoreCat2.setOnClickListener(v -> navigateToFilteredSearch(categoryName2, "", "", 0, 0));
+        seeMoreCat3.setOnClickListener(v -> navigateToFilteredSearch(categoryName3, "", "", 0, 0));
+
+        homeFeedViewModel.getCategoryName1().observe(getViewLifecycleOwner(), name -> categoryName1 = name);
+        homeFeedViewModel.getCategoryName2().observe(getViewLifecycleOwner(), name -> categoryName2 = name);
+        homeFeedViewModel.getCategoryName3().observe(getViewLifecycleOwner(), name -> categoryName3 = name);
+
+    }
+
 
     private void fadeInWithAdapter(RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
         if (recyclerView.getAdapter() != adapter) {
@@ -307,6 +344,22 @@ public class HomeFragment extends Fragment {
             );
             recyclerView.scheduleLayoutAnimation();
         }
+    }
+
+    private void navigateToFilteredSearch(String query, String filter, String difficulty, int maxTime, int maxIngredients) {
+        navigateToFilteredSearch(query, filter, difficulty, maxTime, maxIngredients, 0);
+    }
+
+    private void navigateToFilteredSearch(String query, String filter, String difficulty, int maxTime, int maxIngredients, int userId) {
+        HomeFragmentDirections.ActionHomeFragmentToSearchResultFragment action =
+                HomeFragmentDirections.actionHomeFragmentToSearchResultFragment(query);
+        action.setFilter(filter);
+        action.setDifficulty(difficulty);
+        action.setMaxTime(maxTime);
+        action.setMaxIngredients(maxIngredients);
+        action.setUserId(userId);
+
+        Navigation.findNavController(requireView()).navigate(action);
     }
 
     @Override

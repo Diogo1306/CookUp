@@ -50,7 +50,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
         Glide.with(context)
                 .load(ingredient.getImage())
-                .placeholder(R.drawable.placeholder_ingredient)
+                .placeholder(R.drawable.placeholder)
                 .into(holder.ingredientImage);
     }
 

@@ -35,6 +35,7 @@ import com.diogo.cookup.ui.adapter.CommentAdapter;
 import com.diogo.cookup.ui.adapter.RecipeGalleryDetailAdapter;
 import com.diogo.cookup.ui.adapter.IngredientAdapter;
 import com.diogo.cookup.ui.dialog.RatingBottomSheet;
+import com.diogo.cookup.ui.dialog.SaveRecipeBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
 import com.diogo.cookup.viewmodel.RecipeViewModel;
 import com.diogo.cookup.viewmodel.SavedListViewModel;

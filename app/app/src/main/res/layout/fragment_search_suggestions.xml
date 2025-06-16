@@ -13,8 +13,8 @@
         android:orientation="horizontal"
         android:layout_marginTop="@dimen/margin_small"
         android:gravity="center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small">
 
         <ImageView
             android:id="@+id/buttonBack"
@@ -31,16 +31,16 @@
             android:background="@drawable/input"
             android:drawableStart="@drawable/ic_search"
             android:drawableEnd="@drawable/ic_close"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:hint="Pesquisar receitas, categorias e ingredientes..."
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/gray"
-            android:textSize="14sp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
+            android:textSize="@dimen/text_small"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginEnd="@dimen/padding_small" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -50,6 +50,6 @@
         android:layout_weight="1"
         android:overScrollMode="never"
         android:nestedScrollingEnabled="true"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="@dimen/margin_small"/>
 
 </LinearLayout>

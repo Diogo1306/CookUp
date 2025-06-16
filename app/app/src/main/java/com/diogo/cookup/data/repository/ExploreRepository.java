@@ -54,7 +54,7 @@ public class ExploreRepository {
     public LiveData<ApiResponse<List<CategoryData>>> getPopularCategories() {
         MutableLiveData<ApiResponse<List<CategoryData>>> liveData = new MutableLiveData<>();
 
-        apiService.getPopularCategories("popular_categories").enqueue(new Callback<ApiResponse<List<CategoryData>>>() {
+        apiService.getCategories("categories").enqueue(new Callback<ApiResponse<List<CategoryData>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<CategoryData>>> call, Response<ApiResponse<List<CategoryData>>> response) {
                 if (response.body() != null && response.body().getData() != null) {
@@ -113,4 +113,32 @@ public class ExploreRepository {
         return result;
     }
 
+    public LiveData<ApiResponse<List<RecipeData>>> searchRecipesWithFilters(
+            String query, String filter, Integer userId,
+            String difficulty, Integer minTime, Integer maxTime, Integer maxIngredients,
+            int limit, int offset
+    ) {
+        MutableLiveData<ApiResponse<List<RecipeData>>> liveData = new MutableLiveData<>();
+
+        apiService.searchFilteredRecipes(
+                "search_recipes_filtered", query, filter, userId, difficulty,
+                minTime, maxTime, maxIngredients, limit, offset
+        ).enqueue(new retrofit2.Callback<ApiResponse<List<RecipeData>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<List<RecipeData>>> call, Response<ApiResponse<List<RecipeData>>> response) {
+                if (response.body() != null) {
+                    liveData.setValue(response.body());
+                } else {
+                    liveData.setValue(new ApiResponse<>(false, "Resposta vazia", new ArrayList<>()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<RecipeData>>> call, Throwable t) {
+                liveData.setValue(new ApiResponse<>(false, t.getMessage(), new ArrayList<>()));
+            }
+        });
+
+        return liveData;
+    }
 }

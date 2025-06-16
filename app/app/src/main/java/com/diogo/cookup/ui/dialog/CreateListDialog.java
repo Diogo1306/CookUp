@@ -104,8 +104,7 @@ public class CreateListDialog {
                 "#E0BBE4", // uva clara
                 "#FFF0F5", // marshmallow
                 "#F0EAD6", // farinha
-                "#E6FFE9", // limão suave
-                "#FFF9DB"  // mousse de banana
+                "#E6FFE9" // limão suave
         );
     }
 

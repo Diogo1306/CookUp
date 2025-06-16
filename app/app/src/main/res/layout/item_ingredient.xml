@@ -11,7 +11,7 @@
         android:layout_width="@dimen/icon_size_extra_large"
         android:layout_height="@dimen/icon_size_extra_large"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_ingredient"
+        android:src="@drawable/placeholder"
         android:background="@drawable/bg_ingredient_square"
         android:layout_marginStart="@dimen/margin_medium"
         app:layout_constraintTop_toTopOf="parent"

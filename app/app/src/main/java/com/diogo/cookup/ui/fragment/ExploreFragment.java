@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,6 +19,7 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.ui.adapter.CategoryAdapter;
 import com.diogo.cookup.ui.adapter.RecipeAdapterLarge;
+import com.diogo.cookup.ui.dialog.SaveRecipeBottomSheet;
 import com.diogo.cookup.viewmodel.ExploreViewModel;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 import com.diogo.cookup.data.model.UserData;
@@ -35,7 +35,6 @@ public class ExploreFragment extends Fragment {
     private CategoryAdapter categoryAdapter;
 
     private RecyclerView recyclerCategories, recyclerRecipes;
-    private TextView textEndMessage;
     private EditText searchEditText;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isLoadingMore = false;
@@ -56,14 +55,12 @@ public class ExploreFragment extends Fragment {
         searchEditText = view.findViewById(R.id.searchEditText);
         recyclerCategories = view.findViewById(R.id.recyclerCategories);
         recyclerRecipes = view.findViewById(R.id.recyclerRecipes);
-        textEndMessage = view.findViewById(R.id.textEndMessage);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         setupSearchBar(view);
         setupCategoryRecycler(view);
         setupRecipeRecycler();
 
-        textEndMessage.setVisibility(View.GONE);
 
         savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), savedIds -> {
             recipeAdapter.updateSavedIds(savedIds);
@@ -165,14 +162,6 @@ public class ExploreFragment extends Fragment {
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
             isLoadingMore = loading != null && loading;
-        });
-
-        viewModel.getIsLastPage().observe(getViewLifecycleOwner(), isLast -> {
-            if (Boolean.TRUE.equals(isLast) && recipeAdapter.getItemCount() > 0) {
-                textEndMessage.setVisibility(View.VISIBLE);
-            } else {
-                textEndMessage.setVisibility(View.GONE);
-            }
         });
     }
 

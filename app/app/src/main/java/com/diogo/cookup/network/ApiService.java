@@ -164,6 +164,20 @@ public interface ApiService {
     @GET("api.php")
     Call<ApiResponse<SearchData>> searchAll(@Query("route") String route, @Query("query") String query);
 
+    @GET("api.php")
+    Call<ApiResponse<List<RecipeData>>> searchFilteredRecipes(
+            @Query("route") String route,
+            @Query("query") String query,
+            @Query("filter") String filter,
+            @Query("userId") Integer userId,
+            @Query("difficulty") String difficulty,
+            @Query("min_time") Integer minTime,
+            @Query("max_time") Integer maxTime,
+            @Query("max_ingredients") Integer maxIngredients,
+            @Query("limit") int limit,
+            @Query("offset") int offset
+    );
+
     // === TEST CONNECTION ===
     @GET("test_connection.php")
     Call<ResponseBody> testConnection();

@@ -4,75 +4,66 @@
     android:id="@+id/nav_graph_home"
     app:startDestination="@id/homeFragment">
 
-    <!-- HOME -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.diogo.cookup.ui.fragment.HomeFragment"
-        tools:layout="@layout/fragment_home"
-        android:label="Início">
+        android:label="Início"
+        tools:layout="@layout/fragment_home">
 
-        <!-- Para abrir o campo de busca -->
         <action
             android:id="@+id/action_homeFragment_to_searchSuggestionsFragment"
             app:destination="@id/searchSuggestionsFragment" />
 
-        <!-- Para abrir resultados direto -->
         <action
             android:id="@+id/action_homeFragment_to_searchResultFragment"
             app:destination="@id/searchResultFragment">
-            <argument
-                android:name="query"
-                app:argType="string" />
+            <argument android:name="query" app:argType="string" />
+            <argument android:name="filter" app:argType="string" android:defaultValue="" />
+            <argument android:name="difficulty" app:argType="string" android:defaultValue="" />
+            <argument android:name="maxTime" app:argType="integer" android:defaultValue="0" />
+            <argument android:name="maxIngredients" app:argType="integer" android:defaultValue="0" />
+            <argument android:name="userId" app:argType="integer" android:defaultValue="0" />
         </action>
 
-        <!-- Para detalhes da receita -->
         <action
             android:id="@+id/action_homeFragment_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment">
-            <argument
-                android:name="recipe_id"
-                app:argType="integer" />
+            <argument android:name="recipe_id" app:argType="integer" />
         </action>
     </fragment>
 
-    <!-- SUGESTÕES -->
     <fragment
         android:id="@+id/searchSuggestionsFragment"
         android:name="com.diogo.cookup.ui.fragment.SearchSuggestionsFragment"
         android:label="Sugestões de Pesquisa"
         tools:layout="@layout/fragment_search_suggestions">
 
-        <argument
-            android:name="query"
-            app:argType="string"
-            android:defaultValue="" />
+        <argument android:name="query" app:argType="string" android:defaultValue="" />
 
         <action
             android:id="@+id/action_searchSuggestionsFragment_to_searchResultFragment"
             app:destination="@id/searchResultFragment">
-            <argument
-                android:name="query"
-                app:argType="string" />
+            <argument android:name="query" app:argType="string" />
         </action>
     </fragment>
 
-    <!-- RESULTADOS -->
     <fragment
         android:id="@+id/searchResultFragment"
         android:name="com.diogo.cookup.ui.fragment.SearchResultFragment"
         android:label="Resultados"
         tools:layout="@layout/fragment_search_result">
 
-        <argument
-            android:name="query"
-            app:argType="string" />
+        <argument android:name="query" app:argType="string" android:defaultValue="" />
+        <argument android:name="filter" app:argType="string" android:defaultValue="" />
+        <argument android:name="difficulty" app:argType="string" android:defaultValue="" />
+        <argument android:name="maxTime" app:argType="integer" android:defaultValue="0" />
+        <argument android:name="maxIngredients" app:argType="integer" android:defaultValue="0" />
+        <argument android:name="userId" app:argType="integer" android:defaultValue="0" />
 
         <action
             android:id="@+id/action_searchResultFragment_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment">
-            <argument
-                android:name="recipe_id"
-                app:argType="integer" />
+            <argument android:name="recipe_id" app:argType="integer" />
         </action>
 
         <action

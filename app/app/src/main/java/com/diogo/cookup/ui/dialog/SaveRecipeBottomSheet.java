@@ -1,4 +1,4 @@
-package com.diogo.cookup.ui.fragment;
+package com.diogo.cookup.ui.dialog;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +22,6 @@ import com.diogo.cookup.data.model.TrackRequest;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.TrackingRepository;
 import com.diogo.cookup.ui.adapter.SavedListAdapterSelect;
-import com.diogo.cookup.ui.dialog.CreateListDialog;
 import com.diogo.cookup.utils.UserManager;
 import com.diogo.cookup.viewmodel.SavedListViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;

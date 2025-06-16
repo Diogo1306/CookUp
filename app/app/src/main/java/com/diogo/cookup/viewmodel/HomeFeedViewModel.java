@@ -1,7 +1,5 @@
 package com.diogo.cookup.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -29,6 +27,10 @@ public class HomeFeedViewModel extends ViewModel {
     private final MutableLiveData<String> categoryTitle2 = new MutableLiveData<>();
     private final MutableLiveData<String> categoryTitle3 = new MutableLiveData<>();
 
+    private final MutableLiveData<String> categoryName1 = new MutableLiveData<>();
+    private final MutableLiveData<String> categoryName2 = new MutableLiveData<>();
+    private final MutableLiveData<String> categoryName3 = new MutableLiveData<>();
+
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public HomeFeedViewModel() {
@@ -46,6 +48,10 @@ public class HomeFeedViewModel extends ViewModel {
     public LiveData<String> getCategoryTitle2() { return categoryTitle2; }
     public LiveData<String> getCategoryTitle3() { return categoryTitle3; }
 
+    public LiveData<String> getCategoryName1() { return categoryName1; }
+    public LiveData<String> getCategoryName2() { return categoryName2; }
+    public LiveData<String> getCategoryName3() { return categoryName3; }
+
     public LiveData<String> getErrorMessage() { return errorMessage; }
 
     public void loadHomeFeed(int userId) {
@@ -61,6 +67,7 @@ public class HomeFeedViewModel extends ViewModel {
                         categoryRecipes1.postValue(data.getCategories().get("cat1").getRecipes());
 
                         String name = data.getCategories().get("cat1").getCategoryName();
+                        categoryName1.postValue(name); // Nome real
                         String[] options = {
                                 "Favoritos em: %s",
                                 "Top receitas de %s",
@@ -73,6 +80,7 @@ public class HomeFeedViewModel extends ViewModel {
                         categoryRecipes2.postValue(data.getCategories().get("cat2").getRecipes());
 
                         String name = data.getCategories().get("cat2").getCategoryName();
+                        categoryName2.postValue(name); // Nome real
                         String[] options = {
                                 "Podes gostar de: %s",
                                 "Recomendado: %s",
@@ -85,6 +93,7 @@ public class HomeFeedViewModel extends ViewModel {
                         categoryRecipes3.postValue(data.getCategories().get("cat3").getRecipes());
 
                         String name = data.getCategories().get("cat3").getCategoryName();
+                        categoryName3.postValue(name); // Nome real
                         String[] options = {
                                 "Mais de %s",
                                 "Descobre %s",

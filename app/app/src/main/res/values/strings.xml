@@ -56,9 +56,35 @@
     <string name="email_verification_hint">Introduz o teu novo email e a tua palavra-passe atual. Por questões de segurança, iremos reautenticar a tua conta antes de proceder à alteração.Depois de enviado, irás receber um email com um link de verificação. Clica nesse link para confirmares o novo endereço de email. Assim que confirmares, volta à aplicação e toca em "Confirmar alteração" para concluir o processo.</string>
     <string name="send_verification">Enviar verificação</string>
     <string name="confirm_change">Confirmar alteração</string>
+    <string name="confirm">Confirmar</string>
     <string name="update_email_title">Atualizar email</string>
     <string name="recipe_info_format">%1$d min · %2$d porções</string>
     <string name="preparation_time_minutes">%1$d mins</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="OrderBy">Ordenar por</string>
+    <string name="recommend">Recomendado</string>
+    <string name="Recent">Recentes</string>
+    <string name="Popular">Popular</string>
+    <string name="Weekly">Da semana</string>
+    <string name="Difficulty">Dificuldade</string>
+    <string name="Easy">Fácil</string>
+    <string name="Medium">Média</string>
+    <string name="Hard">Difícil</string>
+    <string name="MaximumTimeM">Tempo máximo (minutos):</string>
+    <string name="MaximumIngredients">Ingredientes máximos:</string>
+    <string name="Cancel">Cancelar</string>
+    <string name="RecipeNote">Deixe sua nota</string>
+    <string name="OptionalComment">Escreve um comentário (opcional)</string>
+    <string name="AddRecipeOnList">Guardar receita em...</string>
+    <string name="CreateList">Criar nova lista</string>
+    <string name="HintList">Nome da lista</string>
+    <string name="ColorPaste">Cor da pasta</string>
+    <string name="Create">Criar</string>
+    <string name="HintExplore">Receitas, categorias, Alimentos..</string>
+    <string name="categories">Categorias</string>
+    <string name="WhatAreYouGoingCook">O que vais cozinhar hoje?</string>
+    <string name="RecomendHome">Recomendado para ti</string>
+    <string name="SeeMore">Ver mais</string>
+    <string name="WeeklyRecipes">Receitas da semana</string>
+    <string name="SeePopular">Ver Populares</string>
+    categories
 </resources>
