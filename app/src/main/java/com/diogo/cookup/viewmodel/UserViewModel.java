@@ -52,14 +52,31 @@ public class UserViewModel extends AndroidViewModel {
         });
     }
 
+    public void updateUser(int userId, String username, File imageFileOrNull) {
+        userRepository.updateProfile(userId, username, imageFileOrNull, new UserRepository.UserCallback() {
+            @Override
+            public void onSuccess(UserData user, String message) {
+                userLiveData.postValue(user);
+                sharedPrefHelper.saveUser(user);
+                successMessage.postValue(message);
+            }
+
+            @Override
+            public void onError(String message) {
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
     public void updateUser(UserData userData) {
         userRepository.createOrUpdateUser(userData, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(UserData user, String message) {
                 userLiveData.postValue(user);
-                SharedPrefHelper.getInstance(getApplication()).saveUser(user);
+                sharedPrefHelper.saveUser(user);
                 successMessage.postValue(message);
             }
+
             @Override
             public void onError(String message) {
                 errorMessage.postValue("Erro ao atualizar usuário: " + message);
@@ -67,32 +84,13 @@ public class UserViewModel extends AndroidViewModel {
         });
     }
 
-    public void updateUserPartialOnServer(UserData updatedUser) {
-        userRepository.createOrUpdateUser(updatedUser, new UserRepository.UserCallback() {
-            @Override
-            public void onSuccess(UserData user, String message) {
-                sharedPrefHelper.updateUserPartial(updatedUser);
-                userLiveData.postValue(sharedPrefHelper.getUser());
-                successMessage.postValue(message);
-            }
-
-            @Override
-            public void onError(String message) {
-                errorMessage.postValue("Erro ao atualizar usuário parcialmente: " + message);
-            }
-        });
-    }
-
     public void updateUserWithImageFile(int userId, String username, File imageFile) {
-        userRepository.updateProfileWithImageFile(userId, username, imageFile, new UserRepository.UserCallback() {
+        userRepository.updateProfile(userId, username, imageFile, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(UserData user, String message) {
                 userLiveData.postValue(user);
-                Log.d("UserViewModel", "Salvando no SharedPrefHelper: " + user);
                 if (user != null) {
                     sharedPrefHelper.saveUser(user);
-                } else {
-                    Log.e("UserViewModel", "Tentou salvar usuário nulo!");
                 }
                 successMessage.postValue(message);
             }

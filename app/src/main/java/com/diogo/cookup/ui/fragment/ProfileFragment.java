@@ -115,14 +115,31 @@ public class ProfileFragment extends Fragment {
                     }
                     @Override
                     public void onDelete(RecipeData recipe) {
-                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                                .setTitle("Excluir Receita")
-                                .setMessage("Tem certeza que deseja excluir esta receita?")
-                                .setPositiveButton("Sim", (dialog, which) -> {
-                                    profileViewModel.deleteRecipe(recipe.getRecipeId());
-                                })
-                                .setNegativeButton("Cancelar", null)
-                                .show();
+                        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_confirm_delete, null);
+
+                        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                                .setView(dialogView)
+                                .create();
+
+                        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                        TextView title = dialogView.findViewById(R.id.dialog_title);
+                        TextView message = dialogView.findViewById(R.id.dialog_message);
+                        TextView cancel = dialogView.findViewById(R.id.button_cancel);
+                        TextView delete = dialogView.findViewById(R.id.button_delete);
+
+                        title.setText("Excluir Receita");
+                        message.setText("Tem certeza que deseja excluir esta receita?");
+
+                        cancel.setOnClickListener(v1 -> dialog.dismiss());
+
+                        delete.setOnClickListener(v1 -> {
+                            profileViewModel.deleteRecipe(recipe.getRecipeId());
+                            dialog.dismiss();
+                        });
+
+                        dialog.show();
+
                     }
                     @Override
                     public void onRecipeClick(RecipeData recipe) {
@@ -138,7 +155,6 @@ public class ProfileFragment extends Fragment {
 
     private void loadUserFromLocalStorage() {
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
-        Log.d("ProfileFragment", "UserData recuperado: " + user);
         if (user != null) {
             user_name.setText(user.getUsername());
             Log.d("ProfileFragment", "Nome: " + user.getUsername() + " | Foto: " + user.getProfilePicture());

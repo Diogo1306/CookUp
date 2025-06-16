@@ -125,7 +125,7 @@ public class SettingsProfileFragment extends Fragment {
             updatedUser.setUserId(currentUser.getUserId());
             updatedUser.setUsername(newName);
             updatedUser.setProfilePicture(currentUser.getProfilePicture());
-            userViewModel.updateUser(updatedUser);
+            userViewModel.updateUser(currentUser.getUserId(), newName, null);
         }
     }
 

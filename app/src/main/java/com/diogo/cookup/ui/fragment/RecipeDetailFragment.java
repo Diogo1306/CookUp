@@ -77,7 +77,7 @@ public class RecipeDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setBottomNavVisibility(false);
+            ((MainActivity) getActivity()).setBottomNavigationVisible(false);
         }
 
         if (getArguments() != null && getArguments().containsKey(ARG_RECIPE_ID)) {
@@ -354,7 +354,7 @@ public class RecipeDetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setBottomNavVisibility(true);
+            ((MainActivity) getActivity()).setBottomNavigationVisible(true);
         }
     }
 }
