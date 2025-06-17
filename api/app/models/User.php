@@ -114,35 +114,10 @@ class User
     public static function deleteUser($userId)
     {
         $db = Database::connect();
-
-        $stmt = $db->prepare("SELECT gallery FROM recipes WHERE user_id = ?");
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        while ($row = $result->fetch_assoc()) {
-            $gallery = json_decode($row['gallery'], true);
-            if (is_array($gallery)) {
-                foreach ($gallery as $imageName) {
-                    $imagePath = __DIR__ . '/../../uploads/recipe_images/' . $imageName;
-                    if (file_exists($imagePath)) {
-                        unlink($imagePath);
-                    }
-                }
-            }
-        }
-        $stmt->close();
-
-        $stmt = $db->prepare("DELETE FROM recipes WHERE user_id = ?");
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $stmt->close();
-
         $stmt = $db->prepare("DELETE FROM users WHERE user_id = ?");
         $stmt->bind_param("i", $userId);
         $ok = $stmt->execute();
         $stmt->close();
-
         return $ok;
     }
 }
