@@ -187,6 +187,7 @@ public class ProfileFragment extends Fragment {
         profileViewModel.getUserRecipes().observe(getViewLifecycleOwner(), recipes -> {
             if (recipes != null) {
                 adapter.setRecipeList(recipes);
+                UserRecipesRecyclerView.setVisibility(recipes.isEmpty() ? View.GONE : View.VISIBLE);
             }
         });
 
