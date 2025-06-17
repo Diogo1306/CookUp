@@ -53,6 +53,7 @@
         android:layout_marginTop="@dimen/margin_medium"
         android:drawablePadding="@dimen/padding_small"
         android:gravity="top|start"
+        android:layout_marginBottom="@dimen/margin_large"
         android:hint="@string/OptionalComment"
         android:textColorHint="@color/text_primary" />
 

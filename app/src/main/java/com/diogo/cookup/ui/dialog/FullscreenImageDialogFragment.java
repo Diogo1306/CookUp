@@ -1,4 +1,3 @@
-// FullscreenImageDialogFragment.java
 package com.diogo.cookup.ui.dialog;
 
 import android.os.Bundle;

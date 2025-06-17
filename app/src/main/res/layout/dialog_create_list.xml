@@ -12,14 +12,14 @@
         android:id="@+id/header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="@dimen/padding_small"
         android:layout_marginBottom="@dimen/margin_medium"
-        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/transparent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_small"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/arrow_back"
@@ -35,10 +35,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
+            android:fontFamily="@font/poppins_semibold"
             android:text="@string/CreateList"
             android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_large"
-            android:fontFamily="@font/poppins_semibold" />
+            android:textSize="@dimen/text_large" />
     </LinearLayout>
 
     <EditText

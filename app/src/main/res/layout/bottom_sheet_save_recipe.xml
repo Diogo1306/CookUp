@@ -7,6 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:layout_width="75dp"
+        android:layout_height="8dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_micro"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="@drawable/bg_handle" />
+
     <TextView
         android:id="@+id/save_recipe_title"
         android:layout_width="match_parent"

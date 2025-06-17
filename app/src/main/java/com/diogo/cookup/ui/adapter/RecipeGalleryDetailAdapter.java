@@ -16,6 +16,15 @@ import java.util.List;
 public class RecipeGalleryDetailAdapter extends RecyclerView.Adapter<RecipeGalleryDetailAdapter.GalleryViewHolder> {
 
     private List<String> imageUrls;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(String imageUrl);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public RecipeGalleryDetailAdapter(List<String> imageUrls) {
         this.imageUrls = imageUrls;
@@ -36,6 +45,12 @@ public class RecipeGalleryDetailAdapter extends RecyclerView.Adapter<RecipeGalle
                 .load(url)
                 .placeholder(R.drawable.placeholder)
                 .into(holder.imageView);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(url);
+            }
+        });
     }
 
     @Override
@@ -50,10 +65,10 @@ public class RecipeGalleryDetailAdapter extends RecyclerView.Adapter<RecipeGalle
 
     static class GalleryViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+
         public GalleryViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.img_gallery_preview);
         }
     }
 }
-
