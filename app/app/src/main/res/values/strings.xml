@@ -86,5 +86,9 @@
     <string name="SeeMore">Ver mais</string>
     <string name="WeeklyRecipes">Receitas da semana</string>
     <string name="SeePopular">Ver Populares</string>
-    categories
+    <string name="CreateRecipe">Criar Receita</string>
+    <string name="EditRecipe">Editar Receita</string>
+    <string name="RecipeImages">Imagens da Receita</string>
+    <string name="AddImage">Adicionar Imagem</string>
+    <string name="AddIngredients">Adicionar Ingredients</string>
 </resources>

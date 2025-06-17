@@ -34,6 +34,7 @@ import com.diogo.cookup.ui.activity.MainActivity;
 import com.diogo.cookup.ui.adapter.CommentAdapter;
 import com.diogo.cookup.ui.adapter.RecipeGalleryDetailAdapter;
 import com.diogo.cookup.ui.adapter.IngredientAdapter;
+import com.diogo.cookup.ui.dialog.FullscreenImageDialogFragment;
 import com.diogo.cookup.ui.dialog.RatingBottomSheet;
 import com.diogo.cookup.ui.dialog.SaveRecipeBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
@@ -146,16 +147,18 @@ public class RecipeDetailFragment extends Fragment {
             if (recipe == null) return;
 
             List<String> gallery = recipe.getGallery();
+
             if (gallery != null && !gallery.isEmpty()) {
                 galleryPager.setVisibility(View.VISIBLE);
                 galleryIndicator.setVisibility(View.VISIBLE);
 
-                if (galleryPagerAdapter == null) {
-                    galleryPagerAdapter = new RecipeGalleryDetailAdapter(gallery);
-                    galleryPager.setAdapter(galleryPagerAdapter);
-                } else {
-                    galleryPagerAdapter.updateList(gallery);
-                }
+                galleryPagerAdapter = new RecipeGalleryDetailAdapter(gallery);
+                galleryPager.setAdapter(galleryPagerAdapter);
+
+                galleryPagerAdapter.setOnItemClickListener(imageUrl -> {
+                    FullscreenImageDialogFragment.newInstance(imageUrl)
+                            .show(getParentFragmentManager(), "fullscreen_image");
+                });
 
                 new TabLayoutMediator(galleryIndicator, galleryPager, (tab, position) -> {
                     tab.setCustomView(R.layout.tab_dot_selector);

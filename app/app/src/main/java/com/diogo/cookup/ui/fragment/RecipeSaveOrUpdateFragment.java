@@ -11,13 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -50,8 +54,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
     private EditText etTitle, etDescription, etInstructions, etServings, etPreparationTime;
     private RecyclerView rvIngredients, rvGallery;
     private ChipGroup chipGroupCategories;
-    private Button btnAddIngredient, btnAddImage;
-    private MaterialButton btnSave;
+    private AppCompatButton btnAddIngredient, btnAddImage, btnSave;
     private RadioGroup rgDifficulty;
 
     private IngredientSaveOrUpdateAdapter ingredientSaveOrUpdateAdapter;
@@ -93,6 +96,18 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
         btnAddIngredient = v.findViewById(R.id.btn_add_ingredient);
         btnAddImage = v.findViewById(R.id.btn_add_image);
         btnSave = v.findViewById(R.id.btn_save);
+
+        ImageButton arrow_back = v.findViewById(R.id.arrow_back);
+        arrow_back.setOnClickListener(view -> {
+            NavHostFragment.findNavController(this).popBackStack();
+        });
+
+        TextView text_title_saveoredit = v.findViewById(R.id.txt_title_saveOrUpdate);
+        if (editingRecipeId != null){
+            text_title_saveoredit.setText(R.string.EditRecipe);
+        }else {
+            text_title_saveoredit.setText(R.string.CreateRecipe);
+        }
 
         setupIngredientsRecycler();
         setupGalleryRecycler();
@@ -147,6 +162,20 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
                 chipGroupCategories.addView(chip);
             }
         });
+
+        viewModel.getImages().observe(getViewLifecycleOwner(), images -> {
+            imageFiles.clear();
+            if (images != null) {
+                imageFiles.addAll(images);
+            }
+            galleryAdapter.notifyDataSetChanged();
+
+            ImageView placeholder = requireView().findViewById(R.id.img_gallery_placeholder);
+            placeholder.setVisibility(imageFiles.isEmpty() ? View.VISIBLE : View.GONE);
+
+            btnAddImage.setEnabled(imageFiles.size() < 6);
+        });
+
 
         viewModel.getRecipeToEdit().observe(getViewLifecycleOwner(), recipe -> {
             if (recipe == null) return;

@@ -19,8 +19,9 @@
         <AutoCompleteTextView
             android:id="@+id/et_ingredient_name"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/input_height"
             android:imeOptions="actionNext"
+            android:padding="@dimen/margin_small"
             android:inputType="text"
             android:importantForAutofill="no"
             android:focusableInTouchMode="true"
@@ -37,7 +38,7 @@
         <EditText
             android:id="@+id/et_ingredient_quantity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/input_height"
             android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
