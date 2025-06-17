@@ -73,7 +73,8 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
     }
 
     public void setRecipeList(List<RecipeData> newList) {
-        this.recipeList = newList;
+        recipeList.clear();
+        recipeList.addAll(newList);
         notifyDataSetChanged();
     }
 

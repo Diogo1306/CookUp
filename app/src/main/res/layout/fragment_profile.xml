@@ -241,6 +241,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
+                    android:layout_marginBottom="@dimen/margin_micro"
                     android:fontFamily="@font/poppins_semibold"
                     android:text="Suas receitas"
                     android:textSize="@dimen/text_large_m" />
@@ -250,6 +251,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false" />
+
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

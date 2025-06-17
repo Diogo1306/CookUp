@@ -8,6 +8,7 @@ import com.diogo.cookup.data.model.ProfileData;
 import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.repository.ProfileRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileViewModel extends ViewModel {
@@ -40,6 +41,16 @@ public class ProfileViewModel extends ViewModel {
             @Override
             public void onSuccess() {
                 deleteSuccess.postValue(true);
+                if (userRecipes.getValue() != null) {
+                    List<RecipeData> updatedList = new ArrayList<>(userRecipes.getValue());
+                    for (int i = 0; i < updatedList.size(); i++) {
+                        if (updatedList.get(i).getRecipeId() == recipeId) {
+                            updatedList.remove(i);
+                            break;
+                        }
+                    }
+                    userRecipes.postValue(updatedList);
+                }
             }
 
             @Override
@@ -48,4 +59,5 @@ public class ProfileViewModel extends ViewModel {
             }
         });
     }
+
 }
