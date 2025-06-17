@@ -34,9 +34,9 @@ class Ingredient
             $ingredientNameEn = Translation::translate($ingredientName, 'pt', 'en');
             $image_url = self::fetchAndSaveImage($ingredientNameEn);
 
-            $category_id = 14;
-            $stmt = $db->prepare("INSERT INTO ingredients (ingredient_name, category_id, image_url) VALUES (?, ?, ?)");
-            $stmt->bind_param("sis", $ingredientName, $category_id, $image_url);
+            // Removido category_id
+            $stmt = $db->prepare("INSERT INTO ingredients (ingredient_name, image_url) VALUES (?, ?)");
+            $stmt->bind_param("ss", $ingredientName, $image_url);
             $stmt->execute();
             $ingredientId = $db->insert_id;
             $matched = false;
@@ -65,17 +65,15 @@ class Ingredient
 
         $ingredientNameEn = Translation::translate($ingredientName, 'pt', 'en');
         $image_url = self::fetchAndSaveImage($ingredientNameEn);
-        $category_id = 14;
 
-        $stmt = $db->prepare("INSERT INTO ingredients (ingredient_name, category_id, image_url) VALUES (?, ?, ?)");
-        $stmt->bind_param("sis", $ingredientName, $category_id, $image_url);
+        $stmt = $db->prepare("INSERT INTO ingredients (ingredient_name, image_url) VALUES (?, ?)");
+        $stmt->bind_param("ss", $ingredientName, $image_url);
         $stmt->execute();
         $ingredientId = $db->insert_id;
         $stmt->close();
 
         return $ingredientId;
     }
-
 
     public static function fetchAndSaveImage($ingredientName)
     {
