@@ -32,7 +32,7 @@ class User
     }
 
     /** 
-     * Cria ou atualiza usuário (mensagem em PT-PT) 
+     * Cria ou atualiza usuário 
      */
     public static function save(string $firebase_uid, string $username, string $email, string $profile_picture): array
     {
@@ -45,7 +45,11 @@ class User
         $res = $stmt->get_result();
         $stmt->close();
         if ($res->num_rows > 0) {
-            return ["success" => false, "message" => "O nome de utilizador já está em uso."];
+            if (!empty($profile_picture)) {
+                $username = $email;
+            } else {
+                return ["success" => false, "message" => "O nome de utilizador já está em uso."];
+            }
         }
 
         $stmt = $db->prepare("SELECT firebase_uid FROM users WHERE email = ? AND firebase_uid != ?");
