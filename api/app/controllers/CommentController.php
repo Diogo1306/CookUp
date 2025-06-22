@@ -37,4 +37,24 @@ class CommentController
             'data' => $comments
         ]);
     }
+
+    public function getAllWithUser()
+    {
+        $comments = Comment::getAllWithUser();
+        Response::json([
+            "success" => true,
+            "data" => $comments
+        ]);
+    }
+
+    public function delete()
+    {
+        $id = $_POST['comment_id'] ?? null;
+        if (!$id) {
+            Response::json(['success' => false, 'message' => 'ID obrigatório.']);
+            return;
+        }
+        $ok = Comment::delete($id);
+        Response::json($ok ? ['success' => true] : ['success' => false, 'message' => 'Erro ao deletar comentário.']);
+    }
 }

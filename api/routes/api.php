@@ -61,6 +61,9 @@ Router::add('GET',  'profile_summary',   [$profileController, 'getSummary']);
 Router::add('GET',  'profile_recipes',   [$profileController, 'getRecipes']);
 
 // CATEGORIES
+Router::add('POST', 'create_category', [$categoryController, 'create']);
+Router::add('POST', 'update_category', [$categoryController, 'update']);
+Router::add('POST', 'delete_category', [$categoryController, 'delete']);
 Router::add('GET',  'categories',            [$categoryController, 'getAll']);
 Router::add('GET',  'popular_categories',    [$categoryController, 'getPopular']);
 Router::add('GET',  'user_categories',       [$categoryController, 'getUserCategories']);
@@ -68,11 +71,17 @@ Router::add('GET',  'user_categories',       [$categoryController, 'getUserCateg
 // COMMENTS
 Router::add('POST', 'comment',   [$commentController, 'submit']);
 Router::add('GET',  'comment',   [$commentController, 'getByRecipe']);
+Router::add('GET',  'comments_admin', [$commentController, 'getAllWithUser']);
+Router::add('POST', 'delete_comment',  [$commentController, 'delete']);
 
 // ingredients API spoonacular Tests
 Router::add('POST', 'add_recipe_ingredient', [$ingredientController, 'addIngredientToRecipe']);
 Router::add('POST', 'translate', [$translationController, 'translate']);
 Router::add('GET', 'autocomplete_ingredient', [$ingredientController, 'autocomplete']);
+Router::add('GET', 'ingredients', [$ingredientController, 'getAll']);
+Router::add('POST', 'create_ingredient', [$ingredientController, 'create']);
+Router::add('POST', 'update_ingredient', [$ingredientController, 'update']);
+Router::add('POST', 'delete_ingredient', [$ingredientController, 'delete']);
 
 // TRACKING
 Router::add('POST', 'track_interaction', [$trackingController, 'trackInteraction']);
@@ -92,10 +101,13 @@ Router::add('POST', 'rating', [$ratingController, 'submit']);
 Router::add('GET',  'rating', [$ratingController, 'getAverage']);
 
 // USER
+Router::add('GET', 'users', [$userController, 'getAll']);
 Router::add('GET',  'user', [$userController, 'getUser']);
 Router::add('POST', 'user', [$userController, 'save']);
+Router::add('POST', 'update_user_admin', [$userController, 'updateUserAdmin']);
 Router::add('POST', 'update_profile', [$userController, 'updateProfile']);
 Router::add('POST', 'delete_user', [$userController, 'delete']);
+Router::add('POST', 'set_blocked', [$userController, 'setBlocked']);
 
 // USER STATS
 Router::add('POST', 'update_stat',       [$userStatsController, 'updateStat']);

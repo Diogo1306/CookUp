@@ -52,4 +52,29 @@ class Comment
 
         return $comments;
     }
+
+    public static function getAllWithUser()
+    {
+        $db = Database::connect();
+        $sql = "SELECT c.*, u.username
+            FROM comments c
+            LEFT JOIN users u ON c.user_id = u.user_id
+            ORDER BY c.created_at DESC";
+        $result = $db->query($sql);
+        $comments = [];
+        while ($row = $result->fetch_assoc()) {
+            $comments[] = $row;
+        }
+        return $comments;
+    }
+
+    public static function delete($comment_id)
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("DELETE FROM comments WHERE comment_id = ?");
+        $stmt->bind_param("i", $comment_id);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
 }

@@ -86,10 +86,6 @@ class Category
             $categories[] = $row;
         }
 
-        /**
-         * Preencher se tiver menos que o limite
-         */
-
         if (count($categories) < $limit) {
             $fetchedIds = array_column($categories, 'category_id');
             $whereNotIn = '';
@@ -162,5 +158,36 @@ class Category
             return $row['category_name'];
         }
         return 'Sem Nome';
+    }
+
+    public static function create($category_name, $image_url, $color_hex)
+    {
+        $conn = Database::connect();
+        $stmt = $conn->prepare("INSERT INTO categories (category_name, image_url, color_hex) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $category_name, $image_url, $color_hex);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
+
+
+    public static function update($category_id, $name, $image_url, $color_hex = null)
+    {
+        $conn = Database::connect();
+        $stmt = $conn->prepare("UPDATE categories SET category_name = ?, image_url = ?, color_hex = ? WHERE category_id = ?");
+        $stmt->bind_param("sssi", $name, $image_url, $color_hex, $category_id);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
+
+    public static function delete($category_id)
+    {
+        $conn = Database::connect();
+        $stmt = $conn->prepare("DELETE FROM categories WHERE category_id = ?");
+        $stmt->bind_param("i", $category_id);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
     }
 }

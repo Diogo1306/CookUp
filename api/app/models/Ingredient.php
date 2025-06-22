@@ -3,8 +3,62 @@
 require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/../models/Translation.php';
 
+function buildIngredientImageUrl($image_url)
+{
+    return !empty($image_url)
+        ? BASE_URL . UPLOADS_FOLDER . 'ingredients/' . $image_url
+        : BASE_URL . DEFAULT_IMAGE;
+}
+
 class Ingredient
 {
+
+    public static function getAll(): array
+    {
+        $conn = Database::connect();
+        $stmt = $conn->prepare("SELECT * FROM ingredients");
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $ingredients = [];
+        while ($row = $result->fetch_assoc()) {
+            $row['ingredient_image_url'] = buildIngredientImageUrl($row['image_url'] ?? null);
+            unset($row['image_url']);
+            $ingredients[] = $row;
+        }
+        return $ingredients;
+    }
+
+    public static function create($ingredient_name, $image_url)
+    {
+        $conn = Database::connect();
+        $stmt = $conn->prepare("INSERT INTO ingredients (ingredient_name, image_url) VALUES (?, ?)");
+        $stmt->bind_param("ss", $ingredient_name, $image_url);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
+
+    public static function update($ingredient_id, $name, $image_url)
+    {
+        $conn = Database::connect();
+        $stmt = $conn->prepare("UPDATE ingredients SET ingredient_name = ?, image_url = ? WHERE ingredient_id = ?");
+        $stmt->bind_param("ssi", $name, $image_url, $ingredient_id);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
+
+    public static function delete($ingredient_id)
+    {
+        $conn = Database::connect();
+        $stmt = $conn->prepare("DELETE FROM ingredients WHERE ingredient_id = ?");
+        $stmt->bind_param("i", $ingredient_id);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
+
     public static function findSimilarIngredient($pdo, $inputName, $maxDistance = 2)
     {
         $result = $pdo->query("SELECT ingredient_id, ingredient_name FROM ingredients");
@@ -34,7 +88,6 @@ class Ingredient
             $ingredientNameEn = Translation::translate($ingredientName, 'pt', 'en');
             $image_url = self::fetchAndSaveImage($ingredientNameEn);
 
-            // Removido category_id
             $stmt = $db->prepare("INSERT INTO ingredients (ingredient_name, image_url) VALUES (?, ?)");
             $stmt->bind_param("ss", $ingredientName, $image_url);
             $stmt->execute();

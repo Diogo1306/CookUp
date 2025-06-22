@@ -39,11 +39,11 @@ class RecipeController
             }
 
             if (!empty($data['recipe_id'])) {
-                $currentGallery = Recipe::getGalleryImages($data['recipe_id']); // deve retornar array de nomes de arquivos
+                $currentGallery = Recipe::getGalleryImages($data['recipe_id']);
                 $toRemove = array_diff($currentGallery, $oldGalleryNames);
                 $uploadDir = __DIR__ . '/../../uploads/recipes/';
                 foreach ($toRemove as $imgName) {
-                    if ($imgName !== 'default.png' && file_exists($uploadDir . $imgName)) {
+                    if ($imgName !== 'default.png' && file_exists(filename: $uploadDir . $imgName)) {
                         @unlink($uploadDir . $imgName);
                     }
                 }
