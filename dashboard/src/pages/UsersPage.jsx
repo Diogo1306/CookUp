@@ -5,7 +5,7 @@ import UsersTable from "../components/UsersTable";
 import { Typography, Button, CircularProgress, Box } from "@mui/material";
 
 export default function UsersPage() {
-  const { users, loading, error, handleCreate, handleEdit, handleDelete, loadUsers } = useUsers();
+  const { users, loading, error, handleCreate, handleEdit, handleDelete, handleBlock, handleUnblock, loadUsers } = useUsers();
   const [openForm, setOpenForm] = useState(false);
   const [editData, setEditData] = useState(null);
 
@@ -17,10 +17,12 @@ export default function UsersPage() {
     setEditData(null);
     setOpenForm(true);
   }
+
   function handleEditUser(user) {
     setEditData(user);
     setOpenForm(true);
   }
+
   async function handleSave(form) {
     if (editData) {
       await handleEdit({ ...editData, ...form });
@@ -29,7 +31,6 @@ export default function UsersPage() {
     }
     setOpenForm(false);
     setEditData(null);
-    loadUsers();
   }
 
   function handleCloseForm() {
@@ -50,7 +51,7 @@ export default function UsersPage() {
           <CircularProgress />
         </Box>
       ) : (
-        <UsersTable users={users} onDelete={handleDelete} onEdit={handleEditUser} />
+        <UsersTable users={users} onEdit={handleEditUser} onBlock={handleBlock} onUnblock={handleUnblock} reloadUsers={loadUsers} />
       )}
       <UsersForm open={openForm} onClose={handleCloseForm} onSave={handleSave} initialData={editData} loading={loading} />
       {error && <Typography color="error">{error}</Typography>}

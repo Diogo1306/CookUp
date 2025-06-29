@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useRecipes } from "../hooks/useRecipes";
 import RecipeForm from "../components/RecipeForm";
 import RecipeTable from "../components/RecipeTable";
-import { Button, CircularProgress, Box, Typography } from "@mui/material";
+import { Button, CircularProgress, Box, Typography, Stack } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { getAllCategories } from "../api/categories";
 import { getRecipeById } from "../api/recipe";
 
 export default function RecipesPage() {
-  const { recipes, loading, error, handleDelete, handleSave } = useRecipes();
-
+  const { recipes, loading, error, handleDelete, handleSave, handleRefresh } = useRecipes();
   const [openForm, setOpenForm] = useState(false);
   const [editData, setEditData] = useState(null);
   const [allCategories, setAllCategories] = useState([]);
@@ -19,9 +20,11 @@ export default function RecipesPage() {
   }, []);
 
   async function handleEdit(recipe) {
+    setLoadingEdit(true);
     const dataCompleta = await getRecipeById(recipe.recipe_id);
     setEditData(dataCompleta.data);
     setOpenForm(true);
+    setLoadingEdit(false);
   }
 
   function handleAdd() {
@@ -38,13 +41,26 @@ export default function RecipesPage() {
     await handleSave(data, !!editData);
     handleFormClose();
   }
-  console.log("recipes", recipes);
 
   return (
-    <div>
-      <Button onClick={handleAdd} variant="contained" sx={{ mb: 2 }}>
-        Nova Receita
-      </Button>
+    <Box sx={{ m: { xs: 0, md: 3 }, mt: 3, maxWidth: "99vw" }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2, justifyContent: "flex-start" }}>
+        <Button
+          onClick={handleAdd}
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          sx={{
+            fontWeight: 700,
+            borderRadius: 2,
+            textTransform: "none",
+            px: 3,
+            boxShadow: 1,
+          }}
+        >
+          Nova Receita
+        </Button>
+      </Stack>
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
           <CircularProgress />
@@ -55,7 +71,7 @@ export default function RecipesPage() {
           {error}
         </Typography>
       )}
-      {!loading && !error && <RecipeTable recipes={recipes} onEdit={handleEdit} onDelete={handleDelete} />}
+      {!loading && !error && <RecipeTable recipes={recipes} onEdit={handleEdit} onDelete={handleDelete} onRefresh={handleRefresh} />}
       <RecipeForm open={openForm} handleClose={handleFormClose} handleSave={handleFormSave} initialData={editData} allCategories={allCategories} />
       {loadingEdit && (
         <Box
@@ -75,6 +91,6 @@ export default function RecipesPage() {
           <CircularProgress color="secondary" />
         </Box>
       )}
-    </div>
+    </Box>
   );
 }

@@ -1,6 +1,6 @@
 import { Button, Box } from "@mui/material";
 import { Logout } from "@mui/icons-material";
-import { useUser } from "../context/userContext";
+import { useUser } from "../context/UserContext";
 
 export default function SettingsPage() {
   const { setUser } = useUser();

@@ -15,8 +15,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Isso cria o objeto de autenticação:
 export const auth = getAuth(app);
 
-// Analytics é opcional se quiser:
 const analytics = getAnalytics(app);

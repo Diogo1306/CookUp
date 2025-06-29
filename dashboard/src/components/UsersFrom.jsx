@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, Avatar, Box, MenuItem } from "@mui/material";
+import { updateFirebaseEmail, updateFirebasePassword } from "../api/adminUser";
 
 const DEFAULT_PIC = "http://192.168.0.26/PAP/CookUp_Core/uploads/profile_pictures/default.png";
 
@@ -10,6 +11,7 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
   const [role, setRole] = useState("user");
   const [profilePicture, setProfilePicture] = useState(null);
   const [preview, setPreview] = useState(DEFAULT_PIC);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setUsername(initialData?.username || "");
@@ -18,6 +20,7 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
     setProfilePicture(null);
     setPreview(initialData?.profile_picture || DEFAULT_PIC);
     setPassword("");
+    setError("");
   }, [initialData, open]);
 
   function handlePictureChange(e) {
@@ -26,18 +29,46 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
     if (file) setPreview(URL.createObjectURL(file));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
+
+    if (!initialData) {
+      if (!email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+        setError("Email inválido.");
+        return;
+      }
+      if (password.length < 6) {
+        setError("Senha deve ter no mínimo 6 caracteres.");
+        return;
+      }
+    }
+    if (initialData) {
+      if (email !== initialData.email) {
+        const res = await updateFirebaseEmail(initialData.firebase_uid, email);
+        if (!res.success) {
+          setError("Erro ao trocar e-mail no Firebase: " + res.error);
+          return;
+        }
+      }
+      if (password.length > 0) {
+        const res = await updateFirebasePassword(initialData.firebase_uid, password);
+        if (!res.success) {
+          setError("Erro ao trocar senha no Firebase: " + res.error);
+          return;
+        }
+      }
+    }
+
     const form = {
       username,
       role,
+      email,
     };
-    if (!initialData) {
-      form.email = email;
-      form.password = password;
-    }
     if (profilePicture) form.profile_picture = profilePicture;
     if (initialData?.user_id) form.user_id = initialData.user_id;
+    if (!initialData) form.password = password; // só manda senha ao criar
+
     onSave(form);
   }
 
@@ -53,12 +84,41 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
               <input type="file" accept="image/*" hidden onChange={handlePictureChange} />
             </Button>
             <TextField label="Nome" value={username} onChange={(e) => setUsername(e.target.value)} required />
-            <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={!!initialData} />
-            {!initialData && <TextField label="Senha" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />}
+            <TextField
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              // Permite editar email tanto na criação quanto edição!
+            />
+            {/* Senha só na criação */}
+            {!initialData && (
+              <TextField
+                label="Senha"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                inputProps={{ minLength: 6 }}
+                required
+                helperText="Mínimo 6 caracteres"
+              />
+            )}
+            {/* Edição: senha opcional */}
+            {initialData && (
+              <TextField
+                label="Nova senha"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                inputProps={{ minLength: 6 }}
+                helperText="Deixe em branco para não alterar"
+              />
+            )}
             <TextField select label="Tipo" value={role} onChange={(e) => setRole(e.target.value)}>
               <MenuItem value="user">Usuário</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
             </TextField>
+            {error && <Box sx={{ color: "red", mt: 1 }}>{error}</Box>}
           </Box>
         </DialogContent>
         <DialogActions>

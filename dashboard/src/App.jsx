@@ -1,7 +1,7 @@
-import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider as MuiThemeProvider, CssBaseline } from "@mui/material";
 import { ThemeProviderCustom, useThemeCustom } from "./context/ThemeContext";
-import { UserProvider, useUser } from "./context/userContext";
+import { UserProvider, useUser } from "./context/UserContext";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
 
@@ -21,7 +21,12 @@ export default function App() {
   return (
     <ThemeProviderCustom>
       <UserProvider>
-        <AppContent />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/dashboard/*" element={<AppContent />} />
+            <Route path="/" element={<Navigate to="/dashboard/recipes" replace />} />
+          </Routes>
+        </BrowserRouter>
       </UserProvider>
     </ThemeProviderCustom>
   );

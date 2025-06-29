@@ -59,6 +59,7 @@ export function useRecipes() {
     recipes,
     loading,
     error,
+    handleRefresh: fetchRecipes,
     fetchRecipes,
     handleDelete,
     handleSave,

@@ -16,22 +16,23 @@ export function useLogin() {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+      console.log("Firebase OK:", userCredential);
       const firebaseUser = userCredential.user;
       const userData = await getByUID(firebaseUser.uid);
+      console.log("getByUID retornou:", userData);
 
-      console.log("Dados do usuário:", userData);
-
-      if (userData && userData.data.role === "admin") {
-        setUsuario(userData.data);
+      if (userData && userData.role === "admin") {
+        setUsuario(userData);
         setSuccess(true);
         setLoading(false);
-        return userData.data;
+        return userData;
       } else {
         setError("Acesso negado. Não é admin.");
         setLoading(false);
         return null;
       }
     } catch (e) {
+      console.log("ERRO NO LOGIN:", e);
       setError("Email ou senha inválidos");
       setLoading(false);
       return null;

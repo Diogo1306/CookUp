@@ -1,17 +1,42 @@
 import { useState, useCallback } from "react";
-import { getAllUsers, createUser, updateUser, deleteUser } from "../api/user";
+import { getAllUsers, createUser, updateUser, deleteUser, blockUser, unblockUser } from "../api/user"; // Corrigido aqui
 
 export function useUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleBlock = async (user_id, firebase_uid) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await blockUser(user_id, firebase_uid);
+      await loadUsers();
+    } catch (err) {
+      setError("Erro ao bloquear usuário.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUnblock = async (user_id, firebase_uid) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await unblockUser(user_id, firebase_uid);
+      await loadUsers();
+    } catch (err) {
+      setError("Erro ao desbloquear usuário.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loadUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await getAllUsers();
-      console.log("Users loaded:", data);
       setUsers(data);
     } catch (err) {
       setError("Erro ao carregar usuários.");
@@ -32,7 +57,7 @@ export function useUsers() {
         return { success: false, message: result.message };
       }
     } catch (err) {
-      setError("Erro ao criar usuário.");
+      setError("Erro ao criar usuário: " + err.message);
       return { success: false, message: err.message };
     } finally {
       setLoading(false);
@@ -40,6 +65,7 @@ export function useUsers() {
   };
 
   const handleEdit = async (userData) => {
+    setLoading(true); // Adicione aqui para loading correto
     setError(null);
     try {
       const result = await updateUser(userData);
@@ -53,14 +79,16 @@ export function useUsers() {
     } catch (err) {
       setError("Erro ao editar usuário.");
       return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = async (user_id) => {
+  const handleDelete = async (user_id, firebase_uid) => {
     setLoading(true);
     setError(null);
     try {
-      const result = await deleteUser(user_id);
+      const result = await deleteUser(user_id, firebase_uid);
       if (result.success) {
         await loadUsers();
         return { success: true };
@@ -84,6 +112,8 @@ export function useUsers() {
     handleCreate,
     handleEdit,
     handleDelete,
+    handleBlock,
+    handleUnblock,
     setUsers,
   };
 }
