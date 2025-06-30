@@ -49,7 +49,7 @@ export default function CategoriesPage() {
           <CircularProgress />
         </Box>
       ) : (
-        <CategoriesTable categories={categories} onEdit={handleEditCategory} onDelete={handleDelete} />
+        <CategoriesTable categories={categories} onEdit={handleEditCategory} onDelete={handleDelete} onRefresh={loadCategories} loading={loading} />
       )}
       <CategoryForm open={openForm} onClose={handleCloseForm} onSave={handleSave} initialData={editData} loading={loading} />
       {error && <Typography color="error">{error}</Typography>}

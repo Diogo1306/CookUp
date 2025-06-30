@@ -1,9 +1,9 @@
 import axios from "axios";
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword, deleteUser as firebaseDeleteUser } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { deleteFirebaseUser, blockFirebaseUser, unblockFirebaseUser } from "./adminUser";
 
-const API_URL = "http://192.168.0.26/PAP/CookUp_Core/public/api.php";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function getByUID(uid) {
   const res = await axios.get(API_URL, {
@@ -16,7 +16,6 @@ export async function getAllUsers() {
   const res = await axios.get(API_URL, {
     params: { route: "users" },
   });
-  console.log("getAllUsers response", res.data);
   return res.data.data || [];
 }
 
@@ -38,17 +37,19 @@ export async function createUser({ email, password, username, profile_picture, r
   } catch (err) {
     throw new Error("Erro ao criar usuário no Firebase: " + (err.message || err.code));
   }
-  const res = await axios.post(`${API_URL}?route=user`, {
+  // Só envia profile_picture se existir (quando selecionado)
+  const payload = {
     firebase_uid: cred.user.uid,
     username,
     email,
-    profile_picture,
     role,
-  });
+  };
+  if (profile_picture) payload.profile_picture = profile_picture;
+
+  const res = await axios.post(`${API_URL}?route=user`, payload);
   return res.data;
 }
 
-// src/api/user.js
 export async function updateUser({ user_id, username, email, role, profile_picture }) {
   const formData = new FormData();
   formData.append("user_id", user_id);

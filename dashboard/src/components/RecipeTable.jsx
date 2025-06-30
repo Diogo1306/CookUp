@@ -298,7 +298,7 @@ export default function RecipeTable({ recipes, onEdit, onDelete, onRefresh }) {
           "& .MuiDataGrid-row": {
             transition: "background 0.15s",
             "&:hover": {
-              bgcolor: "#fff !important",
+              bgcolor: (theme) => (theme.palette.mode === "dark" ? "#23272c" : "#f6f6f9"),
               boxShadow: "0 2px 18px -10px #0002",
               zIndex: 1,
             },

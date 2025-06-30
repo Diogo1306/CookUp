@@ -50,7 +50,13 @@ export default function IngredientsPage() {
           <CircularProgress />
         </Box>
       ) : (
-        <IngredientsTable ingredients={ingredients} onEdit={handleEditIngredient} onDelete={handleDelete} />
+        <IngredientsTable
+          ingredients={ingredients}
+          onEdit={handleEditIngredient}
+          onDelete={handleDelete}
+          onRefresh={loadIngredients}
+          loading={loading}
+        />
       )}
       <IngredientsForm open={openForm} onClose={handleCloseForm} onSave={handleSave} initialData={editData} loading={loading} />
       {error && <Typography color="error">{error}</Typography>}

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, Avatar, Box, MenuItem } from "@mui/material";
-import { updateFirebaseEmail, updateFirebasePassword } from "../api/adminUser";
+import { useState, useEffect } from "react";
+import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions, Avatar, Box, MenuItem, Typography } from "@mui/material";
 
-const DEFAULT_PIC = "http://192.168.0.26/PAP/CookUp_Core/uploads/profile_pictures/default.png";
+const DEFAULT_PIC = "../assets/default.png";
 
 export default function UsersForm({ open, onClose, onSave, initialData, loading }) {
   const [username, setUsername] = useState("");
@@ -32,32 +31,13 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-
-    if (!initialData) {
-      if (!email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-        setError("Email inválido.");
-        return;
-      }
-      if (password.length < 6) {
-        setError("Senha deve ter no mínimo 6 caracteres.");
-        return;
-      }
+    if (!email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      setError("Email inválido.");
+      return;
     }
-    if (initialData) {
-      if (email !== initialData.email) {
-        const res = await updateFirebaseEmail(initialData.firebase_uid, email);
-        if (!res.success) {
-          setError("Erro ao trocar e-mail no Firebase: " + res.error);
-          return;
-        }
-      }
-      if (password.length > 0) {
-        const res = await updateFirebasePassword(initialData.firebase_uid, password);
-        if (!res.success) {
-          setError("Erro ao trocar senha no Firebase: " + res.error);
-          return;
-        }
-      }
+    if (!initialData && password.length < 6) {
+      setError("Senha deve ter no mínimo 6 caracteres.");
+      return;
     }
 
     const form = {
@@ -65,33 +45,60 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
       role,
       email,
     };
-    if (profilePicture) form.profile_picture = profilePicture;
     if (initialData?.user_id) form.user_id = initialData.user_id;
-    if (!initialData) form.password = password; // só manda senha ao criar
+    if (!initialData) form.password = password;
+    // Só permite mudar imagem no edit
+    if (initialData && profilePicture) form.profile_picture = profilePicture;
 
     onSave(form);
   }
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>{initialData ? "Editar usuário" : "Novo usuário"}</DialogTitle>
+        <DialogTitle>{initialData ? "Editar utilizador" : "Novo utilizador"}</DialogTitle>
         <DialogContent>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
-            <Avatar src={preview} sx={{ width: 56, height: 56, alignSelf: "center" }} />
-            <Button variant="contained" component="label">
-              Escolher foto
-              <input type="file" accept="image/*" hidden onChange={handlePictureChange} />
-            </Button>
-            <TextField label="Nome" value={username} onChange={(e) => setUsername(e.target.value)} required />
-            <TextField
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              // Permite editar email tanto na criação quanto edição!
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              mt: 1,
+              alignItems: "center",
+            }}
+          >
+            {/* Sempre mostra preview */}
+            <Avatar
+              src={preview}
+              sx={{
+                width: 60,
+                height: 60,
+                boxShadow: 2,
+                border: "2px solid #eee",
+                mb: 1,
+              }}
             />
-            {/* Senha só na criação */}
+            {/* Só deixa mudar foto em modo editar */}
+            {initialData && (
+              <Button
+                variant="contained"
+                component="label"
+                sx={{
+                  mb: 1,
+                  bgcolor: "grey.100",
+                  color: "primary.main",
+                  fontWeight: 600,
+                  "&:hover": { bgcolor: "primary.main", color: "#fff" },
+                }}
+              >
+                Trocar foto
+                <input type="file" accept="image/*" hidden onChange={handlePictureChange} />
+              </Button>
+            )}
+
+            <TextField label="Nome" value={username} onChange={(e) => setUsername(e.target.value)} required fullWidth />
+            <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth autoComplete="off" />
+            {/* Só pede senha no novo user */}
             {!initialData && (
               <TextField
                 label="Senha"
@@ -100,6 +107,7 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
                 onChange={(e) => setPassword(e.target.value)}
                 inputProps={{ minLength: 6 }}
                 required
+                fullWidth
                 helperText="Mínimo 6 caracteres"
               />
             )}
@@ -111,19 +119,26 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 inputProps={{ minLength: 6 }}
+                fullWidth
                 helperText="Deixe em branco para não alterar"
               />
             )}
-            <TextField select label="Tipo" value={role} onChange={(e) => setRole(e.target.value)}>
-              <MenuItem value="user">Usuário</MenuItem>
+            <TextField select label="Tipo" value={role} onChange={(e) => setRole(e.target.value)} fullWidth>
+              <MenuItem value="user">Utilizador</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
             </TextField>
-            {error && <Box sx={{ color: "red", mt: 1 }}>{error}</Box>}
+            {error && (
+              <Typography color="error" sx={{ mt: 1 }}>
+                {error}
+              </Typography>
+            )}
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Cancelar</Button>
-          <Button type="submit" disabled={loading}>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={onClose} color="secondary">
+            Cancelar
+          </Button>
+          <Button type="submit" variant="contained" disabled={loading}>
             {loading ? "Salvando..." : "Salvar"}
           </Button>
         </DialogActions>

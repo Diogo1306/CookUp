@@ -5,7 +5,7 @@ import UsersTable from "../components/UsersTable";
 import { Typography, Button, CircularProgress, Box } from "@mui/material";
 
 export default function UsersPage() {
-  const { users, loading, error, handleCreate, handleEdit, handleDelete, handleBlock, handleUnblock, loadUsers } = useUsers();
+  const { users, loading, error, loadUsers, handleCreate, handleEdit, handleDelete, handleBlock, handleUnblock } = useUsers();
   const [openForm, setOpenForm] = useState(false);
   const [editData, setEditData] = useState(null);
 
@@ -41,17 +41,26 @@ export default function UsersPage() {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Usuários do Sistema
+        Utilizador do Sistema
       </Typography>
-      <Button variant="contained" sx={{ mb: 2 }} onClick={handleAdd}>
-        Novo Usuário
+      <Button variant="contained" sx={{ mb: 2 }} onClick={handleAdd} disabled={loading}>
+        {loading ? <CircularProgress size={18} color="inherit" sx={{ mr: 1 }} /> : null}
+        Novo Utilizador
       </Button>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress />
         </Box>
       ) : (
-        <UsersTable users={users} onEdit={handleEditUser} onBlock={handleBlock} onUnblock={handleUnblock} reloadUsers={loadUsers} />
+        <UsersTable
+          users={users}
+          onEdit={handleEditUser}
+          onDelete={handleDelete}
+          onBlock={handleBlock}
+          onUnblock={handleUnblock}
+          reloadUsers={loadUsers}
+          loading={loading}
+        />
       )}
       <UsersForm open={openForm} onClose={handleCloseForm} onSave={handleSave} initialData={editData} loading={loading} />
       {error && <Typography color="error">{error}</Typography>}

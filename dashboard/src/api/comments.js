@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://192.168.0.26/PAP/CookUp_Core/public/api.php";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function getAllComments() {
   const res = await axios.get(API_URL, { params: { route: "comments_admin" } });

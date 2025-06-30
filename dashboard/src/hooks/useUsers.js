@@ -1,45 +1,19 @@
 import { useState, useCallback } from "react";
-import { getAllUsers, createUser, updateUser, deleteUser, blockUser, unblockUser } from "../api/user"; // Corrigido aqui
+import { getAllUsers, createUser, updateUser, deleteUser, blockUser, unblockUser } from "../api/user";
 
 export function useUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleBlock = async (user_id, firebase_uid) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await blockUser(user_id, firebase_uid);
-      await loadUsers();
-    } catch (err) {
-      setError("Erro ao bloquear usuário.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUnblock = async (user_id, firebase_uid) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await unblockUser(user_id, firebase_uid);
-      await loadUsers();
-    } catch (err) {
-      setError("Erro ao desbloquear usuário.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const loadUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await getAllUsers();
-      setUsers(data);
+      setUsers(data || []);
     } catch (err) {
-      setError("Erro ao carregar usuários.");
+      setError("Erro ao carregar utilizadores.");
     }
     setLoading(false);
   }, []);
@@ -53,11 +27,11 @@ export function useUsers() {
         await loadUsers();
         return { success: true };
       } else {
-        setError(result.message || "Erro ao criar usuário.");
+        setError(result.message || "Erro ao criar utilizador.");
         return { success: false, message: result.message };
       }
     } catch (err) {
-      setError("Erro ao criar usuário: " + err.message);
+      setError("Erro ao criar utilizador: " + err.message);
       return { success: false, message: err.message };
     } finally {
       setLoading(false);
@@ -65,7 +39,7 @@ export function useUsers() {
   };
 
   const handleEdit = async (userData) => {
-    setLoading(true); // Adicione aqui para loading correto
+    setLoading(true);
     setError(null);
     try {
       const result = await updateUser(userData);
@@ -73,11 +47,11 @@ export function useUsers() {
         await loadUsers();
         return { success: true };
       } else {
-        setError(result.message || "Erro ao editar usuário.");
+        setError(result.message || "Erro ao editar utilizador.");
         return { success: false, message: result.message };
       }
     } catch (err) {
-      setError("Erro ao editar usuário.");
+      setError("Erro ao editar utilizador: " + err.message);
       return { success: false, message: err.message };
     } finally {
       setLoading(false);
@@ -85,6 +59,10 @@ export function useUsers() {
   };
 
   const handleDelete = async (user_id, firebase_uid) => {
+    if (!user_id) {
+      setError("ID do utilizador inválido.");
+      return { success: false, message: "ID do utilizador inválido." };
+    }
     setLoading(true);
     setError(null);
     try {
@@ -93,12 +71,46 @@ export function useUsers() {
         await loadUsers();
         return { success: true };
       } else {
-        setError(result.message || "Erro ao deletar usuário.");
+        setError(result.message || "Erro ao apagar utilizador.");
         return { success: false, message: result.message };
       }
     } catch (err) {
-      setError("Erro ao deletar usuário.");
+      setError("Erro ao apagar utilizador: " + err.message);
       return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBlock = async (user_id, firebase_uid) => {
+    if (!user_id || !firebase_uid) {
+      setError("IDs inválidos para bloquear!");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      await blockUser(user_id, firebase_uid);
+      await loadUsers();
+    } catch (err) {
+      setError("Erro ao bloquear utilizador.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUnblock = async (user_id, firebase_uid) => {
+    if (!user_id || !firebase_uid) {
+      setError("IDs inválidos para desbloquear!");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      await unblockUser(user_id, firebase_uid);
+      await loadUsers();
+    } catch (err) {
+      setError("Erro ao desbloquear utilizador.");
     } finally {
       setLoading(false);
     }

@@ -20,7 +20,7 @@ export default function CommentsPage() {
           <CircularProgress />
         </Box>
       ) : (
-        <CommentsTable comments={comments} onDelete={handleDelete} loading={loading} />
+        <CommentsTable comments={comments} onDelete={handleDelete} onRefresh={loadComments} loading={loading} />
       )}
       {error && <Typography color="error">{error}</Typography>}
     </Box>
