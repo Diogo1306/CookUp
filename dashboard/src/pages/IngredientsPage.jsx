@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useIngredients } from "../hooks/useIngredients";
 import IngredientsForm from "../components/IngredientsForm";
 import IngredientsTable from "../components/IngredientsTable";
-import { Typography, Button, CircularProgress, Box } from "@mui/material";
+import { Typography, Button, CircularProgress, Box, Stack } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function IngredientsPage() {
   const { ingredients, loading, error, handleCreate, handleEdit, handleDelete, loadIngredients } = useIngredients();
@@ -17,10 +18,12 @@ export default function IngredientsPage() {
     setEditData(null);
     setOpenForm(true);
   }
+
   function handleEditIngredient(ingredient) {
     setEditData(ingredient);
     setOpenForm(true);
   }
+
   async function handleSave(form) {
     if (editData) {
       await handleEdit(form);
@@ -38,13 +41,25 @@ export default function IngredientsPage() {
   }
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        Ingredientes
-      </Typography>
-      <Button variant="contained" sx={{ mb: 2 }} onClick={handleAdd}>
-        Novo Ingrediente
-      </Button>
+    <Box sx={{ m: { xs: 1, md: 3 }, mt: 3, maxWidth: "100%" }}>
+      <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAdd}
+          startIcon={<AddIcon />}
+          sx={{
+            borderRadius: 2,
+            fontWeight: 600,
+            textTransform: "none",
+            boxShadow: 1,
+            px: 3,
+          }}
+        >
+          Novo Ingrediente
+        </Button>
+      </Stack>
+
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress />
@@ -58,8 +73,14 @@ export default function IngredientsPage() {
           loading={loading}
         />
       )}
+
       <IngredientsForm open={openForm} onClose={handleCloseForm} onSave={handleSave} initialData={editData} loading={loading} />
-      {error && <Typography color="error">{error}</Typography>}
+
+      {error && (
+        <Typography color="error" mt={2}>
+          {error}
+        </Typography>
+      )}
     </Box>
   );
 }

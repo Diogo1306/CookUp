@@ -30,7 +30,7 @@ export default function CategoryForm({ open, onClose, onSave, initialData, loadi
       category_name: name,
       color_hex: color,
       image_file: imageFile,
-      image_url: initialData?.image_url, // manda o nome antigo para editar se não trocar a imagem
+      image_url: initialData?.image_url,
     });
   }
 

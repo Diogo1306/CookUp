@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Avatar, Box, Chip, Typography, CircularProgress, Tooltip, Stack, IconButton, Button } from "@mui/material";
+import { Avatar, Box, Chip, Typography, CircularProgress, Tooltip, Stack, IconButton, Button, useTheme } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,6 +8,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 
 export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUnblock, reloadUsers, loading = false }) {
+  const theme = useTheme();
   const [loadingRow, setLoadingRow] = useState(null);
 
   const rows = users.map((user) => ({
@@ -21,17 +22,17 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
     {
       field: "profile_picture",
       headerName: "Foto",
-      width: 70,
+      width: 60,
       renderCell: (params) => (
-        <Avatar src={params.value} imgProps={{ referrerPolicy: "no-referrer" }} sx={{ width: 38, height: 38, boxShadow: 1, bgcolor: "grey.100" }} />
+        <Avatar src={params.value} imgProps={{ referrerPolicy: "no-referrer" }} sx={{ width: 36, height: 36, boxShadow: 1, bgcolor: "grey.100" }} />
       ),
       sortable: false,
       filterable: false,
       align: "center",
       headerAlign: "center",
     },
-    { field: "username", headerName: "Nome", width: 150 },
-    { field: "email", headerName: "Email", width: 180 },
+    { field: "username", headerName: "Nome", minWidth: 130, flex: 1 },
+    { field: "email", headerName: "Email", minWidth: 180, flex: 1.2 },
     { field: "user_id", headerName: "ID", width: 80 },
     {
       field: "role",
@@ -43,8 +44,8 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
           size="small"
           sx={{
             fontWeight: 500,
-            bgcolor: params.value === "admin" ? "secondary.main" : "grey.200",
-            color: params.value === "admin" ? "white" : "text.primary",
+            bgcolor: params.value === "admin" ? "secondary.main" : "green",
+            color: params.value === "admin" ? "white" : "white",
             textTransform: "capitalize",
           }}
         />
@@ -53,7 +54,7 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
     {
       field: "blocked",
       headerName: "Status",
-      width: 120,
+      width: 100,
       renderCell: (params) =>
         params.value ? (
           <Chip label="Bloqueado" color="error" size="small" icon={<LockIcon fontSize="small" />} />
@@ -66,22 +67,12 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
     {
       field: "actions",
       headerName: "Ações",
-      width: 180,
-      align: "center",
-      headerAlign: "center",
-      sortable: false,
-      filterable: false,
+      minWidth: 160,
       renderCell: (params) => (
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={0.5}>
           <Tooltip title="Editar">
             <span>
-              <IconButton
-                size="small"
-                color="primary"
-                onClick={() => onEdit?.(params.row)}
-                disabled={loadingRow}
-                aria-label={`Editar ${params.row.username}`}
-              >
+              <IconButton size="small" color="primary" onClick={() => onEdit?.(params.row)} disabled={loadingRow}>
                 <EditIcon fontSize="small" />
               </IconButton>
             </span>
@@ -107,65 +98,43 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
                   }
                 }}
                 disabled={loadingRow === params.row.id}
-                aria-label={`Eliminar ${params.row.username}`}
               >
                 {loadingRow === params.row.id ? <CircularProgress size={16} color="inherit" /> : <DeleteIcon fontSize="small" />}
               </IconButton>
             </span>
           </Tooltip>
-          {params.row.blocked ? (
-            <Tooltip title="Desbloquear">
-              <span>
-                <IconButton
-                  size="small"
-                  color="warning"
-                  onClick={async () => {
-                    if (!params.row.id || !params.row.firebase_uid) {
-                      alert("IDs inválidos!");
-                      return;
-                    }
-                    setLoadingRow(params.row.id + "_unblock");
-                    try {
-                      await onUnblock?.(params.row.id, params.row.firebase_uid);
-                    } catch (e) {
-                      alert("Erro ao desbloquear: " + e.message);
-                    }
-                    setLoadingRow(null);
-                  }}
-                  disabled={loadingRow === params.row.id + "_unblock"}
-                  aria-label={`Desbloquear ${params.row.username}`}
-                >
-                  {loadingRow === params.row.id + "_unblock" ? <CircularProgress size={16} color="inherit" /> : <LockOpenIcon fontSize="small" />}
-                </IconButton>
-              </span>
-            </Tooltip>
-          ) : (
-            <Tooltip title="Bloquear">
-              <span>
-                <IconButton
-                  size="small"
-                  color="warning"
-                  onClick={async () => {
-                    if (!params.row.id || !params.row.firebase_uid) {
-                      alert("IDs inválidos!");
-                      return;
-                    }
-                    setLoadingRow(params.row.id + "_block");
-                    try {
-                      await onBlock?.(params.row.id, params.row.firebase_uid);
-                    } catch (e) {
-                      alert("Erro ao bloquear: " + e.message);
-                    }
-                    setLoadingRow(null);
-                  }}
-                  disabled={loadingRow === params.row.id + "_block"}
-                  aria-label={`Bloquear ${params.row.username}`}
-                >
-                  {loadingRow === params.row.id + "_block" ? <CircularProgress size={16} color="inherit" /> : <LockIcon fontSize="small" />}
-                </IconButton>
-              </span>
-            </Tooltip>
-          )}
+          <Tooltip title={params.row.blocked ? "Desbloquear" : "Bloquear"}>
+            <span>
+              <IconButton
+                size="small"
+                color="warning"
+                onClick={async () => {
+                  if (!params.row.id || !params.row.firebase_uid) {
+                    alert("IDs inválidos!");
+                    return;
+                  }
+                  const action = params.row.blocked ? onUnblock : onBlock;
+                  const key = params.row.id + (params.row.blocked ? "_unblock" : "_block");
+                  setLoadingRow(key);
+                  try {
+                    await action?.(params.row.id, params.row.firebase_uid);
+                  } catch (e) {
+                    alert("Erro ao atualizar status: " + e.message);
+                  }
+                  setLoadingRow(null);
+                }}
+                disabled={loadingRow === params.row.id + (params.row.blocked ? "_unblock" : "_block")}
+              >
+                {loadingRow === params.row.id + (params.row.blocked ? "_unblock" : "_block") ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : params.row.blocked ? (
+                  <LockOpenIcon fontSize="small" />
+                ) : (
+                  <LockIcon fontSize="small" />
+                )}
+              </IconButton>
+            </span>
+          </Tooltip>
         </Stack>
       ),
     },
@@ -175,23 +144,14 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
     <Box
       sx={{
         width: "100%",
-        p: { xs: 1, sm: 2 },
-        bgcolor: (theme) => theme.palette.background.paper,
+        p: 2,
+        bgcolor: theme.palette.background.paper,
         borderRadius: 3,
-        boxShadow: 2,
+        boxShadow: 3,
         mb: 4,
-        overflowX: "auto",
       }}
     >
-      {/* Header e botão atualizar */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 2,
-        }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Typography variant="h6" fontWeight={700} color="primary.main">
           Utilizadores
         </Typography>
@@ -215,7 +175,6 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
                   color: "#fff",
                 },
               }}
-              aria-label="Atualizar utilizadores"
             >
               Atualizar
             </Button>
@@ -231,35 +190,27 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
         autoHeight
         loading={loading}
         sx={{
-          width: "100%",
-          minWidth: 700,
-          background: (theme) => theme.palette.background.default,
+          background: theme.palette.background.default,
           borderRadius: 2,
           border: "none",
-          "& .MuiDataGrid-row": {
-            transition: "background 0.15s",
-            "&:hover": {
-              bgcolor: (theme) => (theme.palette.mode === "dark" ? "#23272c" : "#f6f6f9"),
-              boxShadow: "0 2px 18px -10px #0002",
-              zIndex: 1,
-            },
+          "& .MuiDataGrid-row:hover": {
+            bgcolor: theme.palette.action.hover,
+            boxShadow: "0 2px 12px -6px rgba(0,0,0,0.1)",
           },
           "& .MuiDataGrid-columnHeaders": {
-            bgcolor: "grey.50",
+            bgcolor: "grey.100",
             fontWeight: 700,
-            fontSize: "1rem",
-            boxShadow: "0 2px 8px -6px #0003",
+            fontSize: 14,
+            borderBottom: `1px solid ${theme.palette.divider}`,
           },
           "& .MuiDataGrid-cell": {
             py: 1,
-            transition: "background 0.15s",
             whiteSpace: "nowrap",
-            maxWidth: 200,
             overflow: "hidden",
             textOverflow: "ellipsis",
           },
           "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
+            borderTop: `1px solid ${theme.palette.divider}`,
             bgcolor: "background.paper",
           },
         }}

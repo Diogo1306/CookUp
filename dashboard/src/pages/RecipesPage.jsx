@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useRecipes } from "../hooks/useRecipes";
 import RecipeForm from "../components/RecipeForm";
 import RecipeTable from "../components/RecipeTable";
-import { Button, CircularProgress, Box, Typography, Stack } from "@mui/material";
+import { Button, CircularProgress, Box, Typography, Stack, useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import { getAllCategories } from "../api/categories";
 import { getRecipeById } from "../api/recipe";
 
 export default function RecipesPage() {
+  const theme = useTheme();
   const { recipes, loading, error, handleDelete, handleSave, handleRefresh } = useRecipes();
   const [openForm, setOpenForm] = useState(false);
   const [editData, setEditData] = useState(null);
@@ -43,15 +43,15 @@ export default function RecipesPage() {
   }
 
   return (
-    <Box sx={{ m: { xs: 0, md: 3 }, mt: 3, maxWidth: "99vw" }}>
-      <Stack direction="row" spacing={2} sx={{ mb: 2, justifyContent: "flex-start" }}>
+    <Box sx={{ m: { xs: 1, md: 3 }, mt: 3, maxWidth: "100%" }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <Button
           onClick={handleAdd}
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           sx={{
-            fontWeight: 700,
+            fontWeight: 600,
             borderRadius: 2,
             textTransform: "none",
             px: 3,
@@ -61,17 +61,17 @@ export default function RecipesPage() {
           Nova Receita
         </Button>
       </Stack>
-      {loading && (
+      {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
           <CircularProgress />
         </Box>
-      )}
-      {error && (
+      ) : error ? (
         <Typography color="error" sx={{ mb: 2 }}>
           {error}
         </Typography>
+      ) : (
+        <RecipeTable recipes={recipes} onEdit={handleEdit} onDelete={handleDelete} onRefresh={handleRefresh} />
       )}
-      {!loading && !error && <RecipeTable recipes={recipes} onEdit={handleEdit} onDelete={handleDelete} onRefresh={handleRefresh} />}
       <RecipeForm open={openForm} handleClose={handleFormClose} handleSave={handleFormSave} initialData={editData} allCategories={allCategories} />
       {loadingEdit && (
         <Box

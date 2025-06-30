@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useUsers } from "../hooks/useUsers";
 import UsersForm from "../components/UsersFrom";
 import UsersTable from "../components/UsersTable";
-import { Typography, Button, CircularProgress, Box } from "@mui/material";
+import { Typography, Button, CircularProgress, Box, Stack } from "@mui/material";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 export default function UsersPage() {
   const { users, loading, error, loadUsers, handleCreate, handleEdit, handleDelete, handleBlock, handleUnblock } = useUsers();
@@ -39,14 +40,26 @@ export default function UsersPage() {
   }
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        Utilizador do Sistema
-      </Typography>
-      <Button variant="contained" sx={{ mb: 2 }} onClick={handleAdd} disabled={loading}>
-        {loading ? <CircularProgress size={18} color="inherit" sx={{ mr: 1 }} /> : null}
-        Novo Utilizador
-      </Button>
+    <Box sx={{ m: { xs: 1, md: 3 }, mt: 3, maxWidth: "100%" }}>
+      <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAdd}
+          disabled={loading}
+          startIcon={<PersonAddIcon />}
+          sx={{
+            borderRadius: 2,
+            fontWeight: 600,
+            textTransform: "none",
+            boxShadow: 1,
+            px: 3,
+          }}
+        >
+          Novo Utilizador
+        </Button>
+      </Stack>
+
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress />
@@ -62,8 +75,14 @@ export default function UsersPage() {
           loading={loading}
         />
       )}
+
       <UsersForm open={openForm} onClose={handleCloseForm} onSave={handleSave} initialData={editData} loading={loading} />
-      {error && <Typography color="error">{error}</Typography>}
+
+      {error && (
+        <Typography color="error" mt={2}>
+          {error}
+        </Typography>
+      )}
     </Box>
   );
 }
