@@ -128,8 +128,8 @@ public class ProfileFragment extends Fragment {
                         TextView cancel = dialogView.findViewById(R.id.button_cancel);
                         TextView delete = dialogView.findViewById(R.id.button_delete);
 
-                        title.setText("Excluir Receita");
-                        message.setText("Tem certeza que deseja excluir esta receita?");
+                        title.setText(getString(R.string.dialog_delete_recipe_title));
+                        message.setText(getString(R.string.dialog_delete_recipe_message));
 
                         cancel.setOnClickListener(v1 -> dialog.dismiss());
 
@@ -193,7 +193,7 @@ public class ProfileFragment extends Fragment {
 
         profileViewModel.getDeleteSuccess().observe(getViewLifecycleOwner(), success -> {
             if (Boolean.TRUE.equals(success)) {
-                Toast.makeText(requireContext(), "Receita excluída com sucesso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.recipe_deleted_success), Toast.LENGTH_SHORT).show();
                 UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
                 if (user != null) {
                     profileViewModel.loadProfileRecipes(user.getUserId());

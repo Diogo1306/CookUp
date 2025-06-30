@@ -133,12 +133,12 @@ public class SignupFragment extends Fragment {
         String confirmPassword = editConfirmPassword.getText().toString().trim();
 
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            MessageUtils.showSnackbar(view, "Preencha todos os campos.", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.fill_all_fields), Color.RED);
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            MessageUtils.showSnackbar(view, "As senhas não coincidem.", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.passwords_do_not_match), Color.RED);
             return;
         }
 

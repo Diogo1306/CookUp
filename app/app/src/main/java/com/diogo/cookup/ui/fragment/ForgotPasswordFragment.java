@@ -78,18 +78,18 @@ public class ForgotPasswordFragment extends Fragment {
                         List<String> methods = task.getResult().getSignInMethods();
 
                         if (methods != null && methods.contains(GoogleAuthProvider.GOOGLE_SIGN_IN_METHOD)) {
-                            showMessage("Este email está associado a uma conta Google. Deves iniciar sessão com o botão \"Entrar com Google\".");
+                            showMessage(getString(R.string.reset_email_google));
                         } else {
                             firebaseAuth.sendPasswordResetEmail(email)
                                     .addOnCompleteListener(resetTask -> {
-                                        showMessage("Verifica o teu email. Caso exista uma conta associada que não esteja ligada ao Google, enviámos-te instruções para recuperares o acesso. Segue os passos indicados na mensagem para voltares a entrar na tua conta.");
+                                        showMessage(getString(R.string.reset_email_sent));
                                         if (resetTask.isSuccessful()) {
                                             changeButtonToLogin();
                                         }
                                     });
                         }
                     } else {
-                        showMessage("Verifica o teu email. Caso exista uma conta associada que não esteja ligada ao Google, enviámos-te instruções para recuperares o acesso. Segue os passos indicados na mensagem para voltares a entrar na tua conta.");
+                        showMessage(getString(R.string.reset_email_sent));
                     }
                 });
     }

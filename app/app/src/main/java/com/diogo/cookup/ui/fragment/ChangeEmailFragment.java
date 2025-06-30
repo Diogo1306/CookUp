@@ -68,18 +68,17 @@ public class ChangeEmailFragment extends Fragment {
         String password = editTextPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(newEmail) || !android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
-            editTextNewEmail.setError("Por favor, introduz um email válido.");
-            return;
+            editTextNewEmail.setError(getString(R.string.email_incorrect));            return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Introduz a tua palavra-passe.");
+            editTextPassword.setError(getString(R.string.hintPassowrd));
             return;
         }
 
         user.reload().addOnCompleteListener(reloadTask -> {
             if (!reloadTask.isSuccessful()) {
-                MessageUtils.showSnackbar(view, "Erro ao atualizar estado do utilizador.");
+                MessageUtils.showSnackbar(view, getString(R.string.error_updating_user_state));
                 return;
             }
 
@@ -89,14 +88,14 @@ public class ChangeEmailFragment extends Fragment {
                     user.verifyBeforeUpdateEmail(newEmail)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    MessageUtils.showSnackbar(view, "Foi enviado um email de verificação. Verifica a tua caixa de entrada.");
+                                    MessageUtils.showSnackbar(view, getString(R.string.verification_email_sent));
                                     startVerificationCountdown();
                                 } else {
-                                    MessageUtils.showSnackbar(view, "Erro ao enviar verificação: " + task.getException().getMessage());
+                                    MessageUtils.showSnackbar(view, getString(R.string.error_sending_verification, task.getException().getMessage()));
                                 }
                             });
                 } else {
-                    MessageUtils.showSnackbar(view, "Palavra-passe incorreta. Tenta novamente.");
+                    MessageUtils.showSnackbar(view, getString(R.string.password_incorrect_try_again));
                 }
             });
         });
@@ -125,36 +124,36 @@ public class ChangeEmailFragment extends Fragment {
         String confirmedEmail = editTextNewEmail.getText().toString().trim();
 
         if (TextUtils.isEmpty(confirmedEmail) || !android.util.Patterns.EMAIL_ADDRESS.matcher(confirmedEmail).matches()) {
-            editTextNewEmail.setError("Por favor, introduz um email válido.");
+            editTextNewEmail.setError(getString(R.string.error_invalid_email));
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Introduz a tua palavra-passe.");
+            editTextPassword.setError(getString(R.string.error_enter_password));
             return;
         }
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            MessageUtils.showSnackbar(view, "Erro: utilizador não autenticado.");
+            MessageUtils.showSnackbar(view, getString(R.string.error_user_not_authenticated));
             return;
         }
 
         AuthCredential credential = EmailAuthProvider.getCredential(confirmedEmail, password);
         currentUser.reauthenticate(credential).addOnCompleteListener(authTask -> {
             if (!authTask.isSuccessful()) {
-                MessageUtils.showSnackbar(view, "A autenticação falhou. Tenta novamente.");
+                MessageUtils.showSnackbar(view, getString(R.string.error_authentication_failed));
                 return;
             }
 
             currentUser.reload().addOnCompleteListener(reloadTask -> {
                 if (!reloadTask.isSuccessful()) {
-                    MessageUtils.showSnackbar(view, "Erro ao verificar o estado do email.");
+                    MessageUtils.showSnackbar(view, getString(R.string.error_checking_email_state));
                     return;
                 }
 
                 if (!currentUser.isEmailVerified()) {
-                    MessageUtils.showSnackbar(view, "Ainda não verificaste o novo email.");
+                    MessageUtils.showSnackbar(view, getString(R.string.error_email_not_verified));
                     return;
                 }
 
@@ -172,7 +171,7 @@ public class ChangeEmailFragment extends Fragment {
 
                         userViewModel.updateUser(updatedData);
 
-                        MessageUtils.showSnackbar(view, "Email atualizado com sucesso!");
+                        MessageUtils.showSnackbar(view, getString(R.string.email_updated_successfully));
 
                         new Handler(Looper.getMainLooper()).postDelayed(() -> {
                             if (isAdded()) {
@@ -180,7 +179,7 @@ public class ChangeEmailFragment extends Fragment {
                             }
                         }, 2000);
                     } else {
-                        MessageUtils.showSnackbar(view, "Erro ao carregar os teus dados.");
+                        MessageUtils.showSnackbar(view, getString(R.string.error_loading_your_data));
                     }
                 });
             });

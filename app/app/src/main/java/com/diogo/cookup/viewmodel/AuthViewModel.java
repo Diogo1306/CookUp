@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.data.repository.AuthRepository;
 import com.diogo.cookup.data.repository.UserRepository;
@@ -120,7 +122,7 @@ public class AuthViewModel extends AndroidViewModel {
     public void saveGoogleUser(FirebaseUser firebaseUser) {
         if (firebaseUser != null) {
             String firebaseUid = firebaseUser.getUid();
-            String username = firebaseUser.getDisplayName() != null ? firebaseUser.getDisplayName() : "Usuário Google";
+            String username = firebaseUser.getDisplayName() != null ? firebaseUser.getDisplayName() : getApplication().getString(R.string.google_user);;
             String email = firebaseUser.getEmail();
             String profilePicture = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : "";
 
@@ -132,8 +134,8 @@ public class AuthViewModel extends AndroidViewModel {
                     sharedPrefHelper.saveUser(user);
                     userLiveData.postValue(firebaseUser);
 
-                    if ("Conta atualizada".equals(message)) {
-                        successMessage.postValue("Login bem-sucedido!");
+                    if (getApplication().getString(R.string.account_updated).equals(message)) {
+                        successMessage.postValue(getApplication().getString(R.string.login_successful));
                     } else {
                         successMessage.postValue(message);
                     }

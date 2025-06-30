@@ -67,7 +67,7 @@ public class ChangePasswordFragment extends Fragment {
     private void changePassword(View view) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user == null) {
-            MessageUtils.showSnackbar(view, "Erro: Utilizador não autenticado.", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.error_user_not_authenticated), Color.RED);
             return;
         }
 
@@ -84,24 +84,24 @@ public class ChangePasswordFragment extends Fragment {
             if (authTask.isSuccessful()) {
                 updatePassword(user, newPassword, view);
             } else {
-                MessageUtils.showSnackbar(view, "Palavra-passe atual incorreta.", Color.RED);
+                MessageUtils.showSnackbar(view, getString(R.string.error_current_password_incorrect), Color.RED);
             }
         });
     }
 
     private boolean validateInputs(String currentPassword, String newPassword, String confirmNewPassword, View view) {
         if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmNewPassword.isEmpty()) {
-            MessageUtils.showSnackbar(view, "Preencha todos os campos.", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.error_fill_all_fields), Color.RED);
             return false;
         }
 
         if (!newPassword.equals(confirmNewPassword)) {
-            MessageUtils.showSnackbar(view, "As novas palavras-passe não coincidem.", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.error_passwords_do_not_match), Color.RED);
             return false;
         }
 
         if (newPassword.length() < 6) {
-            MessageUtils.showSnackbar(view, "A nova palavra-passe deve ter pelo menos 6 caracteres.", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.error_password_too_short), Color.RED);
             return false;
         }
 
@@ -111,15 +111,14 @@ public class ChangePasswordFragment extends Fragment {
     private void updatePassword(FirebaseUser user, String newPassword, View view) {
         user.updatePassword(newPassword).addOnCompleteListener(updateTask -> {
             if (updateTask.isSuccessful()) {
-                MessageUtils.showSnackbar(view, "Palavra-passe alterada com sucesso!", Color.GREEN);
-
+                MessageUtils.showSnackbar(view, getString(R.string.password_changed_success), Color.GREEN);
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     requireActivity().runOnUiThread(() ->
                             androidx.navigation.fragment.NavHostFragment.findNavController(this).popBackStack()
                     );
                 }, 2000);
             } else {
-                MessageUtils.showSnackbar(view, "Erro ao atualizar palavra-passe: " + updateTask.getException().getMessage(), Color.RED);
+                MessageUtils.showSnackbar(view, getString(R.string.error_updating_password, updateTask.getException().getMessage()), Color.RED);
             }
         });
     }

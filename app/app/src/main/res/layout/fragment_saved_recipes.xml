@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_weight="1"
-            android:text="Nome da Lista"
+            android:text="@string/list_name"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/text_large"
             android:fontFamily="@font/poppins_semibold"

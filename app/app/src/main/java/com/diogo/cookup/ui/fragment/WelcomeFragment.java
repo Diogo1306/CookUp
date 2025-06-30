@@ -46,7 +46,6 @@ public class WelcomeFragment extends Fragment implements TextureView.SurfaceText
         Button btnSignup = view.findViewById(R.id.signup_button);
         TextView btnLogin = view.findViewById(R.id.login_button);
 
-        // Correto: usa as ações do nav_graph para navegar entre fragments
         btnSignup.setOnClickListener(v ->
                 NavHostFragment.findNavController(this)
                         .navigate(R.id.action_welcomeFragment_to_signupFragment)

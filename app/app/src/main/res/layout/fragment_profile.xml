@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layoutAnimation="@anim/layout_animation_fade_slide_up"
             android:paddingHorizontal="@dimen/margin_small"
             android:paddingTop="@dimen/margin_large"
             android:paddingBottom="80dp">
@@ -120,7 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="Media de\navaliações"
+                        android:text="@string/average_rating_profile"
                         android:textAlignment="center"
                         android:textColor="@color/gray"
                         android:textSize="@dimen/text_holder" />
@@ -153,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="Visualizações\ntotais"
+                        android:text="@string/user_total_views"
                         android:textAlignment="center"
                         android:textColor="@color/gray"
                         android:textSize="@dimen/text_holder" />
@@ -186,7 +185,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="Receitas\n criadas"
+                        android:text="@string/user_created_recipes"
                         android:textAlignment="center"
                         android:textColor="@color/gray"
                         android:textSize="@dimen/text_holder" />
@@ -219,7 +218,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="Receitas\nFinalizadas"
+                        android:text="@string/users_finished_recipes"
                         android:textAlignment="center"
                         android:textColor="@color/gray"
                         android:textSize="@dimen/text_holder" />
@@ -243,7 +242,7 @@
                     android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginBottom="@dimen/margin_micro"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="Suas receitas"
+                    android:text="@string/your_recipes"
                     android:textSize="@dimen/text_large_m" />
 
                 <androidx.recyclerview.widget.RecyclerView

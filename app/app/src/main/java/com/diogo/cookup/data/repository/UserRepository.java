@@ -121,7 +121,6 @@ public class UserRepository {
         });
     }
 
-
     public interface UserCallback {
         void onSuccess(UserData user, String message);
         void onError(String message);

@@ -72,7 +72,7 @@ public class SettingsFragment extends Fragment {
         if (currentUser != null) {
             userViewModel.loadUser(currentUser.getUid());
         } else {
-            MessageUtils.showSnackbar(view, "Usuário não logado", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.user_not_logged_in), Color.RED);
         }
     }
 

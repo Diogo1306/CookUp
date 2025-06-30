@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
-            android:text="Aparência"
+            android:text="@string/settings_appearance_title"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/text_large"
             android:fontFamily="@font/poppins_semibold" />
@@ -73,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Claro"
+                android:text="@string/settings_theme_light"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_medium" />
 
@@ -105,7 +105,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Escuro"
+                android:text="@string/settings_theme_dark"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_medium" />
 
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Usar definições do sistema"
+                    android:text="@string/settings_theme_system"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
@@ -157,7 +157,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Corresponder às definições do dispositivo"
+                android:text="@string/settings_theme_system_sub"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/text_small" />
         </LinearLayout>
