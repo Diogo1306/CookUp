@@ -69,7 +69,6 @@ class SearchFilters
             $where[] = "created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
         }
 
-        // --- SQL Base ---
         if ($isRecommended) {
             $userId = (int)$params['userId'];
             $types = 'i' . $types;
