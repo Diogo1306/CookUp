@@ -8,6 +8,7 @@ if (IS_LOCAL) {
     define('DB_USER', 'root');
     define('DB_PASS', '');
 
+    // Troque ip, abre o cmd digite ipconfig e pegue o IPv4 Address, caso seja presiso mudar url tambem pode
     define('BASE_URL', 'http://192.168.0.26/PAP/CookUp_Core/');
 } else {
     // define('DB_HOST', 'meu.servidor.com');
