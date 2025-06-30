@@ -22,7 +22,7 @@
             android:layout_height="@dimen/icon_size_large"
             android:src="@drawable/ic_arrow_left"
             android:padding="@dimen/padding_very_small"
-            android:contentDescription="Voltar" />
+            android:contentDescription="@string/back" />
 
         <EditText
             android:id="@+id/editTextSearch"
@@ -32,7 +32,7 @@
             android:drawableStart="@drawable/ic_search"
             android:drawableEnd="@drawable/ic_close"
             android:drawablePadding="@dimen/padding_small"
-            android:hint="Pesquisar receitas, categorias e ingredientes..."
+            android:hint="@string/search_hint"
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:maxLines="1"

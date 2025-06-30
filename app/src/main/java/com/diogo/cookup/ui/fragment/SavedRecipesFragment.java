@@ -56,7 +56,7 @@ public class SavedRecipesFragment extends Fragment {
                 recipe -> {
                     viewModel.removeRecipeFromList(listId, recipe.getRecipeId());
                     adapter.removeRecipe(recipe);
-                    Toast.makeText(requireContext(), "Receita removida da lista", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.recipe_removed_from_list), Toast.LENGTH_SHORT).show();
                 },
                 recipe -> {
                     NavHostFragment.findNavController(this)

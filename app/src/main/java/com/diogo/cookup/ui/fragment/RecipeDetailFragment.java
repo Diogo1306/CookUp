@@ -124,7 +124,7 @@ public class RecipeDetailFragment extends Fragment {
                 int userId = SharedPrefHelper.getInstance(requireContext()).getUser().getUserId();
                 viewModel.submitRatingAndComment(userId, recipeId, 0, comment);
             } else {
-                Toast.makeText(requireContext(), "Escreve algo antes de comentar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.write_comment_first), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -136,7 +136,7 @@ public class RecipeDetailFragment extends Fragment {
                 TrackingRepository trackingRepository = new TrackingRepository();
                 trackingRepository.sendTracking(new TrackRequest(userId, recipeId, "finish"), new MutableLiveData<>());
 
-                Toast toast = Toast.makeText(requireContext(), "Receita finalizada com sucesso!", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(requireContext(), getString(R.string.recipe_finished_success), Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
                 toast.show();
             });
@@ -200,7 +200,7 @@ public class RecipeDetailFragment extends Fragment {
             }
 
             recipeTitle.setText(recipe.getTitle());
-            recipeAuthor.setText("Por " + recipe.getAuthorName());
+            recipeAuthor.setText(getString(R.string.by_author, recipe.getAuthorName()));
             txtTime.setText(getString(R.string.preparation_time_minutes, recipe.getPreparationTime()));
             txtDifficulty.setText(recipe.getDifficulty());
 
@@ -255,7 +255,7 @@ public class RecipeDetailFragment extends Fragment {
 
                     int lineEndIndex = layout.getLineEnd(1);
                     String visibleText = fullDescription.substring(0, Math.min(lineEndIndex, fullDescription.length())).trim();
-                    String suffix = "... Ver mais";
+                    String suffix = getString(R.string.see_more_suffix);
 
                     while ((visibleText + suffix).length() > lineEndIndex && visibleText.length() > 0) {
                         visibleText = visibleText.substring(0, visibleText.length() - 1);
@@ -263,7 +263,7 @@ public class RecipeDetailFragment extends Fragment {
 
                     String finalText = visibleText + suffix;
                     SpannableString spannable = new SpannableString(finalText);
-                    int start = finalText.indexOf("Ver mais");
+                    int start = finalText.indexOf(getString(R.string.see_more));
 
                     spannable.setSpan(new ClickableSpan() {
                         @Override

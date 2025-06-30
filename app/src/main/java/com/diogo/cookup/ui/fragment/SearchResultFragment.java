@@ -108,7 +108,7 @@ public class SearchResultFragment extends Fragment {
                 recipeAdapter.setData(response.getData());
             } else {
                 recipeAdapter.setData(new ArrayList<>());
-                Toast.makeText(getContext(), "Nenhuma receita encontrada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.no_recipes_found), Toast.LENGTH_SHORT).show();
             }
         });
 

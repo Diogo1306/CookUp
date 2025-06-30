@@ -119,7 +119,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
-                            android:text="Título da Receita"
+                            android:text="@string/recipe_title"
                             android:textColor="@color/text_primary"
                             android:textSize="@dimen/text_large"
                             android:fontFamily="@font/poppins_semibold"
@@ -141,7 +141,7 @@
                                 android:id="@+id/txt_rating"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="5.0"
+                                android:text="0.0"
                                 android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_medium"
                                 android:layout_marginStart="4dp"/>
@@ -161,7 +161,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Feito por ..."
+                            android:text="@string/recipe_made_by"
                             android:textSize="@dimen/text_small"
                             android:textColor="@color/text_secondary"
                             android:gravity="top"/>
@@ -181,7 +181,7 @@
                                 android:id="@+id/txt_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="10 mins"
+                                android:text="0 mins"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="@dimen/text_small"
                                 android:layout_marginStart="4dp"/>
@@ -195,7 +195,7 @@
                                 android:id="@+id/txt_difficulty"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Medium"
+                                android:text="vazio"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="@dimen/text_small"
                                 android:layout_marginStart="4dp"/>
@@ -215,7 +215,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Descrição"
+                        android:text="@string/recipe_description"
                         android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_large_m"
                         android:fontFamily="@font/poppins_semibold"
@@ -239,7 +239,7 @@
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:layout_marginTop="@dimen/text_large_m"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Ingredients"
+                android:text="@string/ingredients"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_medium" />
 
@@ -257,7 +257,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Intruções"
+                android:text="@string/instructions"
                 android:textSize="@dimen/text_large" />
 
             <TextView
@@ -277,7 +277,7 @@
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Comentários"
+                android:text="@string/comments"
                 android:textSize="@dimen/margin_medium" />
 
             <EditText
@@ -285,7 +285,7 @@
                 style="@style/input"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
-                android:hint="Escreve um comentário..."
+                android:hint="@string/write_a_comment"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="5"
                 android:minLines="1"
@@ -302,7 +302,7 @@
                 android:layout_marginTop="@dimen/text_very_small"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Comentar"
+                android:text="@string/comment"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_very_small" />
 
@@ -323,7 +323,7 @@
     <LinearLayout
         android:id="@+id/bottom_button_container"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/top_fade_background"
         android:orientation="vertical">
@@ -335,7 +335,7 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/margin_small"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Finalizar Receita"
+            android:text="@string/finish_recipe"
             android:textColor="@color/white"
             android:textSize="@dimen/text_small" />
     </LinearLayout>

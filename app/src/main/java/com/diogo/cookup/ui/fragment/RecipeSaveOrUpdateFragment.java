@@ -255,7 +255,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        galleryLauncher.launch(Intent.createChooser(intent, "Escolher imagens"));
+        galleryLauncher.launch(Intent.createChooser(intent, getString(R.string.choose_images)));
     }
 
     private void handleImageSelection(Intent data) {
@@ -278,7 +278,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
             if (file != null && file.length() < 2 * 1024 * 1024) {
                 imageFiles.add(file);
             } else {
-                Toast.makeText(getContext(), "Imagem ignorada: muito pesada ou falha na leitura.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.image_too_large_or_failed), Toast.LENGTH_SHORT).show();
             }
         }
         galleryAdapter.notifyDataSetChanged();
@@ -326,15 +326,15 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
 
         if (title.isEmpty() || description.isEmpty() || instructions.isEmpty() ||
                 difficulty.isEmpty() || servingsStr.isEmpty() || prepTimeStr.isEmpty()) {
-            Toast.makeText(getContext(), "Preencha todos os campos obrigatórios.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.fill_required_fields), Toast.LENGTH_SHORT).show();
             return;
         }
         if (ingredientSaveOrUpdateAdapter.getItemCount() == 0) {
-            Toast.makeText(getContext(), "Adicione pelo menos um ingrediente.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.add_at_least_one_ingredient), Toast.LENGTH_SHORT).show();
             return;
         }
         if (imageFiles.isEmpty()) {
-            Toast.makeText(getContext(), "Adicione pelo menos uma imagem.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.add_at_least_one_image), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -347,7 +347,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
             if (chip.isChecked()) selectedCats.add((Integer) chip.getTag());
         }
         if (selectedCats.isEmpty()) {
-            Toast.makeText(getContext(), "Selecione pelo menos uma categoria.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.select_at_least_one_category), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -374,7 +374,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
                         prepTime, servings, selectedCats, imagensNovas, imagensAntigas
                 ).observe(getViewLifecycleOwner(), recipeData -> {
             Toast.makeText(getContext(),
-                    recipeId == null ? "Receita salva!" : "Receita atualizada!",
+                    recipeId == null ? getString(R.string.recipe_saved) : getString(R.string.recipe_updated),
                     Toast.LENGTH_SHORT
             ).show();
             NavHostFragment.findNavController(this).popBackStack();

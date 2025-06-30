@@ -71,7 +71,7 @@ public class SettingsProfileFragment extends Fragment {
 
         userViewModel.getSuccessMessageLiveData().observe(getViewLifecycleOwner(), message -> {
             if (message != null && !message.isEmpty()) {
-                MessageUtils.showSnackbar(requireView(), "Perfil salvo com sucesso!");
+                MessageUtils.showSnackbar(requireView(), getString(R.string.profile_saved_success));
                 NavHostFragment.findNavController(SettingsProfileFragment.this).navigateUp();
             }
         });
@@ -106,7 +106,7 @@ public class SettingsProfileFragment extends Fragment {
         String newName = editName.getText().toString().trim();
 
         if (newName.isEmpty()) {
-            MessageUtils.showSnackbar(requireView(), "Por favor, insira um nome.");
+            MessageUtils.showSnackbar(requireView(), getString(R.string.enter_name));
             return;
         }
 
@@ -117,7 +117,7 @@ public class SettingsProfileFragment extends Fragment {
                 File imageFile = getFileFromUri(requireContext(), selectedImageUri);
                 userViewModel.updateUserWithImageFile(currentUser.getUserId(), newName, imageFile);
             } catch (IOException e) {
-                MessageUtils.showSnackbar(requireView(), "Erro ao processar imagem.");
+                MessageUtils.showSnackbar(requireView(), getString(R.string.image_processing_error));
                 e.printStackTrace();
             }
         } else {

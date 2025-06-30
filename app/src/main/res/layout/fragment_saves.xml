@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
-                android:text="Olá, xxxxxx 👋"
+                android:text="@string/saved_greeting"
                 android:textSize="@dimen/text_medium" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_semibold"
                 android:includeFontPadding="false"
-                android:text="O que vais cozinhar hoje?"
+                android:text="@string/saved_intro"
                 android:textSize="@dimen/text_large" />
         </LinearLayout>
 

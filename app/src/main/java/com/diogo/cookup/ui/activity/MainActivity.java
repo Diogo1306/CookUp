@@ -1,8 +1,10 @@
 package com.diogo.cookup.ui.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -15,11 +17,17 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.UserData;
 import com.diogo.cookup.network.ApiRetrofit;
 import com.diogo.cookup.network.ApiService;
+import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.NoShowBottomNavigationBehavior;
+import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -32,6 +40,7 @@ import java.util.Map;
 public class MainActivity extends BaseConnectivityActivity {
 
     private UserViewModel userViewModel;
+    private AuthViewModel authViewModel;
     private FirebaseAuth auth;
     private SharedPreferences preferences;
     private final Map<String, NavHostFragment> navHostFragments = new HashMap<>();
@@ -72,6 +81,8 @@ public class MainActivity extends BaseConnectivityActivity {
     protected void onCreate(Bundle savedInstanceState) {
         com.diogo.cookup.utils.ThemeManager.applySavedTheme(this);
 
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         if (savedInstanceState != null) {
             currentTag = savedInstanceState.getString("current_nav_tag", TAG_HOME);
         } else {
@@ -85,6 +96,9 @@ public class MainActivity extends BaseConnectivityActivity {
         View layoutNetworkError = findViewById(R.id.layout_network_error);
         View layoutServerError = findViewById(R.id.layout_server_error);
         View layoutContent = findViewById(R.id.nav_host_container);
+        View rootView = findViewById(android.R.id.content);
+
+        isUserBlock(rootView);
 
         ApiService apiService = ApiRetrofit.getApiService();
         initConnectivityLayouts(layoutNetworkError, layoutServerError, layoutContent, apiService);
@@ -108,6 +122,45 @@ public class MainActivity extends BaseConnectivityActivity {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         handleEmailVerification(getIntent());
+    }
+
+    private void isUserBlock(View view) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            user.getIdToken(true)
+                    .addOnSuccessListener(result -> {
+                        Log.d("AuthCheck", "Usuário ainda ativo.");
+                    })
+                    .addOnFailureListener(e -> {
+                        String errorMsg = "Erro desconhecido ao verificar token";
+                        if (e instanceof FirebaseAuthException) {
+                            FirebaseAuthException authException = (FirebaseAuthException) e;
+                            String errorCode = authException.getErrorCode();
+                            Log.e("AuthCheck", "Firebase Auth error: " + errorCode);
+                            if ("ERROR_USER_DISABLED".equals(errorCode)) {
+                                FirebaseAuth.getInstance().signOut();
+                                MessageUtils.showSnackbar(view, getString(R.string.user_disabled), Toast.LENGTH_LONG);
+                                MessageUtils.showSnackbar(view, "A sua conta foi bloqueada.", Toast.LENGTH_LONG);
+                                authViewModel.logout();
+                                Intent intent = new Intent(MainActivity.this, AuthActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                                return;
+                            }
+                            errorMsg = "Erro de autenticação: " + errorCode;
+                        } else {
+                            Log.e("AuthCheck", errorMsg, e);
+                        }
+                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                    });
+        } else {
+            Intent intent = new Intent(MainActivity.this, AuthActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void setupBottomNavigation() {

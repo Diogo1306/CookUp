@@ -47,7 +47,7 @@ public class UserViewModel extends AndroidViewModel {
 
             @Override
             public void onError(String message) {
-                errorMessage.postValue("Erro ao carregar usuário: " + message);
+                errorMessage.postValue("Erro ao carregar utilizador: " + message);
             }
         });
     }
@@ -79,7 +79,7 @@ public class UserViewModel extends AndroidViewModel {
 
             @Override
             public void onError(String message) {
-                errorMessage.postValue("Erro ao atualizar usuário: " + message);
+                errorMessage.postValue("Erro ao atualizar utilizador: " + message);
             }
         });
     }

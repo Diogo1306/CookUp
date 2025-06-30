@@ -54,7 +54,7 @@ public class SavesFragment extends Fragment {
 
         if (viewModel.getUserLiveData().getValue() != null) {
             String firstName = viewModel.getUserLiveData().getValue().getUsername().split(" ")[0];
-            greeting.setText("Olá, " + firstName + " 👋");
+            greeting.setText(getString(R.string.hello_name, firstName));
         }
 
         View fab = view.findViewById(R.id.fab_add_list);
@@ -99,8 +99,8 @@ public class SavesFragment extends Fragment {
             TextView title = dialogView.findViewById(R.id.dialog_title);
             TextView message = dialogView.findViewById(R.id.dialog_message);
 
-            title.setText("Eliminar lista");
-            message.setText("Tem a certeza que deseja eliminar esta lista?");
+            title.setText(getString(R.string.delete_list_title));
+            message.setText(getString(R.string.delete_list_message));
 
             cancelButton.setOnClickListener(v -> dialog.dismiss());
             deleteButton.setOnClickListener(v -> {
@@ -115,10 +115,10 @@ public class SavesFragment extends Fragment {
 
         viewModel.getSavedLists().observe(getViewLifecycleOwner(), lists -> {
             if (lists != null && !lists.isEmpty()) {
-                intro.setText("Você tem " + lists.size() + " coleções salvas!");
+                intro.setText(getString(R.string.saved_collections_intro, lists.size()));
                 adapter.submitList(lists);
             } else {
-                intro.setText("Você ainda não criou nenhuma lista.");
+                intro.setText(getString(R.string.no_saved_lists_intro));
                 adapter.submitList(new ArrayList<>());
             }
         });

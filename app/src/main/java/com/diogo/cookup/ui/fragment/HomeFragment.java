@@ -130,7 +130,7 @@ public class HomeFragment extends Fragment {
 
         UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
         if (user != null) {
-            tvNameHome.setText("Olá, " + user.getUsername() + " 👋");
+            tvNameHome.setText(getString(R.string.home_greeting, user.getUsername()));
         }
 
         recyclerCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));

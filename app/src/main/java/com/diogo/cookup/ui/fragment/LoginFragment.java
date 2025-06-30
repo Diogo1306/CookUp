@@ -59,7 +59,7 @@ public class LoginFragment extends Fragment {
                             firebaseAuthWithGoogle(idToken);
                         }
                     } catch (Exception e) {
-                        MessageUtils.showSnackbar(requireView(), "Falha no login com Google", Color.RED);
+                        MessageUtils.showSnackbar(requireView(), getString(R.string.login_google_failed), Color.RED);
                     }
                 }
             });
@@ -93,7 +93,7 @@ public class LoginFragment extends Fragment {
     private void setupObservers() {
         authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), firebaseUser -> {
             if (firebaseUser != null) {
-                MessageUtils.showSnackbar(requireView(), "Login bem-sucedido!", Color.GREEN);
+                MessageUtils.showSnackbar(requireView(), getString(R.string.login_success), Color.GREEN);
                 new ViewModelProvider(this).get(UserViewModel.class).loadUser(firebaseUser.getUid());
                 new Handler().postDelayed(this::navigateToMainActivity, 2000);
             }
@@ -152,7 +152,7 @@ public class LoginFragment extends Fragment {
         String password = inputPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            MessageUtils.showSnackbar(view, "Preencha todos os campos.", Color.RED);
+            MessageUtils.showSnackbar(view, getString(R.string.login_fields_empty), Color.RED);
             return;
         }
 
@@ -176,7 +176,7 @@ public class LoginFragment extends Fragment {
                     googleLoginLauncher.launch(intentSenderRequest);
                 })
                 .addOnFailureListener(e -> {
-                    MessageUtils.showSnackbar(requireView(), "Erro ao iniciar login: " + e.getMessage(), Color.RED);
+                    MessageUtils.showSnackbar(requireView(), getString(R.string.login_error_message, e.getMessage()), Color.RED);
                     e.printStackTrace();
                 });
     }
@@ -191,7 +191,7 @@ public class LoginFragment extends Fragment {
                             authViewModel.saveGoogleUser(firebaseUser);
                         }
                     } else {
-                        MessageUtils.showSnackbar(requireView(), "Falha ao autenticar com Google", Color.RED);
+                        MessageUtils.showSnackbar(requireView(), getString(R.string.login_google_auth_failed), Color.RED);
                     }
                 });
     }

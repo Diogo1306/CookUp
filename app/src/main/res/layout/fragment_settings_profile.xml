@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:text="Editar Perfile"
+                android:text="@string/edit_profile_title"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_large"
                 android:fontFamily="@font/poppins_semibold" />
@@ -79,8 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/skeleton_background"
-                        android:contentDescription="Foto de perfil" />
+                        android:src="@drawable/skeleton_background" />
                 </androidx.cardview.widget.CardView>
 
                 <ImageButton
@@ -89,7 +88,6 @@
                     android:layout_height="38dp"
                     android:background="@drawable/bg_circle"
                     android:src="@drawable/ic_edit"
-                    android:contentDescription="Editar foto"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="6dp"
                     android:elevation="4dp" />
@@ -104,7 +102,7 @@
                 android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
-                android:hint="Digite seu nome.."
+                android:hint="@string/edit_profile_hint_name"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -114,7 +112,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_save"
                 style="@style/button_primary"
-                android:text="Salvar"
+                android:text="@string/save"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_medium"
                 android:layout_marginTop="16dp"

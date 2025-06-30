@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.diogo.cookup.R;
+import com.diogo.cookup.data.model.UserData;
+import com.diogo.cookup.data.repository.UserRepository;
 import com.diogo.cookup.ui.activity.AuthActivity;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.utils.SharedPrefHelper;
@@ -143,8 +145,8 @@ public class SettingsAccountFragment extends Fragment {
         TextView title = dialogView.findViewById(R.id.dialog_title);
         TextView message = dialogView.findViewById(R.id.dialog_message);
 
-        title.setText("Eliminar conta");
-        message.setText("Tem certeza que deseja eliminar a sua conta? Esta ação é irreversível.");
+        title.setText(getString(R.string.delete_account_title));
+        message.setText(getString(R.string.delete_account_message));
 
         cancelButton.setOnClickListener(v -> dialog.dismiss());
 
@@ -161,30 +163,32 @@ public class SettingsAccountFragment extends Fragment {
         if (user != null) {
             user.delete().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    deleteUserOnBackend();
+                    deleteUserOnBackend(user.getUid());
                 } else {
                     if (task.getException() instanceof FirebaseAuthRecentLoginRequiredException) {
-                        MessageUtils.showSnackbar(requireView(), "É necessário relogar para eliminar a conta.");
+                        MessageUtils.showSnackbar(requireView(), getString(R.string.must_relogin_to_delete));
                     } else {
-                        MessageUtils.showSnackbar(requireView(), "Erro ao eliminar do Firebase: " + task.getException().getMessage());
+                        MessageUtils.showSnackbar(requireView(), getString(R.string.firebase_delete_error, task.getException().getMessage()));
                     }
                 }
             });
         }
     }
 
-    private void deleteUserOnBackend() {
+    private void deleteUserOnBackend(String firebaseUid) {
         if (userViewModel.getUserLiveData().getValue() == null) {
-            MessageUtils.showSnackbar(requireView(), "Erro: dados do usuário não encontrados.");
+            MessageUtils.showSnackbar(requireView(), getString(R.string.user_data_not_found));
             return;
         }
+
         int userId = userViewModel.getUserLiveData().getValue().getUserId();
-        userViewModel.deleteUser(userId, new com.diogo.cookup.data.repository.UserRepository.UserCallback() {
+
+        userViewModel.deleteUser(userId, new UserRepository.UserCallback() {
             @Override
-            public void onSuccess(com.diogo.cookup.data.model.UserData user, String message) {
+            public void onSuccess(UserData user, String message) {
                 FirebaseAuth.getInstance().signOut();
                 SharedPrefHelper.getInstance(requireContext()).clearUser();
-                MessageUtils.showSnackbar(requireView(), "Conta eliminada com sucesso!");
+                MessageUtils.showSnackbar(requireView(), getString(R.string.account_deleted_success));
                 Intent intent = new Intent(requireActivity(), AuthActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -192,7 +196,7 @@ public class SettingsAccountFragment extends Fragment {
 
             @Override
             public void onError(String message) {
-                MessageUtils.showSnackbar(requireView(), "Erro ao eliminar no backend: " + message);
+                MessageUtils.showSnackbar(requireView(), getString(R.string.backend_delete_error, message));
             }
         });
     }
