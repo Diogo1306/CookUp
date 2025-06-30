@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -61,15 +60,47 @@ public class SearchResultFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_results);
         ImageButton buttonFilters = view.findViewById(R.id.buttonFilters);
 
+        searchViewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
+        savedListViewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
+
+        SearchResultFragmentArgs args = SearchResultFragmentArgs.fromBundle(getArguments());
+        String argQuery = args.getQuery();
+        String argFilter = args.getFilter();
+        String argDifficulty = args.getDifficulty();
+        int argMaxTime = args.getMaxTime();
+        int argMaxIngredients = args.getMaxIngredients();
+
+
+        String query = searchViewModel.getLastQuery();
+        currentFilter = searchViewModel.getLastFilter();
+        currentDifficulty = searchViewModel.getLastDifficulty();
+        currentMaxTime = searchViewModel.getLastMaxTime();
+        currentMaxIngredients = searchViewModel.getLastMaxIngredients();
+
+        if (argQuery != null && !argQuery.isEmpty() && !argQuery.equals(query)) {
+            query = argQuery;
+            currentFilter = argFilter;
+            currentDifficulty = argDifficulty;
+            currentMaxTime = argMaxTime;
+            currentMaxIngredients = argMaxIngredients;
+            searchViewModel.saveSearchParams(
+                    query,
+                    currentFilter,
+                    currentDifficulty,
+                    currentMaxTime,
+                    currentMaxIngredients
+            );
+        }
+
         buttonFilters.setOnClickListener(v -> {
             FiltersBottomSheet dialog = new FiltersBottomSheet();
 
-            Bundle args = new Bundle();
-            args.putString("filter", currentFilter);
-            args.putString("difficulty", currentDifficulty);
-            args.putInt("maxTime", currentMaxTime);
-            args.putInt("maxIngredients", currentMaxIngredients);
-            dialog.setArguments(args);
+            Bundle bundle = new Bundle();
+            bundle.putString("filter", currentFilter);
+            bundle.putString("difficulty", currentDifficulty);
+            bundle.putInt("maxTime", currentMaxTime);
+            bundle.putInt("maxIngredients", currentMaxIngredients);
+            dialog.setArguments(bundle);
 
             dialog.setOnFiltersAppliedListener((filter, difficulty, maxTime, maxIngredients) -> {
                 currentFilter = filter;
@@ -92,8 +123,9 @@ public class SearchResultFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(recipeAdapter);
 
-        searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-        savedListViewModel = new ViewModelProvider(requireActivity()).get(SavedListViewModel.class);
+        editTextSearch.setText(query);
+        editTextSearch.setSelection(query.length());
+        performSearch(query);
 
         savedListViewModel.getSavedRecipeIds().observe(getViewLifecycleOwner(), recipeAdapter::updateSavedIds);
 
@@ -155,30 +187,39 @@ public class SearchResultFragment extends Fragment {
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                 String newQuery = editTextSearch.getText().toString().trim();
-                if (!newQuery.isEmpty()) performSearch(newQuery);
+                if (!newQuery.isEmpty()) {
+                    currentFilter = "";
+                    currentDifficulty = "";
+                    currentMaxTime = 0;
+                    currentMaxIngredients = 0;
+                    searchViewModel.saveSearchParams(
+                            newQuery,
+                            currentFilter,
+                            currentDifficulty,
+                            currentMaxTime,
+                            currentMaxIngredients
+                    );
+                    editTextSearch.setText(newQuery);
+                    editTextSearch.setSelection(newQuery.length());
+                    performSearch(newQuery);
+                }
                 return true;
             }
             return false;
         });
 
-        SearchResultFragmentArgs args = SearchResultFragmentArgs.fromBundle(getArguments());
-        String query = args.getQuery();
-        currentFilter = args.getFilter();
-        currentDifficulty = args.getDifficulty();
-        currentMaxTime = args.getMaxTime();
-        currentMaxIngredients = args.getMaxIngredients();
-
-        editTextSearch.setText(query);
-        editTextSearch.setSelection(query.length());
-
-        if (!query.isEmpty() || !currentFilter.isEmpty()) {
-            performSearch(query);
-        }
-
         return view;
     }
 
     private void performSearch(String query) {
+        searchViewModel.saveSearchParams(
+                query,
+                currentFilter,
+                currentDifficulty,
+                currentMaxTime,
+                currentMaxIngredients
+        );
+
         recipeAdapter.setSkeletonMode(true);
         recipeAdapter.setData(new ArrayList<>());
 
