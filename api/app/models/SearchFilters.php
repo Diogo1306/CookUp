@@ -15,16 +15,24 @@ class SearchFilters
 
         if (!empty($params['query'])) {
             $searchTerm = '%' . strtolower(trim($params['query'])) . '%';
-            $where[] = "(LOWER(r.title) LIKE ? OR EXISTS (
-                SELECT 1 FROM recipe_category rc
-                JOIN categories c ON rc.category_id = c.category_id
-                WHERE rc.recipe_id = r.recipe_id AND LOWER(c.category_name) LIKE ?
-            ))";
+            $where[] = "(
+        LOWER(r.title) LIKE ?
+        OR EXISTS (
+            SELECT 1 FROM recipe_category rc
+            JOIN categories c ON rc.category_id = c.category_id
+            WHERE rc.recipe_id = r.recipe_id AND LOWER(c.category_name) LIKE ?
+        )
+        OR EXISTS (
+            SELECT 1 FROM recipe_ingredients ri
+            JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
+            WHERE ri.recipe_id = r.recipe_id AND LOWER(i.ingredient_name) LIKE ?
+        )
+    )";
             $bindings[] = $searchTerm;
             $bindings[] = $searchTerm;
-            $types .= 'ss';
+            $bindings[] = $searchTerm;
+            $types .= 'sss';
         }
-
 
         if (!empty($params['difficulty'])) {
             $where[] = "difficulty = ?";
