@@ -18,29 +18,29 @@ public class SearchViewModel extends ViewModel {
     private final MutableLiveData<ApiResponse<SearchData>> searchResult = new MutableLiveData<>();
     private final MutableLiveData<ApiResponse<List<RecipeData>>> filteredRecipesResult = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
-    private String lastQuery = "";
-    private String lastFilter = "";
-    private String lastDifficulty = "";
-    private Integer lastMaxTime = 0;
-    private Integer lastMaxIngredients = 0;
+    private String currentQuery = "";
+    private String filter = "";
+    private String difficulty = "";
+    private Integer maxTime = null;
+    private Integer maxIngredients = null;
 
     public LiveData<ApiResponse<SearchData>> getSearchResult() {
         return searchResult;
     }
 
-    public void saveSearchParams(String query, String filter, String difficulty, Integer maxTime, Integer maxIngredients) {
-        this.lastQuery = query;
-        this.lastFilter = filter;
-        this.lastDifficulty = difficulty;
-        this.lastMaxTime = maxTime;
-        this.lastMaxIngredients = maxIngredients;
+    public void saveSearchState(String query, String filter, String difficulty, Integer maxTime, Integer maxIngredients) {
+        this.currentQuery = query;
+        this.filter = filter;
+        this.difficulty = difficulty;
+        this.maxTime = maxTime;
+        this.maxIngredients = maxIngredients;
     }
 
-    public String getLastQuery() { return lastQuery; }
-    public String getLastFilter() { return lastFilter; }
-    public String getLastDifficulty() { return lastDifficulty; }
-    public Integer getLastMaxTime() { return lastMaxTime; }
-    public Integer getLastMaxIngredients() { return lastMaxIngredients; }
+    public String getCurrentQuery() { return currentQuery; }
+    public String getFilter() { return filter; }
+    public String getDifficulty() { return difficulty; }
+    public Integer getMaxTime() { return maxTime; }
+    public Integer getMaxIngredients() { return maxIngredients; }
 
     public LiveData<ApiResponse<List<RecipeData>>> getFilteredRecipesResult() {
         return filteredRecipesResult;
@@ -51,10 +51,6 @@ public class SearchViewModel extends ViewModel {
     }
 
     public void fetchSuggestions(String query) {
-        repository.fetchSearchResults(query, searchResult, errorMessage);
-    }
-
-    public void searchRecipes(String query) {
         repository.fetchSearchResults(query, searchResult, errorMessage);
     }
 

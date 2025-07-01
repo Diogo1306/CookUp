@@ -197,7 +197,7 @@
     <string name="appearance">Aparência</string>
     <string name="email">E-mail</string> <!-- "E-mail" mais comum em Portugal do que "Email" -->
     <string name="Weekly">Da semana</string> <!-- ou "Semana" -->
-    <string name="RecipeNote">Deixa a tua avaliação</string>
+    <string name="RecipeNote">Deixa a tua \n avaliação</string>
     <string name="OptionalComment">Escreve um comentário (opcional)</string>
     <string name="AddIngredients">Adicionar Ingredientes</string>
     <string name="user_disabled">Utilizador bloqueado</string>
