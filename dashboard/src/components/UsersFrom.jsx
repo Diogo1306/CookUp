@@ -45,10 +45,16 @@ export default function UsersForm({ open, onClose, onSave, initialData, loading 
       role,
       email,
     };
+
     if (initialData?.user_id) form.user_id = initialData.user_id;
-    if (!initialData) form.password = password;
-    // Só permite mudar imagem no edit
-    if (initialData && profilePicture) form.profile_picture = profilePicture;
+
+    if (password && password.length >= 6) {
+      form.password = password;
+    }
+
+    if (initialData && profilePicture) {
+      form.profile_picture = profilePicture;
+    }
 
     onSave(form);
   }

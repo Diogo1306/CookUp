@@ -97,7 +97,6 @@ export default function RecipeForm({ open, handleClose, handleSave, initialData,
     }));
   };
 
-  // Categorias (IDs)
   const handleCategoryToggle = (cat) => {
     setForm((f) => {
       const isSelected = f.categories.includes(cat.category_id);
@@ -108,15 +107,12 @@ export default function RecipeForm({ open, handleClose, handleSave, initialData,
     });
   };
 
-  // Imagens
   const handleAddImage = (file) => {
     if (form.gallery.length >= 6) return;
     setForm((f) => ({ ...f, gallery: [...f.gallery, file] }));
   };
 
-  // Trocar para a tua função de upload real!
   const uploadToServer = async (file) => {
-    // Mock: só para mostrar preview local, depois faz upload real!
     return URL.createObjectURL(file);
   };
 

@@ -14,8 +14,8 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
   const rows = users.map((user) => ({
     ...user,
     id: user.user_id,
-    blocked: user.blocked === "1" || user.blocked === 1,
     firebase_uid: user.firebase_uid || "",
+    blocked: user.blocked === "1" || user.blocked === 1,
   }));
 
   const columns = [
@@ -34,6 +34,17 @@ export default function UsersTable({ users = [], onEdit, onDelete, onBlock, onUn
     { field: "username", headerName: "Nome", minWidth: 130, flex: 1 },
     { field: "email", headerName: "Email", minWidth: 180, flex: 1.2 },
     { field: "user_id", headerName: "ID", width: 80 },
+    {
+      field: "firebase_uid", // Nova coluna para o firebase_uid
+      headerName: "Firebase UID",
+      minWidth: 150,
+      flex: 1,
+      renderCell: (params) => (
+        <Typography variant="body2" color="textSecondary">
+          {params.value}
+        </Typography>
+      ),
+    },
     {
       field: "role",
       headerName: "Função",

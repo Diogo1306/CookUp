@@ -1,7 +1,7 @@
 import axios from "axios";
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { deleteFirebaseUser, blockFirebaseUser, unblockFirebaseUser } from "./adminUser";
+import { deleteFirebaseUser, blockFirebaseUser, unblockFirebaseUser, updateFirebaseEmail, updateFirebasePassword } from "./adminUser";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -37,7 +37,6 @@ export async function createUser({ email, password, username, profile_picture, r
   } catch (err) {
     throw new Error("Erro ao criar usuário no Firebase: " + (err.message || err.code));
   }
-  // Só envia profile_picture se existir (quando selecionado)
   const payload = {
     firebase_uid: cred.user.uid,
     username,
@@ -50,7 +49,19 @@ export async function createUser({ email, password, username, profile_picture, r
   return res.data;
 }
 
-export async function updateUser({ user_id, username, email, role, profile_picture }) {
+export async function updateUser({ firebase_uid, user_id, username, email, password, role, profile_picture }) {
+  console.log("Password recebida:", password);
+
+  if (email) {
+    const emailRes = await updateFirebaseEmail(firebase_uid, email);
+    if (!emailRes.success) throw new Error(emailRes.error || "Erro ao atualizar email no Firebase");
+  }
+
+  if (password) {
+    const passRes = await updateFirebasePassword(firebase_uid, password);
+    if (!passRes.success) throw new Error(passRes.error || "Erro ao atualizar password no Firebase");
+  }
+
   const formData = new FormData();
   formData.append("user_id", user_id);
   formData.append("username", username);
