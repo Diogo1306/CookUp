@@ -1,9 +1,6 @@
+<!-- Bloco de skeleton: cor sólida quente + cantos arredondados.
+     O brilho animado é feito pela ShimmerFrameLayout por cima. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <gradient
-        android:type="linear"
-        android:angle="0"
-        android:startColor="@color/skeletonStartColor"
-        android:centerColor="@color/skeletonCenterColor"
-        android:endColor="@color/skeletonStartColor" />
-    <corners android:radius="@dimen/border_radius" />
+    <solid android:color="@color/skeletonStartColor" />
+    <corners android:radius="16dp" />
 </shape>
