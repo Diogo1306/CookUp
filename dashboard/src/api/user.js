@@ -50,8 +50,6 @@ export async function createUser({ email, password, username, profile_picture, r
 }
 
 export async function updateUser({ firebase_uid, user_id, username, email, password, role, profile_picture }) {
-  console.log("Password recebida:", password);
-
   if (email) {
     const emailRes = await updateFirebaseEmail(firebase_uid, email);
     if (!emailRes.success) throw new Error(emailRes.error || "Erro ao atualizar email no Firebase");

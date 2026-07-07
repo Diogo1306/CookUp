@@ -122,7 +122,9 @@ npm install
 node index.js
 ```
 
-> Requer um `serviceAccountKey.json` (chave privada do Firebase) na pasta `firebase-admin/`. Este ficheiro **não está no repositório** por segurança — obtém-no na consola do Firebase (Definições do projeto → Contas de serviço). Mantém esta janela do terminal aberta enquanto usas a dashboard. A porta pode ser mudada com a variável de ambiente `ADMIN_PORT` (por omissão 4000).
+> Requer um `serviceAccountKey.json` (chave privada do Firebase) na pasta `firebase-admin/`. Este ficheiro **não está no repositório** por segurança — obtém-no na consola do Firebase (Definições do projeto → Contas de serviço). Mantém esta janela do terminal aberta enquanto usas a dashboard.
+>
+> **Segurança:** os endpoints exigem um token Firebase válido. Copia `firebase-admin/.env.example` para `.env` e define **`ADMIN_UIDS`** com o UID Firebase do teu admin (consola Firebase → Authentication → Users) para que só admins possam usar a API. `ADMIN_PORT` (default 4000) e `ADMIN_CORS_ORIGIN` também se configuram aí.
 
 ### Configuração num único sítio
 
