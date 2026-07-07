@@ -1,20 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider as MuiThemeProvider, CssBaseline } from "@mui/material";
-import { ThemeProviderCustom, useThemeCustom } from "./context/ThemeContext";
+import { ThemeProviderCustom } from "./context/ThemeContext";
 import { UserProvider, useUser } from "./context/UserContext";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
 
 function AppContent() {
-  const { theme } = useThemeCustom();
   const { user, setUser } = useUser();
-
-  return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      {!user ? <LoginForm onLogin={setUser} /> : <Dashboard />}
-    </MuiThemeProvider>
-  );
+  return !user ? <LoginForm onLogin={setUser} /> : <Dashboard />;
 }
 
 export default function App() {

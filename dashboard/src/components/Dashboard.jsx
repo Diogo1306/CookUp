@@ -100,6 +100,7 @@ export default function Dashboard() {
         </header>
 
         <main className="content">
+          <div className="page-view" key={current}>
           <Routes>
             <Route path="overview" element={<OverviewPage />} />
             <Route path="recipes" element={<RecipesPage />} />
@@ -110,6 +111,7 @@ export default function Dashboard() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/dashboard/overview" replace />} />
           </Routes>
+          </div>
         </main>
       </div>
     </div>

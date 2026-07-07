@@ -1,5 +1,4 @@
-import { createContext, useContext, useMemo, useState, useEffect } from "react";
-import { getTheme } from "../theme/theme";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();
 
@@ -17,10 +16,9 @@ export function ThemeProviderCustom({ children }) {
     document.documentElement.setAttribute("data-theme", mode);
   }, [mode]);
 
-  const theme = useMemo(() => getTheme(mode), [mode]);
   const toggleTheme = () => setMode((m) => (m === "light" ? "dark" : "light"));
 
-  return <ThemeContext.Provider value={{ mode, toggleTheme, theme }}>{children}</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={{ mode, toggleTheme }}>{children}</ThemeContext.Provider>;
 }
 
 export function useThemeCustom() {
