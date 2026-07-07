@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,6 +19,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.bumptech.glide.Glide;
 
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.CategoryData;
@@ -50,6 +53,11 @@ public class HomeFragment extends Fragment {
     private TextView tvNameHome, tvCategoryTitle1, tvCategoryTitle2, tvCategoryTitle3, seeMoreCat1, seeMoreCat2, seeMoreCat3;
     private EditText searchEditText;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    // Hero "Receita da Semana" (destaque no topo do Início)
+    private View cardFeatured;
+    private ImageView imgFeatured;
+    private TextView txtFeaturedTitle, txtFeaturedTime, txtFeaturedRating;
 
     private String categoryName1 = "";
     private String categoryName2 = "";
@@ -117,6 +125,18 @@ public class HomeFragment extends Fragment {
         seeMoreCat3 = view.findViewById(R.id.see_more_cat3);
         tvNameHome = view.findViewById(R.id.tvNameHome);
         searchEditText = view.findViewById(R.id.searchEditText);
+
+        cardFeatured = view.findViewById(R.id.card_featured);
+        imgFeatured = view.findViewById(R.id.img_featured);
+        txtFeaturedTitle = view.findViewById(R.id.txt_featured_title);
+        txtFeaturedTime = view.findViewById(R.id.txt_featured_time);
+        txtFeaturedRating = view.findViewById(R.id.txt_featured_rating);
+
+        // Botão de filtro ao lado da pesquisa: abre os resultados (onde os filtros vivem)
+        View btnFilter = view.findViewById(R.id.btn_filter);
+        if (btnFilter != null) {
+            btnFilter.setOnClickListener(v -> navigateToFilteredSearch("", "", "", 0, 0));
+        }
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -254,6 +274,7 @@ public class HomeFragment extends Fragment {
             if (list != null && !list.isEmpty()) {
                 adapterWeekly.updateData(list, savedRecipeIds);
                 fadeInWithAdapter(recyclerWeekly, adapterWeekly);
+                bindFeatured(list.get(0)); // primeira receita da semana em destaque no hero
             }
         });
 
@@ -336,6 +357,23 @@ public class HomeFragment extends Fragment {
         HomeFragmentDirections.ActionHomeFragmentToRecipeDetailFragment dir =
                 HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId());
         NavUtils.navigateSafe(Navigation.findNavController(requireView()), dir.getActionId(), dir.getArguments());
+    }
+
+    // Preenche o cartão de destaque (hero) com a receita da semana
+    private void bindFeatured(RecipeData recipe) {
+        if (recipe == null || txtFeaturedTitle == null) return;
+        txtFeaturedTitle.setText(recipe.getTitle());
+        txtFeaturedTime.setText(recipe.getPreparationTime() + " min");
+        txtFeaturedRating.setText(String.valueOf(recipe.getAverageRating()));
+        if (imgFeatured != null) {
+            Glide.with(this)
+                    .load(recipe.getImage())
+                    .placeholder(R.drawable.placeholder)
+                    .into(imgFeatured);
+        }
+        if (cardFeatured != null) {
+            cardFeatured.setOnClickListener(v -> openRecipeDetail(recipe));
+        }
     }
 
     private void animateRecycler(RecyclerView recyclerView) {
