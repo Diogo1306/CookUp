@@ -31,7 +31,11 @@ class RecipeController
 
                 $count = count($_FILES['gallery']['name']);
                 for ($i = 0; $i < $count; $i++) {
-                    $ext = pathinfo($_FILES['gallery']['name'][$i], PATHINFO_EXTENSION);
+                    $ext = Upload::safeImageExtension([
+                        'name' => $_FILES['gallery']['name'][$i],
+                        'tmp_name' => $_FILES['gallery']['tmp_name'][$i],
+                    ]);
+                    if ($ext === null) continue; // ignora ficheiros que não são imagens
                     $uniqueName = uniqid('recipe_', true) . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
                     move_uploaded_file($_FILES['gallery']['tmp_name'][$i], $uploadDir . $uniqueName);
                     $galleryNames[] = $uniqueName;

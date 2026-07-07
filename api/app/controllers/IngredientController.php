@@ -27,7 +27,11 @@ class IngredientController
         $image_url = null;
 
         if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES['image_url']['name'], PATHINFO_EXTENSION);
+            $ext = Upload::safeImageExtension($_FILES['image_url']);
+            if ($ext === null) {
+                Response::json(['success' => false, 'message' => 'Ficheiro inválido. Apenas imagens (jpg, png, gif, webp).']);
+                return;
+            }
             $image_url = uniqid('ing_', true) . '.' . $ext;
             $uploadPath = __DIR__ . '/../../uploads/ingredients/' . $image_url;
             if (!move_uploaded_file($_FILES['image_url']['tmp_name'], $uploadPath)) {
@@ -66,7 +70,11 @@ class IngredientController
         $new_image_url = $old_image_url;
 
         if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES['image_url']['name'], PATHINFO_EXTENSION);
+            $ext = Upload::safeImageExtension($_FILES['image_url']);
+            if ($ext === null) {
+                Response::json(['success' => false, 'message' => 'Ficheiro inválido. Apenas imagens (jpg, png, gif, webp).']);
+                return;
+            }
             $new_image_url = uniqid('ing_', true) . '.' . $ext;
             $uploadPath = __DIR__ . '/../../uploads/ingredients/' . $new_image_url;
             if (!move_uploaded_file($_FILES['image_url']['tmp_name'], $uploadPath)) {

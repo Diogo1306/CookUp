@@ -51,7 +51,10 @@ class Recipe
     public static function updateCategories($recipeId, $categories)
     {
         $db = Database::connect();
-        $db->query("DELETE FROM recipe_category WHERE recipe_id = $recipeId");
+        $del = $db->prepare("DELETE FROM recipe_category WHERE recipe_id = ?");
+        $del->bind_param("i", $recipeId);
+        $del->execute();
+        $del->close();
         $stmt = $db->prepare("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?, ?)");
         foreach ($categories as $catId) {
             $stmt->bind_param("ii", $recipeId, $catId);
@@ -64,7 +67,10 @@ class Recipe
     {
 
         $db = Database::connect();
-        $db->query("DELETE FROM recipe_ingredients WHERE recipe_id = $recipeId");
+        $del = $db->prepare("DELETE FROM recipe_ingredients WHERE recipe_id = ?");
+        $del->bind_param("i", $recipeId);
+        $del->execute();
+        $del->close();
         $stmt = $db->prepare("INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity) VALUES (?, ?, ?)");
         foreach ($ingredients as $ing) {
             $name = $ing['ingredient_name'];
@@ -79,7 +85,10 @@ class Recipe
     public static function saveGalleryImages($recipeId, $galleryNames)
     {
         $db = Database::connect();
-        $db->query("DELETE FROM recipe_gallery WHERE recipe_id = $recipeId");
+        $del = $db->prepare("DELETE FROM recipe_gallery WHERE recipe_id = ?");
+        $del->bind_param("i", $recipeId);
+        $del->execute();
+        $del->close();
 
         foreach ($galleryNames as $index => $imgName) {
             $stmt = $db->prepare("INSERT INTO recipe_gallery (recipe_id, image_url, ordering) VALUES (?, ?, ?)");
@@ -106,7 +115,10 @@ class Recipe
         }
         $stmt->close();
 
-        $db->query("DELETE FROM recipe_gallery WHERE recipe_id = $recipeId");
+        $delGallery = $db->prepare("DELETE FROM recipe_gallery WHERE recipe_id = ?");
+        $delGallery->bind_param("i", $recipeId);
+        $delGallery->execute();
+        $delGallery->close();
 
         $stmt2 = $db->prepare("SELECT image FROM recipes WHERE recipe_id = ?");
         $stmt2->bind_param("i", $recipeId);

@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../app/core/Router.php';
+require_once __DIR__ . '/../app/core/Upload.php';
 
 // Controllers
 require_once __DIR__ . '/../app/controllers/RecipeController.php';

@@ -81,7 +81,10 @@ class UserController
         $newPhoto = $oldPhoto ?: $this->defaultPhoto;
 
         if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
+            $ext = Upload::safeImageExtension($_FILES['profile_picture']);
+            if ($ext === null) {
+                return Response::json(['success' => false, 'message' => 'Ficheiro inválido. Apenas imagens (jpg, png, gif, webp).']);
+            }
             $newPhoto = uniqid('profile_', true) . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
             $uploadPath = __DIR__ . '/../../uploads/profile_pictures/' . $newPhoto;
 
@@ -122,7 +125,10 @@ class UserController
         $newPhoto = $oldPhoto ?: $this->defaultPhoto;
 
         if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
+            $ext = Upload::safeImageExtension($_FILES['profile_picture']);
+            if ($ext === null) {
+                return Response::json(['success' => false, 'message' => 'Ficheiro inválido. Apenas imagens (jpg, png, gif, webp).']);
+            }
             $newPhoto = uniqid('profile_', true) . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
             $uploadPath = __DIR__ . '/../../uploads/profile_pictures/' . $newPhoto;
 
