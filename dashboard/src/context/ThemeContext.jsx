@@ -3,12 +3,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 const ThemeContext = createContext();
 
 export function ThemeProviderCustom({ children }) {
-  const [mode, setMode] = useState(() => {
-    const saved = localStorage.getItem("themeMode");
-    if (saved) return saved;
-    // Primeira visita: segue a preferência do sistema.
-    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  });
+  // Predefinição: modo claro (como no design). Guarda a escolha do utilizador.
+  const [mode, setMode] = useState(() => localStorage.getItem("themeMode") || "light");
 
   useEffect(() => {
     localStorage.setItem("themeMode", mode);

@@ -13,6 +13,14 @@
 .kpi:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(46, 42, 38, 0.1); }
 .kpi-top { display: flex; align-items: center; gap: 12px; }
 .kpi-ico { width: 40px; height: 40px; border-radius: var(--r-btn); display: flex; align-items: center; justify-content: center; }
+.kpi-ico.recipes { background: #fee7e7; color: #f96163; }
+.kpi-ico.users { background: #fff4e5; color: #e08a00; }
+.kpi-ico.views { background: #e8f1ea; color: #2e7d32; }
+.kpi-ico.rating { background: #fff4e5; color: #ffa94d; }
+:root[data-theme="dark"] .kpi-ico.recipes { background: #3b2326; color: #ff9b9d; }
+:root[data-theme="dark"] .kpi-ico.users { background: #342c1b; color: #ffb562; }
+:root[data-theme="dark"] .kpi-ico.views { background: #1f2e22; color: #7bc98b; }
+:root[data-theme="dark"] .kpi-ico.rating { background: #342c1b; color: #ffa94d; }
 .kpi-lbl { font-size: 12px; color: var(--text-muted); }
 .kpi-val { font-size: 22px; font-weight: 700; }
 

@@ -126,25 +126,25 @@ export default function OverviewPage() {
       <div className="kpi-grid">
         <div className="kpi">
           <div className="kpi-top">
-            <div className="kpi-ico" style={{ background: "#fee7e7", color: "#f96163" }}><IconRecipes size={20} /></div>
+            <div className="kpi-ico recipes"><IconRecipes size={20} /></div>
             <div><div className="kpi-lbl">Receitas</div><div className="kpi-val"><CountUp value={recipes.length} /></div></div>
           </div>
         </div>
         <div className="kpi">
           <div className="kpi-top">
-            <div className="kpi-ico" style={{ background: "#fff4e5", color: "#e08a00" }}><IconUsers size={20} /></div>
+            <div className="kpi-ico users"><IconUsers size={20} /></div>
             <div><div className="kpi-lbl">Utilizadores</div><div className="kpi-val"><CountUp value={users.length} /></div></div>
           </div>
         </div>
         <div className="kpi">
           <div className="kpi-top">
-            <div className="kpi-ico" style={{ background: "#e8f1ea", color: "#2e7d32" }}><IconEye size={20} /></div>
+            <div className="kpi-ico views"><IconEye size={20} /></div>
             <div><div className="kpi-lbl">Visualizações</div><div className="kpi-val"><CountUp value={totalViews} format={fmtViews} /></div></div>
           </div>
         </div>
         <div className="kpi">
           <div className="kpi-top">
-            <div className="kpi-ico" style={{ background: "#fff4e5", color: "#ffa94d" }}><IconStar size={20} /></div>
+            <div className="kpi-ico rating"><IconStar size={20} /></div>
             <div><div className="kpi-lbl">Avaliação média</div><div className="kpi-val">{avgRating ? <CountUp value={avgRating} format={(v) => v.toFixed(1).replace(".", ",")} /> : "—"}</div></div>
           </div>
         </div>

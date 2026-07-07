@@ -16,7 +16,7 @@
 .sidebar {
   width: 248px;
   flex-shrink: 0;
-  background: var(--surface);
+  background: var(--chrome);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -106,7 +106,7 @@
 .topbar {
   height: 64px;
   flex-shrink: 0;
-  background: var(--surface);
+  background: var(--chrome);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;

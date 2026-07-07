@@ -30,6 +30,7 @@
   /* Superfícies e fundo */
   --bg-page: #faf8f4;
   --surface: #ffffff;
+  --chrome: #ffffff; /* sidebar + topbar */
   --neutral-bg: #f6f2ec;
   --neutral-bg-alt: #fbf9f6;
   --sidebar-active-bg: #fee7e7;
@@ -103,34 +104,35 @@ body {
   }
 }
 
-/* ---------- Modo escuro ---------- */
+/* ---------- Modo escuro (alinhado ao design: neutro, cards planos) ---------- */
 :root[data-theme="dark"] {
-  --bg-page: #17130f;
-  --surface: #211c17;
-  --neutral-bg: #2a241d;
-  --neutral-bg-alt: #241f19;
-  --sidebar-active-bg: rgba(249, 97, 99, 0.16);
+  --bg-page: #121212;
+  --surface: #232324;
+  --chrome: #1a1a1c;
+  --neutral-bg: #2a2a2c;
+  --neutral-bg-alt: #1f1f21;
+  --sidebar-active-bg: #3b2326;
 
-  --text-primary: #f3ede4;
-  --text-secondary: #bab1a6;
-  --text-muted: #8f877d;
-  --text-faint: #6d655b;
+  --text-primary: #e6e6e8;
+  --text-secondary: #b0b0b4;
+  --text-muted: #86868a;
+  --text-faint: #6a6a6e;
 
-  --border: #362f27;
-  --border-row: #2e281f;
-  --border-axis: #3a332a;
+  --border: #2e2e30;
+  --border-row: #2c2c2e;
+  --border-axis: #3a3a3c;
 
-  --primary-dark: #ff7d7f;
-  --success: #6bbf73;
-  --success-bg: rgba(46, 125, 50, 0.22);
-  --warning: #e0a84d;
-  --warning-bg: rgba(224, 138, 0, 0.18);
+  --primary-dark: #ff9b9d; /* coral do texto/estados ativos em escuro */
+  --success: #7bc98b;
+  --success-bg: rgba(123, 201, 139, 0.16);
+  --warning: #ffb562;
+  --warning-bg: rgba(255, 181, 98, 0.16);
   --danger: #ef6b6b;
-  --danger-bg: rgba(198, 40, 40, 0.24);
-  --star: #ffb454;
+  --danger-bg: rgba(239, 107, 107, 0.18);
+  --star: #ffa94d;
 
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.35);
-  --shadow-primary: 0 4px 12px rgba(249, 97, 99, 0.25);
+  --shadow-card: none; /* em escuro os cards são planos (contraste de superfície) */
+  --shadow-primary: 0 4px 12px rgba(249, 97, 99, 0.28);
 }
 
 /* Transição suave ao alternar tema nas superfícies principais */
