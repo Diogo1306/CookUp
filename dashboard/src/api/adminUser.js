@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:4000";
+const API_URL = import.meta.env.VITE_ADMIN_URL || "http://localhost:4000";
 
 export async function deleteFirebaseUser(uid) {
   const res = await fetch(`${API_URL}/user/${uid}`, { method: "DELETE" });

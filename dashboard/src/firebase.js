@@ -3,14 +3,14 @@ import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBO74akVBMnqoTolGokNQfmA3GM6U1ODDA",
-  authDomain: "cookup-bc12b.firebaseapp.com",
-  databaseURL: "https://cookup-bc12b-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "cookup-bc12b",
-  storageBucket: "cookup-bc12b.firebasestorage.app",
-  messagingSenderId: "279648868565",
-  appId: "1:279648868565:web:5cc09b43debf43d069ea5c",
-  measurementId: "G-CT96J562NF",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
