@@ -29,7 +29,7 @@
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColorHint="@color/gray"
+            android:textColorHint="@color/text_secondary"
             tools:ignore="MissingConstraints" />
 
         <TextView

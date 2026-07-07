@@ -121,7 +121,7 @@
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/average_rating_profile"
                         android:textAlignment="center"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/text_holder" />
                 </LinearLayout>
 
@@ -154,7 +154,7 @@
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/user_total_views"
                         android:textAlignment="center"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/text_holder" />
                 </LinearLayout>
 
@@ -187,7 +187,7 @@
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/user_created_recipes"
                         android:textAlignment="center"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/text_holder" />
                 </LinearLayout>
 
@@ -220,7 +220,7 @@
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/users_finished_recipes"
                         android:textAlignment="center"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/text_holder" />
                 </LinearLayout>
             </LinearLayout>

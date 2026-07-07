@@ -37,7 +37,7 @@
             android:imeOptions="actionSearch"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColorHint="@color/gray"
+            android:textColorHint="@color/text_secondary"
             android:textSize="@dimen/text_small"
             android:layout_marginStart="@dimen/padding_small"
             android:layout_marginEnd="@dimen/padding_small" />
