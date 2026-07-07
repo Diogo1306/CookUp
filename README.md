@@ -76,7 +76,7 @@ A app segue o padrão **MVVM** (ViewModels + LiveData) com repositórios central
 1. Copia a pasta `api/` para o diretório do servidor web — ex.: `C:\xampp\htdocs\cookup\api`
 2. Abre o XAMPP e inicia os serviços **Apache** e **MySQL**
 3. Acede a `localhost/phpmyadmin`, cria uma base de dados chamada **`cookup_db`** e importa o ficheiro [`api/config/cookup_db.sql`](api/config/cookup_db.sql)
-4. Em [`api/config/config.php`](api/config/config.php), ajusta o `BASE_URL` para o IP da tua máquina (vê o *Endereço IPv4* com `ipconfig`) e o caminho onde colocaste a pasta
+4. Copia [`api/config/config.local.example.php`](api/config/config.local.example.php) para **`config.local.php`** (na mesma pasta) e preenche os valores: base de dados, `BASE_URL` (o teu IP — vê o *Endereço IPv4* com `ipconfig`) e a chave do Spoonacular. **É o único ficheiro que precisas de editar.**
 
 A API fica acessível em: `http://[O_TEU_IP]/cookup/api/public/api.php`
 
@@ -85,10 +85,10 @@ A API fica acessível em: `http://[O_TEU_IP]/cookup/api/public/api.php`
 **Requisitos:** [Android Studio](https://developer.android.com/studio)
 
 1. Abre a pasta `app/` no Android Studio e sincroniza o Gradle
-2. Troca o IP pelo da tua máquina em **dois ficheiros**:
-   - `app/src/main/java/com/diogo/cookup/network/ApiRetrofit.java` → constante `BASE_URL`
-   - `app/src/main/res/xml/network_security_config.xml` → linha `<domain>`
-3. Liga um telemóvel (na **mesma rede** que a API) ou usa o emulador e clica em **Run**
+2. Define a URL da API na propriedade **`COOKUP_BASE_URL`** em [`app/gradle.properties`](app/gradle.properties) — o único valor a editar:
+   - **Emulador:** deixa o valor por omissão (`http://10.0.2.2/...`)
+   - **Telemóvel físico** (na mesma rede que a API): põe o IP do teu PC e acrescenta esse mesmo IP em `app/src/main/res/xml/network_security_config.xml`
+3. Clica em **Run** para correr no emulador ou no telemóvel
 
 <details>
 <summary>Resolução de problemas comuns</summary>
@@ -105,20 +105,12 @@ A API fica acessível em: `http://[O_TEU_IP]/cookup/api/public/api.php`
 
 **Requisitos:** [Node.js](https://nodejs.org/)
 
+1. Copia [`dashboard/.env.example`](dashboard/.env.example) para **`.env`** e preenche os valores (URL da API, URL do backend admin e config Firebase). **É o único ficheiro que precisas de editar.**
+2. Instala e corre:
+
 ```bash
 cd dashboard
 npm install
-```
-
-Edita o ficheiro `.env` na raiz da pasta e aponta para o teu IP:
-
-```
-VITE_API_URL=http://[O_TEU_IP]/cookup/api/public/api.php
-```
-
-Depois inicia:
-
-```bash
 npm run dev
 ```
 
@@ -130,11 +122,19 @@ npm install
 node index.js
 ```
 
-> Requer um `serviceAccountKey.json` (chave privada do Firebase) na pasta `firebase-admin/`. Este ficheiro **não está no repositório** por segurança — obtém-no na consola do Firebase (Definições do projeto → Contas de serviço). Mantém esta janela do terminal aberta enquanto usas a dashboard.
+> Requer um `serviceAccountKey.json` (chave privada do Firebase) na pasta `firebase-admin/`. Este ficheiro **não está no repositório** por segurança — obtém-no na consola do Firebase (Definições do projeto → Contas de serviço). Mantém esta janela do terminal aberta enquanto usas a dashboard. A porta pode ser mudada com a variável de ambiente `ADMIN_PORT` (por omissão 4000).
 
-### Mudaste de rede?
+### Configuração num único sítio
 
-Só precisas de atualizar o IP em: `config.php` (API) · `.env` (dashboard) · `ApiRetrofit.java` e `network_security_config.xml` (Android).
+Cada componente tem **um ficheiro** (não versionado) com toda a sua configuração — muda o IP/URL aí e nada mais:
+
+| Componente | Ficheiro a editar | Modelo |
+|---|---|---|
+| API | `api/config/config.local.php` | `config.local.example.php` |
+| Dashboard | `dashboard/.env` | `.env.example` |
+| App Android | `app/gradle.properties` (`COOKUP_BASE_URL`) | — |
+
+> Num telemóvel físico, além do `COOKUP_BASE_URL` acrescenta o IP em `app/src/main/res/xml/network_security_config.xml` (limitação do Android: este ficheiro não lê a propriedade do Gradle).
 
 ## Base de dados
 
