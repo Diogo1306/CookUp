@@ -13,7 +13,12 @@ class RatingController
             return Response::json(["success" => false, "message" => "Dados em falta."]);
         }
 
-        $success = Rating::submit($data['user_id'], $data['recipe_id'], $data['rating']);
+        $rating = (int)$data['rating'];
+        if ($rating < 1 || $rating > 5) {
+            return Response::json(["success" => false, "message" => "A avaliação tem de ser entre 1 e 5."], 422);
+        }
+
+        $success = Rating::submit($data['user_id'], $data['recipe_id'], $rating);
 
         Response::json(
             $success
