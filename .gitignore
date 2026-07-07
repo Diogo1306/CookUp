@@ -1,0 +1,19 @@
+# Dependências
+node_modules/
+
+# Builds
+dist/
+build/
+*.apk
+*.aab
+
+# Segredos — nunca commitar
+serviceAccountKey.json
+.env
+*.jks
+*.keystore
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+*.log
