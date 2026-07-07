@@ -26,6 +26,9 @@
     <color name="black">#000000</color>
     <color name="gray">#B9B1A6</color>
 
+    <!-- Borda-fio quente usada em campos, chips e cartões do redesign -->
+    <color name="stroke_soft">#EEE7DE</color>
+
     <color name="overlay_background">#33FFFFFF</color>
     <color name="handle">#E5DED5</color>
 

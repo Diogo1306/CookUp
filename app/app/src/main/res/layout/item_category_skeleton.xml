@@ -9,8 +9,8 @@
     app:shimmer_duration="1000">
 
     <View
-        android:layout_width="100dp"
+        android:layout_width="110dp"
         android:layout_height="40dp"
         android:layout_margin="8dp"
-        android:background="@drawable/skeleton_background" />
+        android:background="@drawable/skeleton_pill" />
 </com.facebook.shimmer.ShimmerFrameLayout>

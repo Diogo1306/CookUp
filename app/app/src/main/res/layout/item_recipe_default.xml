@@ -27,11 +27,14 @@
 
             <ImageButton
                 android:id="@+id/button_save_recipe"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="6dp"
-                android:background="@drawable/bg_circle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="8dp"
+                android:padding="7dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/bg_fav_circle"
                 android:src="@drawable/ic_bookmark"
+                app:tint="@color/primary"
                 android:layout_gravity="top|end"
                 android:contentDescription="Guardar Receita" />
         </FrameLayout>

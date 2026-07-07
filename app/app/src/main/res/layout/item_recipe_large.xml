@@ -56,6 +56,7 @@
                     android:layout_height="32dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_bookmark"
+                    app:tint="@color/primary"
                     android:contentDescription="Favoritar"
                     android:padding="4dp" />
             </LinearLayout>
