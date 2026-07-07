@@ -146,6 +146,8 @@ public class SignupFragment extends Fragment {
     }
 
     private void navigateToMainActivity() {
+        // Evita crash se o utilizador saiu do ecrã durante o atraso de 2s.
+        if (!isAdded()) return;
         Intent intent = new Intent(requireContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

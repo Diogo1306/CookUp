@@ -146,6 +146,8 @@ public class SearchSuggestionsFragment extends Fragment {
         if (query == null || query.trim().isEmpty()) return;
 
         NavController navController = NavHostFragment.findNavController(this);
+        if (navController.getCurrentDestination() == null
+                || navController.getCurrentDestination().getId() != R.id.searchSuggestionsFragment) return;
         navController.navigate(
                 SearchSuggestionsFragmentDirections.actionSearchSuggestionsFragmentToSearchResultFragment(query),
                 new androidx.navigation.NavOptions.Builder()

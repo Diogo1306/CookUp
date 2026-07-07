@@ -19,7 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
+import com.diogo.cookup.utils.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -154,13 +157,16 @@ public class SearchResultFragment extends Fragment {
         });
 
         editTextSearch.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                String currentText = editTextSearch.getText().toString();
-                NavHostFragment.findNavController(this)
-                        .navigate(SearchResultFragmentDirections
-                                .actionSearchResultFragmentToSearchSuggestionsFragment()
-                                .setQuery(currentText));
-            }
+            if (!hasFocus) return;
+            NavController nav = NavHostFragment.findNavController(this);
+            if (nav.getCurrentDestination() == null
+                    || nav.getCurrentDestination().getId() != R.id.searchResultFragment) return;
+            SearchResultFragmentDirections.ActionSearchResultFragmentToSearchSuggestionsFragment dir =
+                    SearchResultFragmentDirections.actionSearchResultFragmentToSearchSuggestionsFragment()
+                            .setQuery(editTextSearch.getText().toString());
+            // popUpTo evita empilhar SearchResult repetidamente ao refinar a pesquisa.
+            NavOptions opts = new NavOptions.Builder().setPopUpTo(R.id.searchResultFragment, true).build();
+            nav.navigate(dir.getActionId(), dir.getArguments(), opts);
         });
 
         editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
@@ -218,8 +224,8 @@ public class SearchResultFragment extends Fragment {
     }
 
     private void openRecipeDetail(RecipeData recipe) {
-        NavHostFragment.findNavController(this)
-                .navigate(SearchResultFragmentDirections
-                        .actionSearchResultFragmentToRecipeDetailFragment(recipe.getRecipeId()));
+        SearchResultFragmentDirections.ActionSearchResultFragmentToRecipeDetailFragment dir =
+                SearchResultFragmentDirections.actionSearchResultFragmentToRecipeDetailFragment(recipe.getRecipeId());
+        NavUtils.navigateSafe(NavHostFragment.findNavController(this), dir.getActionId(), dir.getArguments());
     }
 }
