@@ -1,0 +1,62 @@
+.ov { display: flex; flex-direction: column; gap: 16px; }
+.ov-empty { color: var(--text-muted); font-size: 12.5px; padding: 8px 0; }
+
+/* KPIs */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.kpi {
+  background: var(--surface);
+  border-radius: var(--r-card);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.kpi:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(46, 42, 38, 0.1); }
+.kpi-top { display: flex; align-items: center; gap: 12px; }
+.kpi-ico { width: 40px; height: 40px; border-radius: var(--r-btn); display: flex; align-items: center; justify-content: center; }
+.kpi-lbl { font-size: 12px; color: var(--text-muted); }
+.kpi-val { font-size: 22px; font-weight: 700; }
+
+/* Grid 2 colunas + cards */
+.two-col { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+.card { background: var(--surface); border-radius: var(--r-card); padding: 18px; box-shadow: var(--shadow-card); animation: fadeUp 0.45s ease both; }
+.card-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.card-h .t { font-size: 14px; font-weight: 600; }
+.card-h .s { font-size: 11.5px; color: var(--text-muted); }
+
+/* Gráfico de barras */
+.chart { height: 180px; display: flex; align-items: flex-end; gap: 14px; border-bottom: 1px solid var(--border-axis); padding-top: 8px; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.bar { width: 100%; background: var(--primary); border-radius: 6px 6px 0 0; transform-origin: bottom; animation: growUp 0.6s cubic-bezier(0.2, 0.75, 0.3, 1) both; }
+.bar-x { font-size: 10px; color: var(--text-muted); }
+
+/* Top categorias */
+.tc-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.tc-row:last-child { margin-bottom: 0; }
+.tc-row img { width: 22px; height: 22px; object-fit: contain; }
+.tc-name { width: 104px; font-size: 12.5px; }
+.tc-track { flex: 1; height: 8px; border-radius: 4px; background: #f1ebe3; overflow: hidden; }
+.tc-fill { height: 100%; background: var(--primary); border-radius: 4px; transform-origin: left; animation: fillBar 0.7s ease both; }
+.tc-val { font-size: 12px; font-weight: 600; width: 26px; text-align: right; }
+
+/* Listas (receitas / comentários recentes) */
+.li { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-row); }
+.li:last-child { border-bottom: none; }
+.li img.th { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
+.li img.av { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+.li .g { flex: 1; min-width: 0; }
+.li .g .t { font-size: 13px; font-weight: 600; }
+.li .g .a { font-size: 11.5px; color: var(--text-muted); }
+.li .cm { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.li .in { font-size: 11px; color: var(--primary-dark); }
+.li .time { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; }
+
+/* Chips de dificuldade */
+.chip.sm { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: var(--r-pill); font-size: 11px; font-weight: 600; }
+.chip.easy { background: var(--success-bg); color: var(--success); }
+.chip.med { background: var(--warning-bg); color: var(--warning); }
+.chip.hard { background: var(--danger-bg); color: var(--danger); }
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+}

@@ -24,7 +24,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/dashboard/*" element={<AppContent />} />
-            <Route path="/" element={<Navigate to="/dashboard/recipes" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard/overview" replace />} />
           </Routes>
         </BrowserRouter>
       </UserProvider>
