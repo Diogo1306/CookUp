@@ -1,5 +1,7 @@
 package com.diogo.cookup.network;
 
+import com.diogo.cookup.BuildConfig;
+
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -7,8 +9,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiRetrofit {
-    // Troque ip, abre o cmd digite ipconfig e pegue o IPv4 Address, caso seja presiso mudar url tambem pode
-    private static final String BASE_URL = "http://192.168.0.26/PAP/CookUp_Core/public/";
+    // URL base definida em gradle.properties (COOKUP_BASE_URL) via BuildConfig.
+    private static final String BASE_URL = BuildConfig.BASE_URL;
     private static Retrofit retrofit = null;
     private static OkHttpClient httpClient = null;
 

@@ -78,6 +78,7 @@ app.post("/user/:uid/unblock", async (req, res) => {
   }
 });
 
-app.listen(4000, () => {
-  console.log("Admin API rodando em http://localhost:4000");
+const PORT = process.env.ADMIN_PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Admin API a correr em http://localhost:${PORT}`);
 });

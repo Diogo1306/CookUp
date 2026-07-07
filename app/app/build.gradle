@@ -16,6 +16,14 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // URL base da API — definida em gradle.properties (COOKUP_BASE_URL).
+        // Emulador usa 10.0.2.2; num dispositivo físico troca pelo IP do teu PC.
+        buildConfigField "String", "BASE_URL", "\"${project.findProperty('COOKUP_BASE_URL') ?: 'http://10.0.2.2/PAP/CookUp_Core/public/'}\""
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {
