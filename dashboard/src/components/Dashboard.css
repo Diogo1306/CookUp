@@ -58,10 +58,10 @@
   font-weight: 600;
   text-align: left;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 .sb-item svg { color: var(--text-muted); flex-shrink: 0; transition: color 0.15s ease; }
-.sb-item:hover { background: var(--neutral-bg-alt); }
+.sb-item:hover { background: var(--neutral-bg-alt); transform: translateX(3px); }
 .sb-item.active { background: var(--sidebar-active-bg); color: var(--primary-dark); }
 .sb-item.active svg { color: var(--primary); }
 

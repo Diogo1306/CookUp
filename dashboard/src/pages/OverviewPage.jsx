@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRecipes } from "../hooks/useRecipes";
 import { useUsers } from "../hooks/useUsers";
 import { useComments } from "../hooks/useComments";
@@ -29,7 +29,26 @@ function relTime(dateStr) {
 }
 function fmtViews(n) {
   n = Number(n) || 0;
-  return n >= 1000 ? (n / 1000).toFixed(1).replace(".", ",") + "k" : String(n);
+  return n >= 1000 ? (n / 1000).toFixed(1).replace(".", ",") + "k" : String(Math.round(n));
+}
+
+// Número que conta suavemente de 0 até ao valor final.
+function CountUp({ value, format = (v) => String(Math.round(v)), duration = 900 }) {
+  const [n, setN] = useState(0);
+  const raf = useRef(0);
+  useEffect(() => {
+    let start = null;
+    const step = (ts) => {
+      if (start === null) start = ts;
+      const p = Math.min(1, (ts - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setN(value * eased);
+      if (p < 1) raf.current = requestAnimationFrame(step);
+    };
+    raf.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf.current);
+  }, [value, duration]);
+  return <>{format(n)}</>;
 }
 
 export default function OverviewPage() {
@@ -108,25 +127,25 @@ export default function OverviewPage() {
         <div className="kpi">
           <div className="kpi-top">
             <div className="kpi-ico" style={{ background: "#fee7e7", color: "#f96163" }}><IconRecipes size={20} /></div>
-            <div><div className="kpi-lbl">Receitas</div><div className="kpi-val">{recipes.length}</div></div>
+            <div><div className="kpi-lbl">Receitas</div><div className="kpi-val"><CountUp value={recipes.length} /></div></div>
           </div>
         </div>
         <div className="kpi">
           <div className="kpi-top">
             <div className="kpi-ico" style={{ background: "#fff4e5", color: "#e08a00" }}><IconUsers size={20} /></div>
-            <div><div className="kpi-lbl">Utilizadores</div><div className="kpi-val">{users.length}</div></div>
+            <div><div className="kpi-lbl">Utilizadores</div><div className="kpi-val"><CountUp value={users.length} /></div></div>
           </div>
         </div>
         <div className="kpi">
           <div className="kpi-top">
             <div className="kpi-ico" style={{ background: "#e8f1ea", color: "#2e7d32" }}><IconEye size={20} /></div>
-            <div><div className="kpi-lbl">Visualizações</div><div className="kpi-val">{fmtViews(totalViews)}</div></div>
+            <div><div className="kpi-lbl">Visualizações</div><div className="kpi-val"><CountUp value={totalViews} format={fmtViews} /></div></div>
           </div>
         </div>
         <div className="kpi">
           <div className="kpi-top">
             <div className="kpi-ico" style={{ background: "#fff4e5", color: "#ffa94d" }}><IconStar size={20} /></div>
-            <div><div className="kpi-lbl">Avaliação média</div><div className="kpi-val">{avgRating ? avgRating.toFixed(1).replace(".", ",") : "—"}</div></div>
+            <div><div className="kpi-lbl">Avaliação média</div><div className="kpi-val">{avgRating ? <CountUp value={avgRating} format={(v) => v.toFixed(1).replace(".", ",")} /> : "—"}</div></div>
           </div>
         </div>
       </div>

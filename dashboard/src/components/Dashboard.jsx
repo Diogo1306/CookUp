@@ -3,7 +3,7 @@ import { useUser } from "../context/UserContext";
 import { useThemeCustom } from "../context/ThemeContext";
 import {
   IconOverview, IconRecipes, IconUsers, IconCategories,
-  IconIngredients, IconComments, IconSettings, IconLogout, IconMoon,
+  IconIngredients, IconComments, IconSettings, IconLogout, IconMoon, IconSun,
 } from "./icons";
 import OverviewPage from "../pages/OverviewPage";
 import RecipesPage from "../pages/RecipesPage";
@@ -39,7 +39,7 @@ const FALLBACK_AVATAR = "/brand/ic_cookup.png";
 
 export default function Dashboard() {
   const { user, setUser } = useUser();
-  const { toggleTheme } = useThemeCustom() || {};
+  const { mode, toggleTheme } = useThemeCustom() || {};
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -94,7 +94,7 @@ export default function Dashboard() {
           <h1>{TITLES[current] || "CookUp"}</h1>
           <div className="tb-spacer" />
           <button className="tb-icon" onClick={toggleTheme} title="Alternar tema">
-            <IconMoon />
+            {mode === "dark" ? <IconSun /> : <IconMoon />}
           </button>
           <img className="tb-avatar" src={avatar} alt="" onError={(e) => (e.currentTarget.src = FALLBACK_AVATAR)} />
         </header>

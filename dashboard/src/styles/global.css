@@ -102,3 +102,36 @@ body {
     transition: none !important;
   }
 }
+
+/* ---------- Modo escuro ---------- */
+:root[data-theme="dark"] {
+  --bg-page: #17130f;
+  --surface: #211c17;
+  --neutral-bg: #2a241d;
+  --neutral-bg-alt: #241f19;
+  --sidebar-active-bg: rgba(249, 97, 99, 0.16);
+
+  --text-primary: #f3ede4;
+  --text-secondary: #bab1a6;
+  --text-muted: #8f877d;
+  --text-faint: #6d655b;
+
+  --border: #362f27;
+  --border-row: #2e281f;
+  --border-axis: #3a332a;
+
+  --primary-dark: #ff7d7f;
+  --success: #6bbf73;
+  --success-bg: rgba(46, 125, 50, 0.22);
+  --warning: #e0a84d;
+  --warning-bg: rgba(224, 138, 0, 0.18);
+  --danger: #ef6b6b;
+  --danger-bg: rgba(198, 40, 40, 0.24);
+  --star: #ffb454;
+
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.35);
+  --shadow-primary: 0 4px 12px rgba(249, 97, 99, 0.25);
+}
+
+/* Transição suave ao alternar tema nas superfícies principais */
+body { transition: background-color 0.25s ease, color 0.2s ease; }
