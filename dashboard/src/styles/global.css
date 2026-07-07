@@ -81,3 +81,24 @@ body {
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
 }
+
+/* Animações reutilizáveis pela UI */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes growUp {
+  from { transform: scaleY(0.001); }
+  to { transform: scaleY(1); }
+}
+@keyframes fillBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
