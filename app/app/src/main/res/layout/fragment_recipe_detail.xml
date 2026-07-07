@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Detalhe da Receita — redesign 2c: meta em cartões, porções ajustáveis, secções em cartões suaves. -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,16 +23,27 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
+            <!-- ===== HERO: galeria + scrim + botões redondos ===== -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp">
+                android:layout_height="300dp">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPagerGallery"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/gray"
-                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Scrim para dar contraste aos indicadores/borda inferior -->
+                <View
+                    android:id="@+id/hero_scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_image_scrim"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +53,7 @@
                     android:id="@+id/gallery_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
-                    android:layout_marginBottom="@dimen/margin_hero"
+                    android:layout_marginBottom="@dimen/margin_large"
                     android:background="@color/transparent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -56,284 +68,538 @@
                     app:tabSelectedTextColor="@color/transparent"
                     app:tabTextColor="@color/transparent" />
 
+                <!-- Botão voltar (mantém id) -->
                 <ImageButton
                     android:id="@+id/arrow_back"
                     android:layout_width="@dimen/btn_height_small"
                     android:layout_height="@dimen/btn_height_small"
                     android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_hero"
-                    android:background="@drawable/bg_circle"
+                    android:background="@drawable/bg_fav_circle"
+                    android:elevation="4dp"
                     android:src="@drawable/ic_arrow_left"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="TouchTargetSizeCheck" />
 
+                <!-- Botão guardar/bookmark (mantém id) -->
                 <ImageButton
                     android:id="@+id/button_favorite"
                     android:layout_width="@dimen/btn_height_small"
                     android:layout_height="@dimen/btn_height_small"
                     android:layout_marginTop="@dimen/margin_hero"
                     android:layout_marginEnd="@dimen/margin_large"
-                    android:background="@drawable/bg_circle"
+                    android:background="@drawable/bg_fav_circle"
+                    android:elevation="4dp"
                     android:src="@drawable/ic_bookmark"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="TouchTargetSizeCheck" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.cardview.widget.CardView
+            <!-- ===== CARTÃO/FOLHA: título, autor, rating, meta, descrição ===== -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_recipe_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-36dp"
-                app:cardCornerRadius="32dp"
-                app:cardElevation="0dp"
-                android:backgroundTint="@color/background">
+                android:layout_marginTop="-28dp"
+                app:cardBackgroundColor="@color/background"
+                app:cardCornerRadius="@dimen/border_radius_xl"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingStart="24dp"
-                    android:paddingTop="20dp"
-                    android:paddingEnd="24dp"
-                    android:paddingBottom="20dp">
+                    android:paddingStart="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="16dp">
 
+                    <!-- Pega da folha -->
                     <View
-                        android:layout_width="75dp"
-                        android:layout_height="8dp"
+                        android:layout_width="44dp"
+                        android:layout_height="5dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/margin_micro"
-                        android:layout_marginBottom="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_medium"
                         android:background="@drawable/bg_handle" />
 
+                    <TextView
+                        android:id="@+id/recipe_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:includeFontPadding="false"
+                        android:text="@string/recipe_title"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_large" />
+
+                    <!-- Linha autor + pill de avaliação -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/recipe_title"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="start"
-                            android:text="@string/recipe_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_large"
-                            android:fontFamily="@font/poppins_semibold"
-                            android:includeFontPadding="false" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_small"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginStart="@dimen/margin_small">
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:src="@drawable/ic_star" />
-                            <TextView
-                                android:id="@+id/txt_rating"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0.0"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_medium"
-                                android:layout_marginStart="4dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:layout_marginBottom="@dimen/margin_medium">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        tools:ignore="HardcodedText">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/bg_circle"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_profile"
+                            tools:ignore="ContentDescription" />
 
                         <TextView
                             android:id="@+id/recipe_author"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
                             android:layout_weight="1"
+                            android:fontFamily="@font/poppins_regular"
                             android:text="@string/recipe_made_by"
-                            android:textSize="@dimen/text_small"
                             android:textColor="@color/text_secondary"
-                            android:gravity="top"/>
+                            android:textSize="@dimen/text_small" />
 
-                        <LinearLayout
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            app:cardBackgroundColor="@color/background_elevated"
+                            app:cardCornerRadius="@dimen/border_radius_large"
+                            app:cardElevation="0dp">
 
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:src="@drawable/ic_clock"
-                                tools:ignore="ContentDescription" />
-                            <TextView
-                                android:id="@+id/txt_time"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0 mins"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_small"
-                                android:layout_marginStart="4dp"/>
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp">
 
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:layout_marginStart="12dp"
-                                android:src="@drawable/ic_bar_graph"/>
-                            <TextView
-                                android:id="@+id/txt_difficulty"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="vazio"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_small"
-                                android:layout_marginStart="4dp"/>
-                        </LinearLayout>
+                                <ImageView
+                                    android:layout_width="14dp"
+                                    android:layout_height="14dp"
+                                    android:src="@drawable/ic_star"
+                                    app:tint="@color/accent_orange"
+                                    tools:ignore="ContentDescription" />
+
+                                <TextView
+                                    android:id="@+id/txt_rating"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:fontFamily="@font/poppins_semibold"
+                                    android:text="0.0"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="@dimen/text_small" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
 
+                    <!-- Categorias (chips preenchidos pelo fragment) -->
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/chip_group_categories"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="12dp"
                         app:chipSpacingHorizontal="4dp"
                         app:chipSpacingVertical="2dp"
                         app:singleLine="false" />
 
+                    <!-- Cartões de meta: Tempo / Dificuldade / Porções -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        tools:ignore="HardcodedText">
+
+                        <LinearLayout
+                            android:id="@+id/card_meta_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_card_soft"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="8dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="12dp">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_clock"
+                                app:tint="@color/primary"
+                                tools:ignore="ContentDescription" />
+
+                            <TextView
+                                android:id="@+id/txt_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="0 min"
+                                android:textColor="@color/text_primary"
+                                android:textSize="@dimen/text_small" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:fontFamily="@font/poppins_regular"
+                                android:text="Tempo"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/card_meta_difficulty"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_card_soft"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="8dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="12dp">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_bar_graph"
+                                app:tint="@color/primary"
+                                tools:ignore="ContentDescription" />
+
+                            <TextView
+                                android:id="@+id/txt_difficulty"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="—"
+                                android:textColor="@color/text_primary"
+                                android:textSize="@dimen/text_small" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:fontFamily="@font/poppins_regular"
+                                android:text="Dificuldade"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/card_meta_servings"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_card_soft"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="8dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="12dp">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_people"
+                                app:tint="@color/primary"
+                                tools:ignore="ContentDescription" />
+
+                            <TextView
+                                android:id="@+id/txt_servings"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="4"
+                                android:textColor="@color/text_primary"
+                                android:textSize="@dimen/text_small" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:fontFamily="@font/poppins_regular"
+                                android:text="Porções"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Descrição (mantém id + lógica "ver mais") -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="@font/poppins_semibold"
                         android:text="@string/recipe_description"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_large_m"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:layout_marginTop="6dp"/>
+                        android:textSize="@dimen/text_medium" />
 
                     <TextView
                         android:id="@+id/recipe_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="6dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:textSize="@dimen/text_very_small" />
-
+                        android:lineSpacingMultiplier="1.4"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/text_small" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/recipe_ingredients"
+            <!-- ===== INGREDIENTES: cabeçalho + seletor de porções ===== -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginTop="@dimen/text_large_m"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recipe_ingredients"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="@string/ingredients"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_medium" />
+
+                <!-- Seletor de porções (pill). Fragment liga: btn_portion_minus / txt_portions / btn_portion_plus -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/background_secondary"
+                    app:cardCornerRadius="@dimen/border_radius_circular"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/stroke_soft"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="3dp"
+                        tools:ignore="HardcodedText">
+
+                        <TextView
+                            android:id="@+id/btn_portion_minus"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/bg_stepper_btn"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="−"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/txt_portions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:text="4"
+                            android:textColor="@color/text_primary"
+                            android:textSize="@dimen/text_small" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="porções"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="@dimen/text_very_small" />
+
+                        <TextView
+                            android:id="@+id/btn_portion_plus"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/bg_stepper_btn"
+                            android:backgroundTint="@color/primary_light"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="+"
+                            android:textColor="@color/primary_dark"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Lista de ingredientes dentro de cartão suave -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_large"
+                app:cardBackgroundColor="@color/background_secondary"
+                app:cardCornerRadius="@dimen/border_radius_large"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/stroke_soft"
+                app:strokeWidth="1dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ingredients_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/item_ingredient" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ===== PREPARAÇÃO ===== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="@string/ingredients"
+                android:text="@string/instructions"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_medium" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/ingredients_recycler_view"
+            <!-- Instruções (texto único da receita) apresentadas em cartão legível.
+                 Nota: passos numerados por círculo exigiriam separar a string em Java. -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="never"
-                tools:listitem="@layout/item_ingredient" />
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_large"
+                app:cardBackgroundColor="@color/background_secondary"
+                app:cardCornerRadius="@dimen/border_radius_large"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/stroke_soft"
+                app:strokeWidth="1dp">
 
+                <TextView
+                    android:id="@+id/recipe_instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:lineSpacingMultiplier="1.5"
+                    android:padding="16dp"
+                    android:text=""
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_small" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ===== COMENTÁRIOS ===== -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_large"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="@string/instructions"
-                android:textSize="@dimen/text_large" />
-
-            <TextView
-                android:id="@+id/recipe_instructions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_large"
-                android:fontFamily="@font/poppins_regular"
-                android:paddingBottom="20dp"
-                android:text=""
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_very_small" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:fontFamily="@font/poppins_semibold"
                 android:text="@string/comments"
-                android:textSize="@dimen/margin_medium" />
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_medium" />
 
             <EditText
                 android:id="@+id/input_comment_direct"
                 style="@style/input"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:hint="@string/write_a_comment"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="5"
                 android:minLines="1"
                 android:scrollbars="vertical"
-                android:textColorHint="@color/text_primary" />
+                android:textColorHint="@color/text_secondary" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_send_comment"
                 style="@style/button_primary"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                android:layout_gravity="right"
-                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_gravity="end"
+                android:layout_marginStart="@dimen/margin_large"
                 android:layout_marginTop="@dimen/text_very_small"
-                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:fontFamily="@font/poppins_semibold"
                 android:text="@string/comment"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_very_small" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/comments_recycler_view"
+            <!-- Lista de comentários dentro de cartão suave -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginBottom="24dp"
-                android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_comment" />
+                app:cardBackgroundColor="@color/background_secondary"
+                app:cardCornerRadius="@dimen/border_radius_large"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/stroke_soft"
+                app:strokeWidth="1dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/comments_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_comment" />
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
+    <!-- ===== Botão fixo inferior com fade ===== -->
     <LinearLayout
         android:id="@+id/bottom_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/top_fade_background"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin_large"
+        android:paddingTop="12dp"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingBottom="16dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_finish_recipe"
             style="@style/button_primary"
-            android:layout_width="180dp"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_small"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
             android:fontFamily="@font/poppins_semibold"
             android:text="@string/finish_recipe"
             android:textColor="@color/white"

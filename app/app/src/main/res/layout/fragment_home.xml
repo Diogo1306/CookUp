@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipeRefreshLayout"
-    android:layout_height="match_parent"
+<!-- Início / Home — redesign 2a: saudação, pesquisa + filtro, receita da semana em destaque. -->
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/margin_large"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin_large">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/home_scroll"
@@ -15,76 +17,286 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
             android:layoutAnimation="@anim/layout_animation_fade_slide_up"
             android:orientation="vertical"
-            android:padding="@dimen/padding_small">
+            android:paddingBottom="@dimen/padding_large">
 
+            <!-- Cabeçalho: avatar redondo + saudação -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvNameHome"
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    app:cardCornerRadius="21dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/stroke_soft"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:id="@+id/img_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/primary_light"
+                        android:contentDescription="@null"
+                        android:padding="9dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_person"
+                        app:tint="@color/primary" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvNameHome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="Olá, xxxxxx 👋"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvGreeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:includeFontPadding="false"
+                        android:text="@string/WhatAreYouGoingCook"
+                        android:textColor="@color/text_primary"
+                        android:textSize="17sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Linha de pesquisa: campo (funciona como botão) + botão de filtro coral -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/searchEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search_field"
+                    android:cursorVisible="false"
+                    android:drawablePadding="@dimen/padding_small"
+                    android:drawableStart="@drawable/ic_search"
+                    android:ellipsize="end"
+                    android:focusable="false"
                     android:fontFamily="@font/poppins_regular"
+                    android:gravity="center_vertical"
+                    android:hint="@string/HintExplore"
+                    android:importantForAutofill="no"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/padding_medium"
+                    android:paddingEnd="@dimen/padding_medium"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"
+                    android:textSize="@dimen/text_small"
+                    app:drawableTint="@color/text_secondary" />
+
+                <ImageView
+                    android:id="@+id/btn_filter"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_filter_btn"
+                    android:clickable="true"
+                    android:contentDescription="@string/HintExplore"
+                    android:focusable="true"
+                    android:padding="14dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_filter"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
+
+            <!-- Receita da semana em destaque (cartão grande) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_featured"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/background_elevated"
+                app:cardCornerRadius="@dimen/border_radius_xl"
+                app:cardElevation="6dp"
+                app:cardUseCompatPadding="true">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/img_featured"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/background_elevated"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop" />
+
+                <!-- Scrim para dar contraste ao título -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_image_scrim" />
+
+                <!-- Etiqueta escura -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_badge_dark"
+                    android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="Olá, xxxxxx 👋"
+                    android:letterSpacing="0.03"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="RECEITA DA SEMANA"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+                <!-- Título + tempo + avaliação -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="14dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_featured_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="Feijoada à Transmontana"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_clock"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:id="@+id/txt_featured_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:includeFontPadding="false"
+                            android:text="120 min"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_very_small" />
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="8dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_star"
+                            app:tint="@color/accent_orange" />
+
+                        <TextView
+                            android:id="@+id/txt_featured_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:includeFontPadding="false"
+                            android:text="4.8"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_very_small" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Categorias -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:includeFontPadding="false"
+                    android:text="@string/categories"
+                    android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_medium" />
 
                 <TextView
-                    android:id="@+id/tvGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semibold"
                     android:includeFontPadding="false"
-                    android:text="@string/WhatAreYouGoingCook"
-                    android:textSize="@dimen/text_large" />
+                    android:text="@string/SeeMore"
+                    android:textColor="@color/primary"
+                    android:textSize="13sp" />
 
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/searchEditText"
-                style="@style/input"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:autofillHints="emailAddress"
-                android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="@dimen/padding_small"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:hint="@string/HintExplore"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColorHint="@color/text_secondary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:fontFamily="@font/poppins_semibold"
-                android:includeFontPadding="false"
-                android:text="@string/categories"
-                android:textSize="@dimen/text_medium" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
-                android:orientation="horizontal" />
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium" />
 
+            <!-- Recomendado para ti -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
+                android:layout_marginTop="@dimen/margin_large"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/margin_medium"
@@ -111,20 +323,24 @@
                     android:includeFontPadding="false"
                     android:text="@string/SeeMore"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_very_small" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerRecommended"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
-                android:orientation="horizontal" />
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium" />
 
+            <!-- Receitas da semana -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/margin_medium"
@@ -151,22 +367,27 @@
                     android:includeFontPadding="false"
                     android:text="@string/SeeMore"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_very_small" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerWeekly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
                 android:overScrollMode="never"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium"
                 android:scrollbars="none" />
 
+            <!-- Ver Populares -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/margin_medium"
@@ -192,21 +413,25 @@
                     android:includeFontPadding="false"
                     android:text="@string/SeeMore"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_very_small" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerPopular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium" />
 
+            <!-- Sugestão personalizada (categoria dinâmica 1) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/margin_medium"
@@ -233,21 +458,25 @@
                     android:includeFontPadding="false"
                     android:text="@string/SeeMore"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_very_small" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCat1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium" />
 
+            <!-- Também vais gostar de (categoria dinâmica 2) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/margin_medium"
@@ -274,21 +503,25 @@
                     android:includeFontPadding="false"
                     android:text="@string/SeeMore"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_very_small" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCat2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium" />
 
+            <!-- Talvez te agrade (categoria dinâmica 3) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/margin_medium"
@@ -315,19 +548,20 @@
                     android:includeFontPadding="false"
                     android:text="@string/SeeMore"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_very_small" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCat3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_very_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-

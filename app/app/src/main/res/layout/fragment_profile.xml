@@ -1,3 +1,5 @@
+<!-- Perfil — redesign 2e: cabeçalho centrado, cartões de estatística legíveis
+     e separador Criadas/Finalizadas sobre a lista de receitas do utilizador. -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,49 +19,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_large"
+            android:paddingHorizontal="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_small"
             android:paddingBottom="80dp">
 
+            <!-- Cabeçalho: título + acesso às definições -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/btn_editprofile"
-                    android:layout_width="@dimen/icon_size_large"
-                    android:layout_height="@dimen/icon_size_large"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="Editar perfil"
-                    android:src="@drawable/ic_profile_edit"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-                <View
+                <TextView
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="@string/profile"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_large" />
 
                 <ImageButton
                     android:id="@+id/btn_settings"
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:layout_marginEnd="@dimen/margin_small"
                     android:background="@android:color/transparent"
-                    android:contentDescription="Configurações"
+                    android:contentDescription="@string/settings"
                     android:src="@drawable/ic_setting"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
+            <!-- Avatar redondo -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/profile_image_card"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:layout_gravity="center"
-                app:cardCornerRadius="100dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                app:cardCornerRadius="@dimen/border_radius_circular"
                 app:cardElevation="4dp"
                 app:cardPreventCornerOverlap="false"
                 app:cardUseCompatPadding="true">
@@ -72,6 +69,7 @@
                     android:src="@drawable/placeholder" />
             </androidx.cardview.widget.CardView>
 
+            <!-- Nome do utilizador -->
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="match_parent"
@@ -81,30 +79,82 @@
                 android:text="xxxxxxxxxxxxxx"
                 android:textAlignment="center"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_large" />
+                android:textSize="@dimen/text_large_m" />
 
+            <!-- Subtítulo: handle / membro desde (ligável no fragmento) -->
+            <TextView
+                android:id="@+id/user_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_micro"
+                android:fontFamily="@font/poppins_regular"
+                android:text="Membro CookUp"
+                android:textAlignment="center"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_very_small"
+                tools:text="@diogo.esteves · membro desde 2025" />
+
+            <!-- Pill "Editar perfil": botão sobreposto para manter a área toda tocável -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_small"
+                android:background="@drawable/bg_profile_edit_pill">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:duplicateParentState="true"
+                    android:gravity="center"
+                    android:minHeight="38dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="18dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_very_small"
+                        android:layout_height="@dimen/icon_size_very_small"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@color/text_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Editar perfil"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_small" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_editprofile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="Editar perfil"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </FrameLayout>
+
+            <!-- Linha de estatísticas legíveis (número em cima, rótulo em baixo) -->
             <LinearLayout
                 android:id="@+id/info_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/margin_small">
+                android:layout_marginTop="@dimen/margin_medium"
+                android:orientation="horizontal">
 
+                <!-- Média de avaliações -->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_very_small"
                     android:layout_weight="1"
                     android:background="@drawable/bg_profile_achievements"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_medium"
-                        android:layout_height="@dimen/icon_size_medium"
-                        android:src="@drawable/ic_star" />
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/margin_medium">
 
                     <TextView
                         android:id="@+id/user_rating"
@@ -118,26 +168,24 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_micro"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/average_rating_profile"
                         android:textAlignment="center"
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_holder" />
+                        android:textSize="@dimen/text_micro" />
                 </LinearLayout>
 
+                <!-- Visualizações totais -->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_very_small"
                     android:layout_weight="1"
                     android:background="@drawable/bg_profile_achievements"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_medium"
-                        android:layout_height="@dimen/icon_size_medium"
-                        android:src="@drawable/ic_hat_chef" />
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/margin_medium">
 
                     <TextView
                         android:id="@+id/user_total_views"
@@ -151,26 +199,24 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_micro"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/user_total_views"
                         android:textAlignment="center"
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_holder" />
+                        android:textSize="@dimen/text_micro" />
                 </LinearLayout>
 
+                <!-- Receitas criadas -->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_very_small"
                     android:layout_weight="1"
                     android:background="@drawable/bg_profile_achievements"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_medium"
-                        android:layout_height="@dimen/icon_size_medium"
-                        android:src="@drawable/ic_recipes_total" />
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/margin_medium">
 
                     <TextView
                         android:id="@+id/total_recipes"
@@ -184,26 +230,24 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_micro"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/user_created_recipes"
                         android:textAlignment="center"
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_holder" />
+                        android:textSize="@dimen/text_micro" />
                 </LinearLayout>
 
+                <!-- Receitas finalizadas -->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_very_small"
                     android:layout_weight="1"
                     android:background="@drawable/bg_profile_achievements"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_medium"
-                        android:layout_height="@dimen/icon_size_medium"
-                        android:src="@drawable/ic_check" />
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/margin_medium">
 
                     <TextView
                         android:id="@+id/total_finished_my_recipes"
@@ -217,53 +261,71 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_micro"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/users_finished_recipes"
                         android:textAlignment="center"
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_holder" />
+                        android:textSize="@dimen/text_micro" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Separador segmentado Criadas / Finalizadas (Criadas ativo por defeito) -->
             <LinearLayout
+                android:id="@+id/recipes_segment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_container"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@drawable/bg_segment_track"
+                android:orientation="horizontal"
+                android:padding="3dp">
 
                 <TextView
-                    android:id="@+id/user_recipes_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_medium"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:layout_marginBottom="@dimen/margin_micro"
+                    android:id="@+id/segment_created"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_profile_segment_selected"
+                    android:elevation="1dp"
                     android:fontFamily="@font/poppins_semibold"
-                    android:text="@string/your_recipes"
-                    android:textSize="@dimen/text_large_m" />
+                    android:gravity="center"
+                    android:text="Criadas"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_small" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/UserRecipesRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false" />
-
+                <TextView
+                    android:id="@+id/segment_finished"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="center"
+                    android:text="Finalizadas"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_small" />
             </LinearLayout>
+
+            <!-- Lista das receitas do utilizador -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/UserRecipesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Botão flutuante coral: criar receita -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_recipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/margin_large"
-        android:backgroundTint="@color/background_secondary"
+        android:backgroundTint="@color/primary"
         android:contentDescription="Criar nova receita"
         android:src="@drawable/ic_add"
-        android:textColor="@color/text_primary"
-        app:tint="@color/text_primary" />
+        app:tint="@color/white" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

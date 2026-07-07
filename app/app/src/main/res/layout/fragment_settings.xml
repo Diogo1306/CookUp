@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Definições (redesign 2i): cabeçalho + cartões agrupados por secção, tema inline e ações. -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +10,7 @@
     android:background="@color/background"
     tools:context=".ui.fragment.SettingsFragment">
 
+    <!-- Cabeçalho: voltar + título -->
     <LinearLayout
         android:id="@+id/header_container"
         android:layout_width="match_parent"
@@ -17,8 +19,8 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_medium"
-        android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -30,6 +32,7 @@
             android:background="@color/transparent"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_left"
+            app:tint="@color/text_primary"
             tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
@@ -39,177 +42,415 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:text="@string/settings"
             android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_large"
+            android:textSize="@dimen/text_large_m"
             android:fontFamily="@font/poppins_semibold" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/settings_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_small"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
+    <!-- Lista rolável de definições -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/padding_large"
         app:layout_constraintTop_toBottomOf="@id/header_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:background="@color/gray" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/button_profile"
+        <LinearLayout
+            android:id="@+id/settings_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:focusable="true">
+            android:orientation="vertical"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium">
 
-            <LinearLayout
+            <!-- Cartão de perfil: identidade do utilizador (abre o Perfil) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/button_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_medium"
-                android:gravity="center_vertical">
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/background_secondary"
+                app:cardCornerRadius="@dimen/border_radius_large"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/stroke_soft"
+                app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/profile"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_medium" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/padding_medium">
 
-                <TextView
-                    android:id="@+id/settings_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_medium"
-                    tools:ignore="HardcodedText" />
+                    <!-- Avatar (marcador com ícone, sem foto ligada) -->
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_extra_large"
+                        android:layout_height="@dimen/icon_size_extra_large"
+                        android:background="@drawable/bg_container"
+                        android:backgroundTint="@color/primary_light"
+                        android:padding="@dimen/padding_small"
+                        android:src="@drawable/ic_person"
+                        app:tint="@color/primary"
+                        android:contentDescription="@string/profile" />
 
-                <ImageView
-                    android:id="@+id/profile_arrow"
-                    android:background="@color/transparent"
-                    android:layout_width="@dimen/icon_size_medium"
-                    android:layout_height="@dimen/icon_size_medium"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="@string/go_to_profile" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/margin_medium"
+                        android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:background="@color/gray" />
+                        <TextView
+                            android:id="@+id/settings_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/text_primary"
+                            android:textSize="@dimen/text_small"
+                            android:fontFamily="@font/poppins_semibold"
+                            tools:text="Diogo Esteves"
+                            tools:ignore="HardcodedText" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/button_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:focusable="true">
+                        <TextView
+                            android:id="@+id/settings_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_micro"
+                            android:text=""
+                            android:textColor="@color/text_secondary"
+                            android:textSize="@dimen/text_very_small"
+                            android:fontFamily="@font/poppins_regular"
+                            tools:text="diogo@gmail.com"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
 
-            <LinearLayout
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_very_small"
+                        android:layout_height="@dimen/icon_size_very_small"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="@color/gray"
+                        android:contentDescription="@string/profile" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Secção CONTA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_very_small"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:text="@string/account"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_very_small"
+                android:fontFamily="@font/poppins_semibold" />
+
+            <!-- Cartão agrupado da conta (equivalente visual a bg_card_soft) -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_medium"
-                android:gravity="center_vertical">
+                app:cardBackgroundColor="@color/background_secondary"
+                app:cardCornerRadius="@dimen/border_radius_large"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/stroke_soft"
+                app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/account"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_medium" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/settings_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_medium"
-                    tools:ignore="HardcodedText" />
+                    <!-- Linha E-mail (abre definições de conta) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/button_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/transparent"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
 
-                <ImageView
-                    android:id="@+id/email_arrow"
-                    android:background="@color/background"
-                    android:layout_width="@dimen/icon_size_medium"
-                    android:layout_height="@dimen/icon_size_medium"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="@string/go_to_email" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="@dimen/btn_height"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingStart="@dimen/padding_medium"
+                            android:paddingEnd="@dimen/padding_medium">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:background="@color/gray" />
+                            <ImageView
+                                android:layout_width="@dimen/icon_size_large"
+                                android:layout_height="@dimen/icon_size_large"
+                                android:background="@drawable/bg_container"
+                                android:backgroundTint="@color/primary_light"
+                                android:padding="@dimen/padding_small"
+                                android:src="@drawable/ic_email"
+                                app:tint="@color/primary_dark"
+                                android:contentDescription="@string/email" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/button_appearance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:focusable="true">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="@dimen/margin_medium"
+                                android:text="@string/email"
+                                android:textColor="@color/text_primary"
+                                android:textSize="@dimen/text_small"
+                                android:fontFamily="@font/poppins_regular" />
 
-            <LinearLayout
+                            <TextView
+                                android:id="@+id/settings_account_email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_small"
+                                android:text=""
+                                android:textColor="@color/text_secondary"
+                                android:textSize="@dimen/text_very_small"
+                                android:fontFamily="@font/poppins_regular"
+                                tools:text="diogo@gmail.com"
+                                tools:ignore="HardcodedText" />
+
+                            <ImageView
+                                android:layout_width="@dimen/icon_size_very_small"
+                                android:layout_height="@dimen/icon_size_very_small"
+                                android:layout_marginStart="@dimen/margin_small"
+                                android:src="@drawable/ic_arrow_right"
+                                app:tint="@color/gray"
+                                android:contentDescription="@string/email" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Fio de separação -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/margin_medium"
+                        android:layout_marginEnd="@dimen/margin_medium"
+                        android:background="@color/stroke_soft" />
+
+                    <!-- Linha Palavra-passe (sem navegação ligada ainda) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/button_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/transparent"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="@dimen/btn_height"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingStart="@dimen/padding_medium"
+                            android:paddingEnd="@dimen/padding_medium">
+
+                            <ImageView
+                                android:layout_width="@dimen/icon_size_large"
+                                android:layout_height="@dimen/icon_size_large"
+                                android:background="@drawable/bg_container"
+                                android:backgroundTint="@color/primary_light"
+                                android:padding="@dimen/padding_small"
+                                android:src="@drawable/ic_lock"
+                                app:tint="@color/primary_dark"
+                                android:contentDescription="@string/password" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="@dimen/margin_medium"
+                                android:text="@string/password"
+                                android:textColor="@color/text_primary"
+                                android:textSize="@dimen/text_small"
+                                android:fontFamily="@font/poppins_regular" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_small"
+                                android:text="••••••"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="@dimen/text_very_small"
+                                tools:ignore="HardcodedText" />
+
+                            <ImageView
+                                android:layout_width="@dimen/icon_size_very_small"
+                                android:layout_height="@dimen/icon_size_very_small"
+                                android:layout_marginStart="@dimen/margin_small"
+                                android:src="@drawable/ic_arrow_right"
+                                app:tint="@color/gray"
+                                android:contentDescription="@string/password" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Secção APARÊNCIA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_very_small"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:text="@string/appearance"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_very_small"
+                android:fontFamily="@font/poppins_semibold" />
+
+            <!-- Cartão de aparência: pré-visualização do tema (abre o ecrã de Aparência) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/button_appearance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_medium"
-                android:gravity="center_vertical">
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/background_secondary"
+                app:cardCornerRadius="@dimen/border_radius_large"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/stroke_soft"
+                app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/appearance"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_medium" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_medium">
 
-                <ImageView
-                    android:id="@+id/password_arrow"
-                    android:layout_width="@dimen/icon_size_medium"
-                    android:layout_height="@dimen/icon_size_medium"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="@string/go_to_password" />
-            </LinearLayout>
+                    <!-- Seletor de tema em linha (visual; a ação abre o ecrã completo) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_container"
+                        android:backgroundTint="@color/background_elevated"
+                        android:padding="@dimen/padding_micro">
 
-        </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/btn_height_small"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/bg_container"
+                            android:text="@string/settings_theme_light"
+                            android:textColor="@color/text_primary"
+                            android:textSize="@dimen/text_very_small"
+                            android:fontFamily="@font/poppins_semibold" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:background="@color/gray" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/btn_height_small"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/settings_theme_dark"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="@dimen/text_very_small"
+                            android:fontFamily="@font/poppins_regular" />
 
-    </LinearLayout>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/btn_height_small"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Sistema"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="@dimen/text_very_small"
+                            android:fontFamily="@font/poppins_regular"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:gravity="center"
+                        android:text="@string/settings_theme_system_sub"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/text_micro"
+                        android:fontFamily="@font/poppins_regular" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Terminar sessão (ação destrutiva) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/button_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/background_secondary"
+                app:cardCornerRadius="@dimen/border_radius_large"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/stroke_soft"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/padding_medium"
+                    android:paddingEnd="@dimen/padding_medium">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_small"
+                        android:layout_height="@dimen/icon_size_small"
+                        android:src="@drawable/ic_logout"
+                        app:tint="@color/red"
+                        android:contentDescription="@string/logout" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/margin_medium"
+                        android:text="@string/logout"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_small"
+                        android:fontFamily="@font/poppins_semibold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Eliminar conta (ação secundária, sem navegação ligada ainda) -->
+            <TextView
+                android:id="@+id/button_delete_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/padding_small"
+                android:text="@string/delete_account"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/text_very_small"
+                android:fontFamily="@font/poppins_regular" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

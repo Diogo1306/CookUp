@@ -1,31 +1,36 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ecrã Guardados — cabeçalho legível + grelha de coleções (redesign 2d). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
     android:layout_marginTop="@dimen/margin_large"
     android:layoutAnimation="@anim/layout_animation_fade_slide_up"
-    android:background="@color/background"
     tools:context=".ui.fragment.SavesFragment">
 
+    <!-- Cabeçalho: textos à esquerda, ação "Nova lista" à direita -->
     <LinearLayout
+        android:id="@+id/headerSavedLists"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/padding_medium"
-        android:paddingTop="@dimen/padding_large"
-        android:paddingEnd="@dimen/padding_medium"
-        android:paddingBottom="@dimen/padding_small">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/padding_large"
+        android:paddingEnd="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_medium">
 
+        <!-- Coluna de textos: saudação, título e contagem de coleções -->
         <LinearLayout
-            android:id="@+id/headerSavedLists"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:paddingTop="@dimen/padding_large"
-            android:paddingBottom="@dimen/padding_small">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <!-- Saudação dinâmica ("Olá, Nome 👋") -->
             <TextView
                 android:id="@+id/text_saved_greeting"
                 android:layout_width="wrap_content"
@@ -33,36 +38,76 @@
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="@string/saved_greeting"
-                android:textSize="@dimen/text_medium" />
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_very_small" />
 
+            <!-- Título do ecrã -->
+            <TextView
+                android:id="@+id/text_saves_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_micro"
+                android:fontFamily="@font/poppins_bold"
+                android:includeFontPadding="false"
+                android:text="Guardados"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_large"
+                tools:ignore="HardcodedText" />
+
+            <!-- Contagem de coleções (dinâmica) -->
             <TextView
                 android:id="@+id/text_saved_intro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
+                android:layout_marginTop="@dimen/margin_micro"
+                android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="@string/saved_intro"
-                android:textSize="@dimen/text_large" />
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_very_small" />
         </LinearLayout>
 
+        <!-- Ação criar lista: pílula coral suave (mantém id fab_add_list) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fab_add_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_small"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Nova lista"
+            android:textAllCaps="false"
+            android:textColor="@color/primary_dark"
+            android:textSize="@dimen/text_very_small"
+            android:letterSpacing="0"
+            app:backgroundTint="@color/primary_light"
+            app:cornerRadius="@dimen/border_radius_circular"
+            app:elevation="0dp"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/padding_very_small"
+            app:iconSize="@dimen/icon_size_very_small"
+            app:iconTint="@color/primary_dark"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
+    <!-- Grelha de coleções guardadas -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_saved_lists"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="120dp"
-        android:padding="@dimen/padding_medium"
-        android:clipToPadding="false" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_medium"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_saved_list_manage" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/margin_large"
-        app:srcCompat="@drawable/ic_add"
-        app:tint="@color/text_primary"
-        app:backgroundTint="@color/background_soft" />
-
-</FrameLayout>
+</LinearLayout>

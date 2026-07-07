@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Ecrã Explorar: título, campo de pesquisa, filtros (pills) e lista de resultados. -->
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,15 +14,36 @@
         android:background="@color/background"
         android:paddingBottom="@dimen/padding_medium">
 
+        <!-- Título do ecrã -->
+        <TextView
+            android:id="@+id/titleExplore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:fontFamily="@font/poppins_semibold"
+            android:includeFontPadding="false"
+            android:text="Explorar"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Campo de pesquisa (funciona como botão -> ecrã de pesquisa) -->
         <EditText
             android:id="@+id/searchEditText"
             style="@style/input"
+            android:layout_width="0dp"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_medium"
             android:autofillHints="emailAddress"
+            android:background="@drawable/bg_search_field"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="@dimen/padding_small"
+            android:drawableTint="@color/primary"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:hint="@string/HintExplore"
@@ -30,66 +51,58 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/text_secondary"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toBottomOf="@id/titleExplore"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/titleCategories"
-            android:layout_width="match_parent"
+        <!-- Filtros / categorias em pills, roláveis na horizontal -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCategories"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/categories"
-            android:textSize="@dimen/text_medium"
-            android:textColor="@color/text_primary"
-            android:fontFamily="@font/poppins_semibold"
             android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_medium"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/searchEditText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/margin_medium" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerCategories"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_micro"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/titleCategories"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        <!-- Linha-resumo dos resultados -->
         <TextView
             android:id="@+id/titleRecipes"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Explore mais receitas"
-            android:textSize="@dimen/text_medium"
-            android:textColor="@color/text_primary"
-            android:fontFamily="@font/poppins_semibold"
             android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
+            android:fontFamily="@font/poppins_regular"
+            android:includeFontPadding="false"
+            android:text="Explore mais receitas"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_very_small"
             app:layout_constraintTop_toBottomOf="@id/recyclerCategories"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/margin_medium" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerRecipes"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingTop="@dimen/padding_small"
-        android:paddingBottom="@dimen/padding_large"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/titleRecipes"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Resultados (lista grande, ocupa o espaço restante) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerRecipes"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_large"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/titleRecipes"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
