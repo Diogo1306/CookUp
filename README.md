@@ -10,7 +10,7 @@ Plataforma completa de receitas: cria, guarda e partilha receitas, recebe avalia
 ![Android](https://img.shields.io/badge/App-Android%20·%20Java-3DDC84?logo=android&logoColor=white)
 ![PHP](https://img.shields.io/badge/API-PHP%20·%20REST-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/BD-MySQL-4479A1?logo=mysql&logoColor=white)
-![React](https://img.shields.io/badge/Dashboard-React%20·%20Vite%20·%20MUI-61DAFB?logo=react&logoColor=black)
+![React](https://img.shields.io/badge/Dashboard-React%20·%20Vite-61DAFB?logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Admin-Node.js%20·%20Express-339933?logo=nodedotjs&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Auth-Firebase-FFCA28?logo=firebase&logoColor=black)
 ![Licença](https://img.shields.io/badge/Licen%C3%A7a-Todos%20os%20direitos%20reservados-c0392b)
@@ -47,7 +47,7 @@ O CookUp nasceu de uma observação simples: as receitas estão espalhadas pelas
 ```mermaid
 flowchart LR
     APP["App Android<br/>Java · MVVM · Retrofit"] -->|REST · JSON| API["API RESTful<br/>PHP"]
-    DASH["Dashboard<br/>React · MUI · Axios"] -->|REST · JSON| API
+    DASH["Dashboard<br/>React · Vite · Axios"] -->|REST · JSON| API
     API --> BD[("MySQL<br/>cookup_db")]
     APP -->|Autenticação| FB["Firebase Auth"]
     DASH -->|Autenticação| FB
@@ -63,7 +63,7 @@ A app segue o padrão **MVVM** (ViewModels + LiveData) com repositórios central
 |---|---|---|
 | [`app/`](app/) | Aplicação Android | Java, MVVM, LiveData, Retrofit, Navigation |
 | [`api/`](api/) | API RESTful + base de dados | PHP, MySQL |
-| [`dashboard/`](dashboard/) | Dashboard de administração | React, Vite, Material UI, Axios |
+| [`dashboard/`](dashboard/) | Dashboard de administração | React, Vite, Axios (design system próprio) |
 | [`firebase-admin/`](firebase-admin/) | Backend auxiliar de administração | Node.js, Express, Firebase Admin SDK |
 | [`assets/icons/`](assets/icons/) | Ícones e imagens da marca | — |
 

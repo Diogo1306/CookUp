@@ -1,9 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Skeleton do cartão de receita (Início/Recomendado). Espelha o item_recipe_default:
+     imagem arredondada + título + linha de meta, com brilho animado da Shimmer. -->
 <com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="150dp"
     android:layout_height="wrap_content"
     app:shimmer_auto_start="true"
-    app:shimmer_duration="1000">
+    app:shimmer_duration="1100"
+    app:shimmer_tilt="18">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,19 +18,18 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="170dp"
-            android:background="@drawable/skeleton_background"
-            android:layout_gravity="center" />
+            android:background="@drawable/skeleton_card" />
 
         <View
-            android:layout_width="80dp"
+            android:layout_width="110dp"
             android:layout_height="14dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/skeleton_background" />
 
         <View
-            android:layout_width="50dp"
+            android:layout_width="70dp"
             android:layout_height="12dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/skeleton_background" />
     </LinearLayout>
 </com.facebook.shimmer.ShimmerFrameLayout>
