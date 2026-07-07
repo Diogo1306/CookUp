@@ -85,13 +85,15 @@ class CategoryController
         }
 
         $db = Database::connect();
-        $stmt = $db->prepare("SELECT image_url FROM categories WHERE category_id = ?");
+        $stmt = $db->prepare("SELECT image_url, color_hex FROM categories WHERE category_id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
         $old_image_url = '';
         if ($row = $result->fetch_assoc()) {
             $old_image_url = $row['image_url'];
+            // Preserva a cor atual se não vier no pedido.
+            if (empty($color_hex)) $color_hex = $row['color_hex'];
         }
         $stmt->close();
 

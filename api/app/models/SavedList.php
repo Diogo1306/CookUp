@@ -22,8 +22,9 @@ class SavedList
     }
 
     /** Cria nova lista */
-    public static function create(int $user_id, string $list_name, string $color): bool
+    public static function create(int $user_id, string $list_name, ?string $color = null): bool
     {
+        $color = $color ?: '#FFFFFF';
         $db = Database::connect();
         $stmt = $db->prepare("INSERT INTO saved_lists (user_id, list_name, color) VALUES (?, ?, ?)");
         $stmt->bind_param("iss", $user_id, $list_name, $color);

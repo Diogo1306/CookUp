@@ -24,7 +24,7 @@ class ProfileController
         $finishedCount = 0;
 
         if ($totalRecipes > 0) {
-            $averageRating = Rating::getAverageRatingByAuthor($recipeIds);
+            $averageRating = Rating::getAverageRatingByAuthor($user_id);
             $totalViews = Recipe::getTotalViewsByIds($recipeIds);
             $finishedCount = Tracking::countFinishedByRecipeIds($recipeIds);
         }
