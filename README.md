@@ -11,7 +11,7 @@ Junta num só repositório a app Android, a API, o dashboard de administração 
 | [`api/`](api/) | API / backend principal | PHP, MySQL |
 | [`dashboard/`](dashboard/) | Dashboard de administração | React, Vite, Material UI |
 | [`firebase-admin/`](firebase-admin/) | Backend de notificações | Node.js, Firebase Admin SDK |
-| [`docs/`](docs/) | Relatório de PAP, manual de instalação, cronograma | — |
+| [`docs/`](docs/) | Manual de instalação (PDF) | — |
 | [`assets/icons/`](assets/icons/) | Ícones e imagens da marca | — |
 
 ## Como correr
@@ -46,3 +46,7 @@ Este monorepo foi criado a partir de três repositórios originais, com o histó
 - `Diogo1306/CookUp_Dasboard` → `dashboard/`
 
 Os repositórios originais foram arquivados.
+
+## Licença
+
+**Todos os direitos reservados.** Este repositório está público apenas para visualização (portefólio). Não é permitido copiar, modificar ou usar este código ou a ideia do projeto — incluindo para outras PAP ou trabalhos académicos — sem autorização escrita do autor. Ver [LICENSE](LICENSE).
