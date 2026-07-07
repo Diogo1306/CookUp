@@ -27,6 +27,7 @@ import com.diogo.cookup.ui.adapter.CategoryAdapter;
 import com.diogo.cookup.ui.adapter.RecipeAdapterDefault;
 import com.diogo.cookup.ui.dialog.SaveRecipeBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
+import com.diogo.cookup.utils.NavUtils;
 import com.diogo.cookup.viewmodel.CategoryViewModel;
 import com.diogo.cookup.viewmodel.HomeFeedViewModel;
 import com.diogo.cookup.viewmodel.RecipeViewModel;
@@ -83,13 +84,10 @@ public class HomeFragment extends Fragment {
 
     private void setupSearchBar(View view) {
         if (searchEditText != null) {
-            View.OnClickListener navigateToSearch = v -> NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_homeFragment_to_searchSuggestionsFragment);
-
-            searchEditText.setOnClickListener(navigateToSearch);
-            searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
-                if (hasFocus) navigateToSearch.onClick(v);
-            });
+            // Um único gatilho (clique) para evitar a navegação dupla foco+clique.
+            searchEditText.setOnClickListener(v -> NavUtils.navigateSafe(
+                    NavHostFragment.findNavController(this),
+                    R.id.action_homeFragment_to_searchSuggestionsFragment));
         }
     }
 
@@ -192,7 +190,7 @@ public class HomeFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(categoryList, category -> {
             HomeFragmentDirections.ActionHomeFragmentToSearchResultFragment action =
                     HomeFragmentDirections.actionHomeFragmentToSearchResultFragment(category.getCategoryName());
-            Navigation.findNavController(requireView()).navigate(action);
+            NavUtils.navigateSafe(Navigation.findNavController(requireView()), action.getActionId(), action.getArguments());
         });
         recyclerCategories.setAdapter(categoryAdapter);
     }
@@ -332,9 +330,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void openRecipeDetail(RecipeData recipe) {
-        Navigation.findNavController(requireView()).navigate(
-                HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId())
-        );
+        HomeFragmentDirections.ActionHomeFragmentToRecipeDetailFragment dir =
+                HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId());
+        NavUtils.navigateSafe(Navigation.findNavController(requireView()), dir.getActionId(), dir.getArguments());
     }
 
     private void animateRecycler(RecyclerView recyclerView) {

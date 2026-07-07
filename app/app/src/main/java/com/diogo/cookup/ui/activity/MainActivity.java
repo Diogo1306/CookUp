@@ -120,6 +120,7 @@ public class MainActivity extends BaseConnectivityActivity {
 
         auth = FirebaseAuth.getInstance();
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        preferences = getSharedPreferences("cookup_prefs", MODE_PRIVATE);
 
         handleEmailVerification(getIntent());
     }
@@ -187,6 +188,8 @@ public class MainActivity extends BaseConnectivityActivity {
         }
 
         switchToFragment(currentTag);
+        // Mantém o item destacado em sincronia com o separador atual (ex.: após recreate/tema).
+        bottomNavigationView.setSelectedItemId(menuIdForTag(currentTag));
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -205,6 +208,13 @@ public class MainActivity extends BaseConnectivityActivity {
             }
             return false;
         });
+    }
+
+    private int menuIdForTag(String tag) {
+        if (TAG_EXPLORE.equals(tag)) return R.id.navigation_explore;
+        if (TAG_SAVES.equals(tag)) return R.id.navigation_saves;
+        if (TAG_PROFILE.equals(tag)) return R.id.navigation_profile;
+        return R.id.navigation_home;
     }
 
     private void checkAndApplyBottomNavVisibility() {
@@ -242,22 +252,22 @@ public class MainActivity extends BaseConnectivityActivity {
     }
 
     private void handleEmailVerification(android.content.Intent intent) {
-        if (intent != null && intent.getData() != null) {
-            String email = getEmailFromPreferences();
-            if (auth.isSignInWithEmailLink(intent.getData().toString())) {
-                auth.signInWithEmailLink(email, intent.getData().toString())
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                FirebaseUser user = auth.getCurrentUser();
-                                if (user != null) {
-                                    updateUserData(user, email, null, null, null);
-                                }
-                            } else {
-                                Toast.makeText(this, "Erro ao verificar email.", Toast.LENGTH_LONG).show();
-                            }
-                        });
-            }
-        }
+        // Só trata o intent quando é mesmo um link de sign-in do Firebase.
+        if (intent == null || intent.getData() == null || auth == null) return;
+        if (!auth.isSignInWithEmailLink(intent.getData().toString())) return;
+
+        String email = getEmailFromPreferences();
+        auth.signInWithEmailLink(email, intent.getData().toString())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            updateUserData(user, email, null, null, null);
+                        }
+                    } else {
+                        Toast.makeText(this, "Erro ao verificar email.", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     public void setBottomNavigationVisible(boolean visible) {
