@@ -63,6 +63,7 @@ export default function Dashboard() {
     if (isMobile) setDrawerOpen(false);
   }
 
+  // Papel do utilizador (cor)
   function getRoleColor(role) {
     if (role === "admin") return "success";
     if (role === "moderador") return "info";
@@ -71,6 +72,7 @@ export default function Dashboard() {
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
+      {/* HEADER / APPBAR */}
       <AppBar
         position="fixed"
         color="default"
@@ -118,6 +120,7 @@ export default function Dashboard() {
         </Toolbar>
       </AppBar>
 
+      {/* DRAWER / MENU LATERAL */}
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
         open={drawerOpen}
