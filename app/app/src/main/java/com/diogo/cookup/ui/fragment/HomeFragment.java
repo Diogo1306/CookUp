@@ -84,7 +84,10 @@ public class HomeFragment extends Fragment {
 
     private void setupSearchBar(View view) {
         if (searchEditText != null) {
-            // Um único gatilho (clique) para evitar a navegação dupla foco+clique.
+            // O campo funciona como botão: 1º toque abre já o ecrã de pesquisa
+            // (não edita aqui). Assim navega ao primeiro toque, sem foco+clique dupla.
+            searchEditText.setFocusable(false);
+            searchEditText.setFocusableInTouchMode(false);
             searchEditText.setOnClickListener(v -> NavUtils.navigateSafe(
                     NavHostFragment.findNavController(this),
                     R.id.action_homeFragment_to_searchSuggestionsFragment));
