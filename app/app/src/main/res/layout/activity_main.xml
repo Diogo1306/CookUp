@@ -37,7 +37,7 @@
         android:background="@color/background"
         android:animateLayoutChanges="true"
         app:menu="@menu/bottom_nav_menu"
-        app:itemIconTint="@null"
+        app:itemIconTint="@color/nav_icon_selector"
         app:itemTextColor="@color/bottom_navmenu_text_selector"
         app:itemTextAppearanceActive="@style/BottomNavText"
         app:itemTextAppearanceInactive="@style/BottomNavText"
