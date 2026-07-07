@@ -11,25 +11,30 @@ Junta num só repositório a app Android, a API, o dashboard de administração 
 | [`api/`](api/) | API / backend principal | PHP, MySQL |
 | [`dashboard/`](dashboard/) | Dashboard de administração | React, Vite, Material UI |
 | [`firebase-admin/`](firebase-admin/) | Backend de notificações | Node.js, Firebase Admin SDK |
-| [`docs/`](docs/) | Manual de instalação (PDF) | — |
 | [`assets/icons/`](assets/icons/) | Ícones e imagens da marca | — |
 
-## Como correr
+## Instalação e execução
 
-### API (`api/`)
-Requer PHP + MySQL (ex.: XAMPP/WAMP). Configura a base de dados e o IP local em `api/config/config.php`.
+### 1. API (`api/`)
+Requer PHP + MySQL (ex.: XAMPP ou WAMP).
 
-### App Android (`app/`)
-Abrir a pasta `app/` no Android Studio e sincronizar o Gradle. Ajustar o endereço da API para o IP da máquina onde a API está a correr.
+1. Copiar a pasta `api/` para o diretório do servidor web (ex.: `htdocs/`).
+2. Criar a base de dados e importar `api/config/cookup_db.sql` (ex.: via phpMyAdmin).
+3. Em `api/config/config.php`, ajustar as credenciais da base de dados e o `BASE_URL` para o IP da tua máquina (vê o IPv4 com `ipconfig`).
 
-### Dashboard (`dashboard/`)
+### 2. App Android (`app/`)
+1. Abrir a pasta `app/` no Android Studio e sincronizar o Gradle.
+2. Ajustar o endereço da API para o mesmo IP configurado no `BASE_URL` da API.
+3. O telemóvel/emulador tem de estar na mesma rede que a máquina onde a API corre.
+
+### 3. Dashboard (`dashboard/`)
 ```bash
 cd dashboard
 npm install
 npm run dev
 ```
 
-### Firebase Admin (`firebase-admin/`)
+### 4. Firebase Admin (`firebase-admin/`)
 ```bash
 cd firebase-admin
 npm install
