@@ -1290,12 +1290,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `firebase_uid`, `username`, `email`, `profile_picture`, `created_at`, `updated_at`, `role`, `blocked`) VALUES
-(1, 'FpMqP3w1rwRzKto6H0A0TzdP0mR2', 'admin', 'admin@gmail.com', NULL, '2025-06-18 19:58:12', '2025-06-22 22:20:23', 'admin', 0),
-(1312, '4jSMI2tw8xZz1sfmSPNLPuMqPni1', 'chefe kauan', 'kauan@gmail.com', NULL, '2025-06-18 21:03:26', '2025-06-22 22:20:25', 'user', 0),
-(1313, 'EdctpOKw6IauUt4nBkznlv8Mksw2', 'diogo', 'diogo@gmail.com', NULL, '2025-06-18 21:28:01', '2025-06-30 11:14:51', 'user', 0),
-(1314, 'o7mLSc1ZQmZFsn0jqA6JPMfa57i1', 'Diogo Esteves', 'diogoestevesmorgado@gmail.com', NULL, '2025-06-18 22:11:01', '2025-06-22 22:20:28', 'user', 0),
-(1317, 'KnAXTewUWHZY1ITX3k88d4ATaUn2', 'diogoesteves1306@gmail.com', 'diogoesteves1306@gmail.com', 'https://lh3.googleusercontent.com/a/ACg8ocKQavgu7u1hrxgWikRMMXIzi-Ng7gMRthY6kE4VfF-VIwPaNQ=s96-c', '2025-06-18 23:10:05', '2025-06-20 14:42:08', 'user', 0),
-(1318, 'yEWtYOykMIb5LgnclKaBea0WAYx2', 'cassandra', 'cassandra@gmail.com', NULL, '2025-06-18 23:56:13', '2025-06-30 11:14:54', 'user', 0);
+(1, 'firebase_uid_admin_0001', 'admin', 'admin@example.com', NULL, '2025-06-18 19:58:12', '2025-06-22 22:20:23', 'admin', 0),
+(1312, 'firebase_uid_user_1312', 'user_1312', 'user1312@example.com', NULL, '2025-06-18 21:03:26', '2025-06-22 22:20:25', 'user', 0),
+(1313, 'firebase_uid_user_1313', 'user_1313', 'user1313@example.com', NULL, '2025-06-18 21:28:01', '2025-06-30 11:14:51', 'user', 0),
+(1314, 'firebase_uid_user_1314', 'user_1314', 'user1314@example.com', NULL, '2025-06-18 22:11:01', '2025-06-22 22:20:28', 'user', 0),
+(1317, 'firebase_uid_user_1317', 'user_1317', 'user1317@example.com', NULL, '2025-06-18 23:10:05', '2025-06-20 14:42:08', 'user', 0),
+(1318, 'firebase_uid_user_1318', 'user_1318', 'user1318@example.com', NULL, '2025-06-18 23:56:13', '2025-06-30 11:14:54', 'user', 0);
 
 -- --------------------------------------------------------
 

@@ -130,7 +130,7 @@ class Ingredient
 
     public static function fetchAndSaveImage($ingredientName)
     {
-        $apiKey = "44806cf7384f4fbeb461004158d1977f";
+        $apiKey = SPOONACULAR_API_KEY;
         $query = urlencode($ingredientName);
         $url = "https://api.spoonacular.com/food/ingredients/search?query=$query&apiKey=$apiKey";
 

@@ -7,9 +7,12 @@ build/
 *.apk
 *.aab
 
-# Segredos — nunca commitar
+# Segredos e configuração local — nunca commitar
 serviceAccountKey.json
 .env
+.env.*
+!.env.example
+config.local.php
 *.jks
 *.keystore
 
