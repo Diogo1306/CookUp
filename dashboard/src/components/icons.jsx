@@ -54,3 +54,18 @@ export const IconStar = ({ size = 14 }) => (
 export const IconTrendUp = ({ size = 11 }) => (
   <svg {...base(size)} strokeWidth={2}><path d="m3 8 5-5 4 4 6-6" /><path d="M13 1h5v5" /></svg>
 );
+export const IconEdit = ({ size = 15 }) => (
+  <svg {...base(size)}><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+);
+export const IconTrash = ({ size = 15 }) => (
+  <svg {...base(size)}><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /></svg>
+);
+export const IconPlus = ({ size = 16 }) => (
+  <svg {...base(size)} strokeWidth={2}><path d="M12 5v14M5 12h14" /></svg>
+);
+export const IconLock = ({ size = 15 }) => (
+  <svg {...base(size)}><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+);
+export const IconUnlock = ({ size = 15 }) => (
+  <svg {...base(size)}><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" /></svg>
+);
