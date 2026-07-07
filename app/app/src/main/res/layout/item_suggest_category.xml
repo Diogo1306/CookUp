@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/category_bg"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/padding_small"
+    android:layout_margin="@dimen/margin_small">
+
+    <ImageView
+        android:id="@+id/imgCategoryIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_circle"
+        android:clipToOutline="true"
+        android:src="@drawable/placeholder"
+        android:padding="@dimen/padding_small"
+        android:scaleType="centerInside" />
+
+    <TextView
+        android:id="@+id/tvCategoryLabel"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_very_small"
+        android:text="Almoço"
+        android:fontFamily="@font/poppins_semibold"
+        android:textSize="@dimen/text_micro"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/text_primary" />
+
+</LinearLayout>

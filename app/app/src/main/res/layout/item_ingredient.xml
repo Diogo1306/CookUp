@@ -1,0 +1,49 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/ingredient_image"
+        android:layout_width="@dimen/icon_size_extra_large"
+        android:layout_height="@dimen/icon_size_extra_large"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder"
+        android:background="@drawable/bg_ingredient_square"
+        android:layout_marginStart="@dimen/margin_medium"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/ingredient_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Granulated sugar"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_small"
+        android:fontFamily="@font/poppins_regular"
+        android:layout_marginStart="@dimen/text_medium"
+        app:layout_constraintTop_toTopOf="@id/ingredient_image"
+        app:layout_constraintBottom_toBottomOf="@id/ingredient_image"
+        app:layout_constraintStart_toEndOf="@id/ingredient_image"
+        app:layout_constraintEnd_toStartOf="@id/ingredient_quantity"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <TextView
+        android:id="@+id/ingredient_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="160 g"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_medium"
+        android:fontFamily="@font/poppins_regular"
+        android:layout_marginEnd="@dimen/margin_medium"
+        app:layout_constraintTop_toTopOf="@id/ingredient_image"
+        app:layout_constraintBottom_toBottomOf="@id/ingredient_image"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

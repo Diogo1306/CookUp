@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@android:color/transparent"
+    tools:context=".ui.fragment.WelcomeFragment">
+
+    <TextureView
+        android:id="@+id/video_texture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+        android:gravity="center"
+        android:padding="@dimen/padding_large"
+        android:layout_marginTop="60dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:gravity="center"
+            android:lineSpacingExtra="-10dp"
+            android:text="@string/welcome_words"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="56sp"
+            tools:ignore="TextSizeCheck" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/signup_button"
+            style="@style/button_primary"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="@string/welcome_criar_conta"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_medium" />
+
+        <TextView
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:fontFamily="@font/poppins_semibold"
+            android:gravity="center"
+            android:text="@string/welcome_iniciar_sessao"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_medium"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textPrivacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="30dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="@string/privacy_policy"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        tools:ignore="TextContrastCheck" />
+
+</FrameLayout>

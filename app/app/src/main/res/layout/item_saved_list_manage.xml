@@ -1,0 +1,259 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="240dp"
+    android:layout_margin="@dimen/border_radius"
+    app:cardCornerRadius="@dimen/border_radius"
+    app:cardElevation="0dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/image_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/image_rounded"
+            android:clipToOutline="true"
+            android:outlineProvider="background"
+            android:padding="@dimen/padding_micro"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/image_row_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="2dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/image_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+        </LinearLayout>
+
+        <GridLayout
+            android:id="@+id/image_grid_3_custom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="2"
+            android:padding="2dp"
+            android:rowCount="2"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image_3_1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/image_3_2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="1"
+                android:layout_rowWeight="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/image_3_3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="0"
+                android:layout_rowSpan="2"
+                android:layout_rowWeight="2"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+        </GridLayout>
+
+        <GridLayout
+            android:id="@+id/image_grid_2x2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="2"
+            android:padding="@dimen/padding_micro"
+            android:rowCount="2"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image_4_1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/image_4_2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/image_4_3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="1"
+                android:layout_rowWeight="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/image_4_4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="1"
+                android:layout_rowWeight="1"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="1dp"
+                android:background="@drawable/image_rounded"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:padding="@dimen/padding_micro"
+                android:scaleType="centerCrop" />
+        </GridLayout>
+
+        <View
+            android:id="@+id/image_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/overlay_background" />
+
+        <LinearLayout
+            android:id="@+id/overlay_text_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <View
+                android:id="@+id/view_color_dot"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_circle" />
+
+            <TextView
+                android:id="@+id/list_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Nome da Lista"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_recipe_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12 receitas"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageButton
+                android:id="@+id/button_edit_list"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_circle"
+                android:contentDescription="Editar lista"
+                android:src="@drawable/ic_edit"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/button_delete_list"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_circle"
+                android:contentDescription="Eliminar lista"
+                android:src="@drawable/ic_trash"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+    </FrameLayout>
+</androidx.cardview.widget.CardView>

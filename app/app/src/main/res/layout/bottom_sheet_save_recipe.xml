@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_large"
+    android:background="@drawable/bg_dialog_rounded"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="75dp"
+        android:layout_height="8dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_micro"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="@drawable/bg_handle" />
+
+    <TextView
+        android:id="@+id/save_recipe_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/AddRecipeOnList"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_large"
+        android:paddingBottom="@dimen/padding_small"
+        android:fontFamily="@font/poppins_semibold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_lists"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:nestedScrollingEnabled="false"
+        android:overScrollMode="never"
+        android:layout_marginBottom="@dimen/margin_medium" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_create_list"
+        style="@style/button_primary"
+        android:layout_margin="@dimen/margin_small"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/CreateList"
+        android:textColor="@color/white" />
+</LinearLayout>

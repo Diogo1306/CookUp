@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin_large"
+    android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/background"
+            android:gravity="center_vertical"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/arrow_back"
+                android:layout_width="@dimen/icon_size_medium"
+                android:layout_height="@dimen/icon_size_medium"
+                android:background="@color/transparent"
+                android:contentDescription="@string/back"
+                android:src="@drawable/ic_arrow_left"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/title_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:text="@string/edit_profile_title"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_large"
+                android:fontFamily="@font/poppins_semibold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/body_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@id/header_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <FrameLayout
+                android:id="@+id/profile_image_container"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_profile_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardCornerRadius="100dp"
+                    app:cardElevation="4dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:cardUseCompatPadding="true">
+
+                    <ImageView
+                        android:id="@+id/img_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/skeleton_background" />
+                </androidx.cardview.widget.CardView>
+
+                <ImageButton
+                    android:id="@+id/btn_edit_photo"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_circle"
+                    android:src="@drawable/ic_edit"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="6dp"
+                    android:elevation="4dp" />
+            </FrameLayout>
+
+
+
+            <EditText
+                android:id="@+id/edit_name"
+                style="@style/input"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:hint="@string/edit_profile_hint_name"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColorHint="@color/text_primary"
+                android:layout_marginTop="24dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_save"
+                style="@style/button_primary"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

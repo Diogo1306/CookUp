@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/padding_large"
+    android:background="@color/background"
+    android:fillViewport="true"
+    tools:context=".ui.fragment.ChangeEmailFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutAnimation="@anim/layout_animation_fade_slide_up">
+
+        <LinearLayout
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/background"
+            android:gravity="center_vertical"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/arrow_back"
+                android:layout_width="@dimen/icon_size_medium"
+                android:layout_height="@dimen/icon_size_medium"
+                android:background="@color/transparent"
+                android:contentDescription="@string/back"
+                android:src="@drawable/ic_arrow_left"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/title_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:text="@string/update_email_title"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_large"
+                android:fontFamily="@font/poppins_semibold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/body_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/header_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <EditText
+                android:id="@+id/editTextNewEmail"
+                style="@style/input"
+                android:autofillHints="emailAddress"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="@dimen/padding_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColorHint="@color/text_primary" />
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                style="@style/input"
+                android:autofillHints="password"
+                android:drawableStart="@drawable/ic_lock"
+                android:drawableEnd="@drawable/ic_eye_off"
+                android:drawablePadding="@dimen/padding_small"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center_vertical"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:layout_marginTop="@dimen/margin_small"
+                android:singleLine="true"
+                android:textColorHint="@color/text_primary"
+                android:focusable="true"
+                android:clickable="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/email_verification_hint"
+                android:textAlignment="center"
+                android:textSize="@dimen/text_very_small"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="@dimen/padding_small" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonSendVerification"
+                style="@style/button_primary"
+                android:layout_margin="@dimen/margin_small"
+                android:text="@string/send_verification"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonConfirm"
+                style="@style/button_secundary"
+                android:layout_margin="@dimen/margin_small"
+                android:text="@string/confirm_change"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="@dimen/text_medium"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:padding="@dimen/padding_medium"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

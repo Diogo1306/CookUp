@@ -1,0 +1,31 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_saves"
+    app:startDestination="@id/savesFragment">
+
+    <fragment
+        android:id="@+id/savesFragment"
+        android:name="com.diogo.cookup.ui.fragment.SavesFragment">
+        <action
+            android:id="@+id/action_savesFragment_to_savedRecipesFragment"
+            app:destination="@id/savedRecipesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/savedRecipesFragment"
+        android:name="com.diogo.cookup.ui.fragment.SavedRecipesFragment"
+        tools:layout="@layout/fragment_saved_recipes">
+        <argument android:name="list_id" app:argType="integer" />
+        <argument android:name="list_name" app:argType="string" />
+        <action
+            android:id="@+id/action_savedRecipesFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.diogo.cookup.ui.fragment.RecipeDetailFragment">
+        <argument android:name="recipe_id" app:argType="integer" />
+    </fragment>
+</navigation>

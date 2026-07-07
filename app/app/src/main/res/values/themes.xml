@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.CookUp" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnBackground">@color/background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="colorControlActivated">@color/primary</item>
+    </style>
+</resources>
