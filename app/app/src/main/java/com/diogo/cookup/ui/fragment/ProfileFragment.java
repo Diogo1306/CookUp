@@ -199,11 +199,13 @@ public class ProfileFragment extends Fragment {
                     profileViewModel.loadProfileRecipes(user.getUserId());
                     profileViewModel.loadProfileSummary(user.getUserId());
                 }
+                profileViewModel.clearDeleteSuccess();
             }
         });
         profileViewModel.getDeleteError().observe(getViewLifecycleOwner(), msg -> {
-            if (msg != null) {
+            if (msg != null && !msg.isEmpty()) {
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
+                profileViewModel.clearDeleteError();
             }
         });
 

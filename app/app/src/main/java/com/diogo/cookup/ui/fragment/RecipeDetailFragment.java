@@ -60,6 +60,9 @@ public class RecipeDetailFragment extends Fragment {
     private TabLayout galleryIndicator;
     private RecipeGalleryDetailAdapter galleryPagerAdapter;
 
+    // Pílula de avaliação (atualizada tanto pelo detalhe como pela média)
+    private TextView txtRating;
+
     // Seletor de porções (ajusta as quantidades dos ingredientes)
     private TextView txtPortions, txtServings;
     private java.util.List<IngredientData> baseIngredients;
@@ -104,7 +107,7 @@ public class RecipeDetailFragment extends Fragment {
         TextView recipeDescription = view.findViewById(R.id.recipe_description);
         TextView recipeInstructions = view.findViewById(R.id.recipe_instructions);
         TextView txtTime = view.findViewById(R.id.txt_time);
-        TextView txtRating = view.findViewById(R.id.txt_rating);
+        txtRating = view.findViewById(R.id.txt_rating);
         TextView txtDifficulty = view.findViewById(R.id.txt_difficulty);
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_categories);
         ImageButton btnBack = view.findViewById(R.id.arrow_back);
@@ -323,6 +326,11 @@ public class RecipeDetailFragment extends Fragment {
             }
         });
 
+        viewModel.getAverageRatingLiveData().observe(getViewLifecycleOwner(), avg -> {
+            if (txtRating == null || avg == null) return;
+            txtRating.setText(avg > 0 ? String.format(Locale.getDefault(), "%.1f", avg) : "—");
+        });
+
         viewModel.getRatingSuccessLiveData().observe(getViewLifecycleOwner(), success -> {
             if (success != null && success) {
                 inputComment.setText("");
@@ -395,20 +403,37 @@ public class RecipeDetailFragment extends Fragment {
     // Se não houver número (ex.: "a gosto"), devolve a quantidade tal como está.
     private String scaleQuantity(String quantity, double factor) {
         if (quantity == null || quantity.isEmpty()) return quantity;
+
+        // Fração no início (ex.: "1/2 chávena") -> escala o valor da fração, não só o numerador.
+        java.util.regex.Matcher fraction = java.util.regex.Pattern.compile("^\\s*(\\d+)\\s*/\\s*(\\d+)").matcher(quantity);
+        if (fraction.find()) {
+            try {
+                double denominator = Double.parseDouble(fraction.group(2));
+                if (denominator != 0) {
+                    double value = (Double.parseDouble(fraction.group(1)) / denominator) * factor;
+                    return formatQuantityValue(value) + quantity.substring(fraction.end());
+                }
+            } catch (NumberFormatException e) {
+                return quantity;
+            }
+        }
+
         java.util.regex.Matcher m = java.util.regex.Pattern.compile("^\\s*(\\d+(?:[.,]\\d+)?)").matcher(quantity);
         if (!m.find()) return quantity;
         try {
             double value = Double.parseDouble(m.group(1).replace(',', '.')) * factor;
-            String number;
-            if (Math.abs(value - Math.rint(value)) < 0.05) {
-                number = String.valueOf((int) Math.rint(value));
-            } else {
-                number = String.format(Locale.getDefault(), "%.1f", value);
-            }
-            return number + quantity.substring(m.end());
+            return formatQuantityValue(value) + quantity.substring(m.end());
         } catch (NumberFormatException e) {
             return quantity;
         }
+    }
+
+    // Arredonda para inteiro quando está muito perto de um; caso contrário mostra uma casa decimal.
+    private String formatQuantityValue(double value) {
+        if (Math.abs(value - Math.rint(value)) < 0.05) {
+            return String.valueOf((int) Math.rint(value));
+        }
+        return String.format(Locale.getDefault(), "%.1f", value);
     }
 
     @Override

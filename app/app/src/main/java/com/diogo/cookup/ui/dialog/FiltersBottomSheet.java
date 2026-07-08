@@ -102,7 +102,35 @@ public class FiltersBottomSheet extends BottomSheetDialogFragment {
             dismiss();
         });
 
-        buttonCancel.setOnClickListener(v -> dismiss());
+        checkEasy.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkMedium.setChecked(false);
+                checkHard.setChecked(false);
+            }
+        });
+        checkMedium.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkEasy.setChecked(false);
+                checkHard.setChecked(false);
+            }
+        });
+        checkHard.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkEasy.setChecked(false);
+                checkMedium.setChecked(false);
+            }
+        });
+
+        buttonCancel.setOnClickListener(v -> {
+            radioGroupOrder.clearCheck();
+            checkEasy.setChecked(false);
+            checkMedium.setChecked(false);
+            checkHard.setChecked(false);
+            seekMaxTime.setProgress(0);
+            seekMaxIngredients.setProgress(0);
+            textMaxTimeValue.setText(seekMaxTime.getProgress() + " min");
+            textMaxIngredientsValue.setText(String.valueOf(seekMaxIngredients.getProgress()));
+        });
     }
 
     private String getSelectedFilter() {

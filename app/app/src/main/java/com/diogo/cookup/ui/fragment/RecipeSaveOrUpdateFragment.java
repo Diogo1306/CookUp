@@ -82,7 +82,9 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
 
         if (getArguments() != null && getArguments().containsKey("recipe_id")) {
             editingRecipeId = getArguments().getInt("recipe_id");
-            viewModel.fetchRecipeById(editingRecipeId);
+            if (savedInstanceState == null) {
+                viewModel.fetchRecipeById(editingRecipeId);
+            }
         }
 
         etTitle = v.findViewById(R.id.et_title);
@@ -248,6 +250,8 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
             galleryAdapter.notifyDataSetChanged();
             viewModel.setImages(new ArrayList<>(imageFiles));
 
+            viewModel.setIngredients(recipe.getIngredients() != null ? recipe.getIngredients() : new ArrayList<>());
+
             if (recipe.getDifficulty() != null) {
                 // Atualiza o RadioGroup (fonte de verdade) e o destaque dos segmentos
                 selectDifficultySegment(recipe.getDifficulty());
@@ -278,17 +282,6 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
                 names.add(ing.getName());
             }
             ingredientSaveOrUpdateAdapter.updateSuggestions(names);
-        });
-
-        viewModel.getImages().observe(getViewLifecycleOwner(), images -> {
-            if (images != null) {
-                imageFiles.clear();
-                imageFiles.addAll(images);
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    galleryAdapter.notifyDataSetChanged();
-                    btnAddImage.setEnabled(imageFiles.size() < 6);
-                });
-            }
         });
 
         viewModel.getError().observe(getViewLifecycleOwner(), error -> {

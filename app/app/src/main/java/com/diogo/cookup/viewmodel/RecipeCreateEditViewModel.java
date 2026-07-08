@@ -41,16 +41,6 @@ public class RecipeCreateEditViewModel extends ViewModel {
 
     public void fetchRecipeById(int recipeId) {
         recipeRepository.getRecipeDetail(recipeId, recipeToEditLiveData, errorLiveData);
-        recipeToEditLiveData.observeForever(recipe -> {
-            if (recipe != null) {
-                setIngredients(recipe.getIngredients() != null ? recipe.getIngredients() : new ArrayList<>());
-                List<Object> galeria = new ArrayList<>();
-                if (recipe.getGallery() != null) {
-                    galeria.addAll(recipe.getGallery());
-                }
-                imagesLiveData.setValue(galeria);
-            }
-        });
     }
 
     public void addIngredient(IngredientData ingredient) {

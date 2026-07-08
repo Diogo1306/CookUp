@@ -110,7 +110,7 @@ public class ForgotPasswordFragment extends Fragment {
 
     private void navigateToLogin() {
         NavHostFragment.findNavController(this)
-                .navigate(R.id.action_signupFragment_to_loginFragment);
+                .popBackStack(R.id.loginFragment, false);
     }
 
     private void showMessage(String message) {

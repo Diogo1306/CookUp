@@ -67,6 +67,8 @@ public class HomeFragment extends Fragment {
     private final List<CategoryData> categoryList = new ArrayList<>();
     private final List<Integer> savedRecipeIds = new ArrayList<>();
 
+    private final android.os.Handler startupHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,13 +83,19 @@ public class HomeFragment extends Fragment {
         initSeeMore(view);
         setupSearchBar(view);
 
-        new Handler().postDelayed(() -> {
-            if (!isAdded()) return;
+        startupHandler.postDelayed(() -> {
+            if (getView() == null || !isAdded()) return;
             initAdapters();
             setAdapters();
             observeViewModels();
             loadInitialData();
         }, 200);
+    }
+
+    @Override
+    public void onDestroyView() {
+        startupHandler.removeCallbacksAndMessages(null);
+        super.onDestroyView();
     }
 
     private void setupSearchBar(View view) {
@@ -236,7 +244,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void observeViewModels() {
-        if (!isAdded()) return;
+        if (getView() == null || !isAdded()) return;
 
         categoryViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
             if (categories != null && !categories.isEmpty()) {
@@ -274,7 +282,10 @@ public class HomeFragment extends Fragment {
             if (list != null && !list.isEmpty()) {
                 adapterWeekly.updateData(list, savedRecipeIds);
                 fadeInWithAdapter(recyclerWeekly, adapterWeekly);
+                if (cardFeatured != null) cardFeatured.setVisibility(View.VISIBLE);
                 bindFeatured(list.get(0)); // primeira receita da semana em destaque no hero
+            } else {
+                if (cardFeatured != null) cardFeatured.setVisibility(View.GONE);
             }
         });
 
