@@ -28,6 +28,7 @@
             android:background="@color/transparent"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_left"
+            app:tint="@color/text_primary"
             tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
@@ -74,7 +75,7 @@
           android:columnCount="10"
           android:alignmentMode="alignMargins"
           android:useDefaultMargins="false"
-          android:paddingHorizontal="4dp"
+          android:paddingHorizontal="@dimen/padding_very_small"
           android:rowOrderPreserved="false" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -83,7 +84,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_large"
         android:text="@string/Create"
         android:layout_gravity="start"
         style="@style/button_primary" />

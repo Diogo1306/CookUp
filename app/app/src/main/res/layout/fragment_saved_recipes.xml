@@ -26,9 +26,10 @@
             android:id="@+id/arrow_back"
             android:layout_width="@dimen/icon_size_medium"
             android:layout_height="@dimen/icon_size_medium"
-            android:background="@android:color/transparent"
+            android:background="@color/transparent"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_arrow_left" />
+            android:src="@drawable/ic_arrow_left"
+            app:tint="@color/text_primary" />
 
         <TextView
             android:id="@+id/text_list_name"
@@ -48,8 +49,8 @@
         android:id="@+id/recycler_saved_recipes"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/header_container"
         app:layout_constraintBottom_toBottomOf="parent"

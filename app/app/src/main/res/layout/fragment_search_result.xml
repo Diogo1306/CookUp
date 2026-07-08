@@ -21,6 +21,7 @@
             android:layout_width="@dimen/icon_size_large"
             android:layout_height="@dimen/icon_size_large"
             android:src="@drawable/ic_arrow_left"
+            app:tint="@color/text_primary"
             android:padding="@dimen/padding_very_small"
             android:contentDescription="@string/back" />
 
@@ -50,6 +51,7 @@
             android:layout_marginStart="@dimen/margin_micro"
             android:backgroundTint="@color/primary"
             android:src="@drawable/ic_filter"
+            app:tint="@color/white"
             android:background="@drawable/bg_filter_btn" />
 
     </LinearLayout>

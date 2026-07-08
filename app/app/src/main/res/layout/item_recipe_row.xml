@@ -1,11 +1,14 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="6dp"
     android:layout_marginHorizontal="16dp"
-    card_view:cardCornerRadius="@dimen/border_radius"
-    card_view:cardElevation="0dp"
+    app:cardCornerRadius="@dimen/border_radius_large"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/stroke_soft"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="@color/background_secondary"
     android:clickable="true"
     android:focusable="true">
 
@@ -14,7 +17,6 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:padding="@dimen/padding_very_small"
-        android:background="@color/background_soft"
         android:gravity="center_vertical">
 
         <ImageView
@@ -56,6 +58,7 @@
                     android:layout_width="@dimen/icon_size_micro"
                     android:layout_height="@dimen/icon_size_micro"
                     android:layout_gravity="center_vertical"
+                    app:tint="@color/gray"
                     android:src="@drawable/ic_clock" />
 
                 <TextView
@@ -76,6 +79,7 @@
                     android:layout_width="@dimen/icon_size_micro"
                     android:layout_height="@dimen/icon_size_micro"
                     android:layout_gravity="center_vertical"
+                    app:tint="@color/accent_orange"
                     android:src="@drawable/ic_star" />
 
                 <TextView
@@ -96,6 +100,7 @@
                     android:layout_width="@dimen/icon_size_micro"
                     android:layout_height="@dimen/icon_size_micro"
                     android:layout_gravity="center_vertical"
+                    app:tint="@color/gray"
                     android:src="@drawable/ic_bar_graph" />
 
                 <TextView
@@ -111,4 +116,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

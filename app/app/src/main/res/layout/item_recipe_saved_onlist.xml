@@ -5,14 +5,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/padding_small"
-    android:elevation="6dp"
     android:layout_marginEnd="0dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="150dp"
         app:cardCornerRadius="@dimen/border_radius"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        app:strokeColor="@color/stroke_soft"
+        app:strokeWidth="1dp">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -35,7 +36,7 @@
                 android:src="@drawable/ic_trash"
                 android:contentDescription="Remover Receita" />
         </FrameLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/recipe_title"
@@ -79,7 +80,8 @@
         <ImageView
             android:layout_width="@dimen/icon_size_very_small"
             android:layout_height="@dimen/icon_size_very_small"
-            android:src="@drawable/ic_star" />
+            android:src="@drawable/ic_star"
+            app:tint="@color/accent_orange" />
 
         <TextView
             android:id="@+id/rating_text"

@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingVertical="6dp"
-    android:imeOptions="actionDone"
-    android:inputType="text"
-    android:paddingHorizontal="4dp">
+    android:paddingVertical="@dimen/margin_very_small"
+    android:paddingHorizontal="@dimen/margin_very_small">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp"
-        android:hint="Nome do ingrediente">
+        android:layout_marginEnd="@dimen/margin_small"
+        android:hint="Nome do ingrediente"
+        tools:ignore="HardcodedText">
 
         <AutoCompleteTextView
             android:id="@+id/et_ingredient_name"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/input_height"
+            style="@style/input"
             android:imeOptions="actionNext"
-            android:padding="@dimen/margin_small"
             android:inputType="text"
             android:importantForAutofill="no"
             android:focusableInTouchMode="true"
@@ -32,23 +31,24 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp"
-        android:hint="Quantidade">
+        android:layout_marginEnd="@dimen/margin_small"
+        android:hint="Quantidade"
+        tools:ignore="HardcodedText">
 
         <EditText
             android:id="@+id/et_ingredient_quantity"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/input_height"
-            android:inputType="text"/>
+            style="@style/input"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageButton
         android:id="@+id/btn_remove_ingredient"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@android:drawable/ic_menu_delete"
+        android:src="@drawable/ic_trash"
         android:contentDescription="Remover"
         android:background="?android:selectableItemBackgroundBorderless"
-        android:tint="@color/primary"
-        android:padding="8dp"/>
+        app:tint="@color/red"
+        android:padding="@dimen/padding_small"
+        tools:ignore="HardcodedText" />
 </LinearLayout>

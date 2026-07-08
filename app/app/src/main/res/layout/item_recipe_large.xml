@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/margin_micro"
     android:layout_marginHorizontal="@dimen/margin_small"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="2dp"
-    app:cardUseCompatPadding="true">
+    app:cardCornerRadius="@dimen/border_radius_large"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/background_secondary"
+    app:strokeColor="@color/stroke_soft"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +47,7 @@
                     android:layout_weight="1"
                     android:text="Título da Receita"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_medium"
                     android:fontFamily="@font/poppins_semibold"
                     android:maxLines="1"
                     android:ellipsize="end" />
@@ -79,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="25 min"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_very_small"
                     android:textColor="@color/text_secondary"
                     android:fontFamily="@font/poppins_regular"/>
 
@@ -97,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4.9"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_very_small"
                     android:textColor="@color/text_secondary"
                     android:fontFamily="@font/poppins_regular"/>
             </LinearLayout>
@@ -108,10 +110,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Descrição da receita ou subtítulo..."
-                android:textSize="12sp"
+                android:textSize="@dimen/text_very_small"
                 android:textColor="@color/text_secondary"
+                android:fontFamily="@font/poppins_regular"
                 android:maxLines="2"
                 android:ellipsize="end" />
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -1,4 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="72dp"
     android:layout_height="72dp"
     android:layout_margin="6dp">
@@ -14,9 +16,10 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_gravity="top|end"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:tint="@color/primary"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_close"
+        app:tint="@color/red"
         android:padding="2dp"
-        android:contentDescription="Remover imagem"/>
+        android:contentDescription="Remover imagem"
+        tools:ignore="HardcodedText"/>
 </FrameLayout>

@@ -4,4 +4,5 @@
     android:layout_height="wrap_content"
     android:textSize="15sp"
     android:padding="14dp"
+    android:fontFamily="@font/poppins_regular"
     android:textColor="@color/text_primary" />

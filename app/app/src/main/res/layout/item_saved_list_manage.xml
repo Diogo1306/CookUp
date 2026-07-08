@@ -1,11 +1,14 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:layout_margin="@dimen/border_radius"
+    app:cardBackgroundColor="@color/background_secondary"
     app:cardCornerRadius="@dimen/border_radius"
-    app:cardElevation="0dp">
+    app:cardElevation="0dp"
+    app:strokeColor="@color/stroke_soft"
+    app:strokeWidth="1dp">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -213,19 +216,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins_bold"
                 android:maxLines="1"
                 android:text="Nome da Lista"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_large_m"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/text_recipe_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
                 android:text="12 receitas"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
@@ -256,4 +262,4 @@
         </LinearLayout>
 
     </FrameLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
