@@ -153,16 +153,6 @@ Cada componente tem **um ficheiro** (não versionado) com toda a sua configuraç
 
 Base de dados relacional **MySQL** com tabelas para utilizadores, receitas, ingredientes, categorias, listas/coleções, comentários e avaliações, além de tabelas de estatísticas que alimentam o algoritmo de sugestões. O dump completo está em [`api/config/cookup_db.sql`](api/config/cookup_db.sql).
 
-## Histórico
-
-Este monorepo junta três repositórios originais, com o histórico completo importado via `git filter-repo`:
-
-- `Diogo1306/CookUp` → `app/`
-- `Diogo1306/CookUp_Core` → `api/`
-- `Diogo1306/CookUp_Dasboard` → `dashboard/`
-
-Os três repositórios originais foram consolidados aqui e deixaram de ser mantidos — **este monorepo é agora o único ativo**.
-
 ## Licença
 
 **Todos os direitos reservados.** Este repositório está público apenas para visualização (portefólio). Não é permitido copiar, modificar ou usar este código ou a ideia do projeto — incluindo para outras PAP ou trabalhos académicos — sem autorização escrita do autor. Ver [LICENSE](LICENSE).
