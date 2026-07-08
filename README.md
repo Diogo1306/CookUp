@@ -7,6 +7,7 @@
 
 Plataforma completa de receitas: cria, guarda e partilha receitas, recebe avaliações e sugestões personalizadas — desenvolvida como Prova de Aptidão Profissional (PAP) por Diogo Esteves.
 
+![Versão](https://img.shields.io/badge/vers%C3%A3o-1.1.0-FF7043)
 ![Android](https://img.shields.io/badge/App-Android%20·%20Java-3DDC84?logo=android&logoColor=white)
 ![PHP](https://img.shields.io/badge/API-PHP%20·%20REST-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/BD-MySQL-4479A1?logo=mysql&logoColor=white)
@@ -18,6 +19,16 @@ Plataforma completa de receitas: cria, guarda e partilha receitas, recebe avalia
 </div>
 
 ---
+
+## 🆕 Novidades na v1.1.0
+
+**Redesign visual completo da app Android** — nova identidade "borda-fio quente", cartões arredondados com sombras suaves, bottom nav com estado ativo em coral e skeletons de _loading_ polidos. Destaques funcionais:
+
+- **Receita da semana** em destaque no ecrã Início (_hero_)
+- **Porções ajustáveis** no detalhe, com recálculo automático das quantidades dos ingredientes
+- **Dificuldade em segmentos** e **_steppers_ numéricos** na criação/edição de receitas
+- **Gestão de conta** nas Definições — terminar sessão e eliminar conta
+- **Estabilidade** — correções de navegação, ciclo de vida de _fragments_ e eventos de LiveData
 
 ## Sobre o projeto
 
@@ -150,7 +161,7 @@ Este monorepo junta três repositórios originais, com o histórico completo imp
 - `Diogo1306/CookUp_Core` → `api/`
 - `Diogo1306/CookUp_Dasboard` → `dashboard/`
 
-Os repositórios originais foram arquivados.
+Os três repositórios originais foram consolidados aqui e deixaram de ser mantidos — **este monorepo é agora o único ativo**.
 
 ## Licença
 
