@@ -28,6 +28,9 @@ public class ProfileViewModel extends ViewModel {
     public LiveData<Boolean> getDeleteSuccess() { return deleteSuccess; }
     public LiveData<String> getDeleteError() { return deleteError; }
 
+    public void clearDeleteSuccess() { deleteSuccess.setValue(null); }
+    public void clearDeleteError() { deleteError.setValue(null); }
+
     public void loadProfileSummary(int userId) {
         repository.getProfileSummary(userId, profileSummary, error);
     }

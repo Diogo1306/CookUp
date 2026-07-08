@@ -139,7 +139,7 @@ class Ingredient
 
         if (isset($data['results'][0]['image'])) {
             $imgUrl = "https://spoonacular.com/cdn/ingredients_250x250/" . $data['results'][0]['image'];
-            $filename = strtolower(preg_replace('/[^a-z0-9]/', '', $ingredientName)) . ".jpg";
+            $filename = preg_replace('/[^a-z0-9]/', '', strtolower($ingredientName)) . ".jpg";
             $destination = __DIR__ . "/../../uploads/ingredients/" . $filename;
 
             if (!is_dir(__DIR__ . "/../../uploads/ingredients/")) {

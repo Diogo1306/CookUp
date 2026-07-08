@@ -47,6 +47,13 @@ class Comment
 
         $comments = [];
         while ($row = $result->fetch_assoc()) {
+            // Constrói o URL completo do avatar (trata foto já em URL, ex. Google).
+            $img = $row['image'] ?? '';
+            if (empty($img)) {
+                $row['image'] = BASE_URL . UPLOADS_FOLDER . PROFILE_PICTURES . 'default.png';
+            } elseif (substr($img, 0, 4) !== 'http') {
+                $row['image'] = BASE_URL . UPLOADS_FOLDER . PROFILE_PICTURES . $img;
+            }
             $comments[] = $row;
         }
 

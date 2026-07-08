@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import com.diogo.cookup.utils.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -86,14 +87,12 @@ public class ExploreFragment extends Fragment {
 
     private void setupSearchBar(View view) {
         if (searchEditText != null) {
-            View.OnClickListener navigateToSearch = v ->
-                    NavHostFragment.findNavController(this)
-                            .navigate(R.id.action_exploreFragment_to_searchSuggestionsFragment);
-
-            searchEditText.setOnClickListener(navigateToSearch);
-            searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
-                if (hasFocus) navigateToSearch.onClick(v);
-            });
+            // Campo como botão: 1º toque abre logo o ecrã de pesquisa (sem edição aqui).
+            searchEditText.setFocusable(false);
+            searchEditText.setFocusableInTouchMode(false);
+            searchEditText.setOnClickListener(v -> NavUtils.navigateSafe(
+                    NavHostFragment.findNavController(this),
+                    R.id.action_exploreFragment_to_searchSuggestionsFragment));
         }
     }
 
@@ -101,7 +100,7 @@ public class ExploreFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(new ArrayList<>(), category -> {
             ExploreFragmentDirections.ActionExploreFragmentToSearchResultFragment action =
                     ExploreFragmentDirections.actionExploreFragmentToSearchResultFragment(category.getCategoryName());
-            Navigation.findNavController(view).navigate(action);
+            NavUtils.navigateSafe(Navigation.findNavController(view), action.getActionId(), action.getArguments());
         });
 
         recyclerCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -168,6 +167,6 @@ public class ExploreFragment extends Fragment {
     private void openRecipeDetail(RecipeData recipe) {
         ExploreFragmentDirections.ActionExploreFragmentToRecipeDetailFragment action =
                 ExploreFragmentDirections.actionExploreFragmentToRecipeDetailFragment(recipe.getRecipeId());
-        Navigation.findNavController(requireView()).navigate(action);
+        NavUtils.navigateSafe(Navigation.findNavController(requireView()), action.getActionId(), action.getArguments());
     }
 }

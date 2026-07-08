@@ -1732,6 +1732,14 @@ ALTER TABLE `user_category_stats`
 ALTER TABLE `user_recipe_finished`
   ADD CONSTRAINT `user_recipe_finished_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_recipe_finished_ibfk_2` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`recipe_id`) ON DELETE CASCADE;
+
+--
+-- Restrições UNIQUE (evitam contagens infladas e entradas duplicadas)
+--
+ALTER TABLE `user_recipe_finished` MODIFY `finished_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `user_recipe_finished` ADD UNIQUE KEY `uq_user_recipe_finished` (`user_id`, `recipe_id`);
+ALTER TABLE `saved_recipes` ADD UNIQUE KEY `uq_saved_recipe` (`list_id`, `recipe_id`);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

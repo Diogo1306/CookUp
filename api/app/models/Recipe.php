@@ -363,6 +363,7 @@ class Recipe
 
     private static function parseCategories($recipe)
     {
+        if (empty($recipe['category_ids'])) return [];
         $ids = explode(',', $recipe['category_ids'] ?? '');
         $names = explode(',', $recipe['category_names'] ?? '');
         $colors = explode(',', $recipe['category_colors'] ?? '');

@@ -1,235 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<!-- Ecrã de Registo — redesign 2j: hierarquia clara + requisitos visíveis. -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:fillViewport="true"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Coluna única, à imagem do mockup (scroll vertical). -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:fitsSystemWindows="true"
-        tools:context=".ui.activity.SignupActivity">
+        android:layoutAnimation="@anim/layout_animation_fade_slide_up"
+        android:paddingStart="@dimen/margin_large"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_small"
+        android:paddingBottom="@dimen/margin_large"
+        tools:context=".ui.activity.SignupActivity"
+        tools:ignore="HardcodedText">
 
+        <!-- Voltar -->
+        <ImageButton
+            android:id="@+id/arrow_back"
+            android:layout_width="@dimen/icon_size_large"
+            android:layout_height="@dimen/icon_size_large"
+            android:background="@color/transparent"
+            android:contentDescription="@string/arrow_back"
+            android:src="@drawable/ic_arrow_left"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <!-- Cabeçalho: título + subtítulo centrados -->
         <LinearLayout
-            android:id="@+id/header_signup_container"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" >
-
-            <ImageButton
-                android:id="@+id/arrow_back"
-                android:layout_width="@dimen/icon_size_large"
-                android:layout_height="@dimen/icon_size_large"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/margin_small"
-                android:background="@color/transparent"
-                android:contentDescription="@string/arrow_back"
-                android:src="@drawable/ic_arrow_left"
-                tools:ignore="TouchTargetSizeCheck" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_medium">
 
             <TextView
                 android:id="@+id/title_signup"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_semibold"
+                android:text="Cria a tua conta"
                 android:textColor="@color/text_primary"
-                android:text="@string/title_signup"
                 android:textSize="@dimen/text_large" />
+
+            <TextView
+                android:id="@+id/subtitle_signup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_micro"
+                android:fontFamily="@font/poppins_regular"
+                android:text="Junta-te à comunidade CookUp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_very_small" />
         </LinearLayout>
 
+        <!-- Nome de chef -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_micro"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_very_small"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Nome de chef"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_very_small" />
+
+        <EditText
+            android:id="@+id/input_username"
+            style="@style/input"
+            android:autofillHints="name"
+            android:background="@drawable/bg_signup_input"
+            android:drawableStart="@drawable/ic_person"
+            android:drawableTint="@color/text_secondary"
+            android:drawablePadding="@dimen/padding_small"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary" />
+
+        <!-- E-mail -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_micro"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_very_small"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="E-mail"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_very_small" />
+
+        <EditText
+            android:id="@+id/input_email"
+            style="@style/input"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/bg_signup_input"
+            android:drawableStart="@drawable/ic_email"
+            android:drawableTint="@color/text_secondary"
+            android:drawablePadding="@dimen/padding_small"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            tools:ignore="VisualLintTextFieldSize" />
+
+        <!-- Palavra-passe -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_micro"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_very_small"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Palavra-passe"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_very_small" />
+
+        <EditText
+            android:id="@+id/input_password"
+            style="@style/input"
+            android:autofillHints="password"
+            android:background="@drawable/bg_signup_input"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawableEnd="@drawable/ic_eye_off"
+            android:drawableTint="@color/text_secondary"
+            android:drawablePadding="@dimen/padding_small"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            tools:ignore="VisualLintTextFieldSize,DuplicateSpeakableTextCheck" />
+
+        <!-- Confirmar palavra-passe -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_micro"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_very_small"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Confirmar palavra-passe"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_very_small" />
+
+        <EditText
+            android:id="@+id/input_confirm_password"
+            style="@style/input"
+            android:autofillHints="password"
+            android:background="@drawable/bg_signup_input"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawableEnd="@drawable/ic_eye_off"
+            android:drawableTint="@color/text_secondary"
+            android:drawablePadding="@dimen/padding_small"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:hint="Confirmar palavra-passe"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            tools:ignore="VisualLintTextFieldSize,DuplicateSpeakableTextCheck" />
+
+        <!-- Requisitos da palavra-passe (dica estática, visível) -->
         <LinearLayout
-            android:id="@+id/body_input_signup_container"
+            android:id="@+id/signup_password_requirements"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
             android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header_signup_container">
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_micro">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_small"
-                android:autofillHints="emailAddress"
-                android:fontFamily="@font/poppins_regular"
-                android:text="@string/input_sing_up_title_name"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="A tua palavra-passe deve ter:"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_small" />
+                android:textSize="@dimen/text_very_small" />
 
-            <EditText
-                android:id="@+id/input_username"
-                style="@style/input"
-                android:autofillHints="name"
-                android:drawableStart="@drawable/ic_person"
-                android:drawablePadding="@dimen/padding_small"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:hint="@string/name"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColorHint="@color/text_primary" />
-
-            <TextView
+            <!-- Requisito: comprimento -->
+            <LinearLayout
+                android:id="@+id/req_length"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_small"
-                android:autofillHints="emailAddress"
-                android:fontFamily="@font/poppins_regular"
-                android:text="@string/input_login_title_email"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_small" />
-
-            <EditText
-                android:id="@+id/input_email"
-                style="@style/input"
-                android:autofillHints="emailAddress"
-                android:drawableStart="@drawable/ic_email"
-                android:drawablePadding="@dimen/margin_small"
-                android:ellipsize="end"
+                android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColorHint="@color/text_primary"
-                tools:ignore="VisualLintTextFieldSize" />
+                android:layout_marginTop="@dimen/margin_small">
 
-            <TextView
+                <ImageView
+                    android:layout_width="@dimen/icon_size_very_small"
+                    android:layout_height="@dimen/icon_size_very_small"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_check"
+                    android:tint="@color/text_secondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Pelo menos 6 caracteres"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_very_small" />
+            </LinearLayout>
+
+            <!-- Requisito: letras + números -->
+            <LinearLayout
+                android:id="@+id/req_charset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_small"
-                android:autofillHints="password"
-                android:fontFamily="@font/poppins_regular"
-                android:importantForAutofill="no"
-                android:text="@string/input_login_title_password"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_small" />
-
-            <EditText
-                android:id="@+id/input_password"
-                style="@style/input"
-                android:autofillHints="password"
-                android:drawableStart="@drawable/ic_lock"
-                android:drawableEnd="@drawable/ic_eye_off"
-                android:drawablePadding="@dimen/padding_small"
-                android:ellipsize="end"
-                android:focusable="true"
+                android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColorHint="@color/text_primary"
-                android:clickable="true"
-                tools:ignore="VisualLintTextFieldSize,DuplicateSpeakableTextCheck" />
+                android:layout_marginTop="@dimen/margin_very_small">
 
-            <TextView
+                <ImageView
+                    android:layout_width="@dimen/icon_size_very_small"
+                    android:layout_height="@dimen/icon_size_very_small"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_check"
+                    android:tint="@color/text_secondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Combina letras e números"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_very_small" />
+            </LinearLayout>
+
+            <!-- Requisito: coincidência -->
+            <LinearLayout
+                android:id="@+id/req_match"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_small"
-                android:autofillHints="password"
-                android:fontFamily="@font/poppins_regular"
-                android:importantForAutofill="no"
-                android:text="@string/input_login_title_password"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_small" />
-
-            <EditText
-                android:id="@+id/input_confirm_password"
-                style="@style/input"
-                android:autofillHints="password"
-                android:drawableStart="@drawable/ic_lock"
-                android:drawableEnd="@drawable/ic_eye_off"
-                android:drawablePadding="@dimen/padding_small"
-                android:ellipsize="end"
-                android:fontFamily="@font/poppins_regular"
+                android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:clickable="true"
-                android:focusable="true"
-                android:textColorHint="@color/text_primary"
-                android:textSize="@dimen/text_small"
-                tools:ignore="VisualLintTextFieldSize" />
+                android:layout_marginTop="@dimen/margin_very_small">
 
+                <ImageView
+                    android:layout_width="@dimen/icon_size_very_small"
+                    android:layout_height="@dimen/icon_size_very_small"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_check"
+                    android:tint="@color/text_secondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="As palavras-passe coincidem"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_very_small" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/body_button_signup_container"
+        <!-- Botão principal coral -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/signup_button"
+            style="@style/button_primary"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Criar conta"
+            android:textColor="@color/white"
+            tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+
+        <!-- Voltar ao início de sessão -->
+        <TextView
+            android:id="@+id/singuptologin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="@string/singuptologin"
+            android:textAlignment="center"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_small" />
+
+        <!-- Política de privacidade -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/body_input_signup_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/privacy_policy"
+            android:textAlignment="center"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_very_small" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/signup_button"
-                style="@style/button_primary"
-                android:layout_margin="@dimen/margin_small"
-                android:text="@string/button_continue"
-                android:fontFamily="@font/poppins_semibold"
-                android:textColor="@color/white"
-                tools:ignore="TextContrastCheck,VisualLintButtonSize" />
-
-            <TextView
-                android:id="@+id/singuptologin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/singuptologin"
-                android:textSize="@dimen/text_small"
-                android:textAlignment="center"
-                android:fontFamily="@font/poppins_semibold"
-                android:textColor="@color/text_primary"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/container_privacy_policy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/margin_large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/privacy_policy"
-                android:textAlignment="center"
-                android:fontFamily="@font/poppins_regular"
-                android:textSize="@dimen/text_very_small"
-                android:textColor="@color/text_primary"
-                />
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

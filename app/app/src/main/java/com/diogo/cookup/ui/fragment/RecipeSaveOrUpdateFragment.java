@@ -56,6 +56,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
     private ChipGroup chipGroupCategories;
     private AppCompatButton btnAddIngredient, btnAddImage, btnSave;
     private RadioGroup rgDifficulty;
+    private TextView segEasy, segMedium, segHard; // controlo segmentado de dificuldade
 
     private IngredientSaveOrUpdateAdapter ingredientSaveOrUpdateAdapter;
     private RecipeGalleryEditAdapter galleryAdapter;
@@ -81,7 +82,9 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
 
         if (getArguments() != null && getArguments().containsKey("recipe_id")) {
             editingRecipeId = getArguments().getInt("recipe_id");
-            viewModel.fetchRecipeById(editingRecipeId);
+            if (savedInstanceState == null) {
+                viewModel.fetchRecipeById(editingRecipeId);
+            }
         }
 
         etTitle = v.findViewById(R.id.et_title);
@@ -90,6 +93,9 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
         etServings = v.findViewById(R.id.et_servings);
         etPreparationTime = v.findViewById(R.id.et_preparation_time);
         rgDifficulty = v.findViewById(R.id.rg_difficulty);
+        segEasy = v.findViewById(R.id.btn_diff_easy);
+        segMedium = v.findViewById(R.id.btn_diff_medium);
+        segHard = v.findViewById(R.id.btn_diff_hard);
         rvIngredients = v.findViewById(R.id.rv_ingredients);
         rvGallery = v.findViewById(R.id.rv_gallery);
         chipGroupCategories = v.findViewById(R.id.chip_group_categories);
@@ -112,6 +118,7 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
         setupIngredientsRecycler();
         setupGalleryRecycler();
         setupListeners();
+        setupDifficultyAndSteppers(v);
         observeViewModel();
 
         viewModel.fetchCategories();
@@ -146,6 +153,57 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
         btnAddIngredient.setOnClickListener(v -> viewModel.addIngredient(new IngredientData("", "", null)));
         btnAddImage.setOnClickListener(v -> openGalleryPicker());
         btnSave.setOnClickListener(v -> saveRecipe());
+    }
+
+    // Dificuldade em segmentos + steppers de porções/tempo.
+    // Os segmentos são o controlo visível; o RadioGroup (escondido) continua a ser
+    // a fonte de verdade que o saveRecipe() lê.
+    private void setupDifficultyAndSteppers(View v) {
+        if (segEasy != null) segEasy.setOnClickListener(x -> selectDifficultySegment("Fácil"));
+        if (segMedium != null) segMedium.setOnClickListener(x -> selectDifficultySegment("Médio"));
+        if (segHard != null) segHard.setOnClickListener(x -> selectDifficultySegment("Difícil"));
+        selectDifficultySegment("Fácil"); // seleção inicial coerente com rb_easy
+
+        wireStepper(v.findViewById(R.id.btn_servings_minus), etServings, -1, 1);
+        wireStepper(v.findViewById(R.id.btn_servings_plus), etServings, 1, 1);
+        wireStepper(v.findViewById(R.id.btn_time_minus), etPreparationTime, -5, 5);
+        wireStepper(v.findViewById(R.id.btn_time_plus), etPreparationTime, 5, 5);
+    }
+
+    private void wireStepper(View btn, EditText field, int delta, int min) {
+        if (btn == null || field == null) return;
+        btn.setOnClickListener(x -> {
+            int current;
+            try {
+                current = Integer.parseInt(field.getText().toString().trim());
+            } catch (NumberFormatException e) {
+                current = min;
+            }
+            field.setText(String.valueOf(Math.max(min, current + delta)));
+        });
+    }
+
+    private void selectDifficultySegment(String level) {
+        if (segEasy == null || segMedium == null || segHard == null) return;
+        int white = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.white);
+        int muted = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary);
+
+        for (TextView seg : new TextView[]{segEasy, segMedium, segHard}) {
+            seg.setBackgroundResource(0);
+            seg.setTextColor(muted);
+            seg.setTypeface(null, android.graphics.Typeface.NORMAL);
+        }
+
+        TextView chosen;
+        int checkId;
+        if ("Médio".equals(level)) { chosen = segMedium; checkId = R.id.rb_medium; }
+        else if ("Difícil".equals(level)) { chosen = segHard; checkId = R.id.rb_hard; }
+        else { chosen = segEasy; checkId = R.id.rb_easy; }
+
+        chosen.setBackgroundResource(R.drawable.bg_segment_selected);
+        chosen.setTextColor(white);
+        chosen.setTypeface(null, android.graphics.Typeface.BOLD);
+        if (rgDifficulty != null) rgDifficulty.check(checkId);
     }
 
     private void observeViewModel() {
@@ -192,18 +250,11 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
             galleryAdapter.notifyDataSetChanged();
             viewModel.setImages(new ArrayList<>(imageFiles));
 
+            viewModel.setIngredients(recipe.getIngredients() != null ? recipe.getIngredients() : new ArrayList<>());
+
             if (recipe.getDifficulty() != null) {
-                switch (recipe.getDifficulty()) {
-                    case "Fácil":
-                        rgDifficulty.check(R.id.rb_easy);
-                        break;
-                    case "Médio":
-                        rgDifficulty.check(R.id.rb_medium);
-                        break;
-                    case "Difícil":
-                        rgDifficulty.check(R.id.rb_hard);
-                        break;
-                }
+                // Atualiza o RadioGroup (fonte de verdade) e o destaque dos segmentos
+                selectDifficultySegment(recipe.getDifficulty());
             }
 
             categoriesToCheck.clear();
@@ -231,17 +282,6 @@ public class RecipeSaveOrUpdateFragment extends Fragment {
                 names.add(ing.getName());
             }
             ingredientSaveOrUpdateAdapter.updateSuggestions(names);
-        });
-
-        viewModel.getImages().observe(getViewLifecycleOwner(), images -> {
-            if (images != null) {
-                imageFiles.clear();
-                imageFiles.addAll(images);
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    galleryAdapter.notifyDataSetChanged();
-                    btnAddImage.setEnabled(imageFiles.size() < 6);
-                });
-            }
         });
 
         viewModel.getError().observe(getViewLifecycleOwner(), error -> {

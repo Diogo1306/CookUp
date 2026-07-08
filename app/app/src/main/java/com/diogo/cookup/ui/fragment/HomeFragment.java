@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+
 import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.RecipeData;
@@ -27,6 +30,7 @@ import com.diogo.cookup.ui.adapter.CategoryAdapter;
 import com.diogo.cookup.ui.adapter.RecipeAdapterDefault;
 import com.diogo.cookup.ui.dialog.SaveRecipeBottomSheet;
 import com.diogo.cookup.utils.SharedPrefHelper;
+import com.diogo.cookup.utils.NavUtils;
 import com.diogo.cookup.viewmodel.CategoryViewModel;
 import com.diogo.cookup.viewmodel.HomeFeedViewModel;
 import com.diogo.cookup.viewmodel.RecipeViewModel;
@@ -50,6 +54,11 @@ public class HomeFragment extends Fragment {
     private EditText searchEditText;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    // Hero "Receita da Semana" (destaque no topo do Início)
+    private View cardFeatured;
+    private ImageView imgFeatured;
+    private TextView txtFeaturedTitle, txtFeaturedTime, txtFeaturedRating;
+
     private String categoryName1 = "";
     private String categoryName2 = "";
     private String categoryName3 = "";
@@ -57,6 +66,8 @@ public class HomeFragment extends Fragment {
     private final List<RecipeData> recipeList = new ArrayList<>();
     private final List<CategoryData> categoryList = new ArrayList<>();
     private final List<Integer> savedRecipeIds = new ArrayList<>();
+
+    private final android.os.Handler startupHandler = new android.os.Handler(android.os.Looper.getMainLooper());
 
     @Nullable
     @Override
@@ -72,8 +83,8 @@ public class HomeFragment extends Fragment {
         initSeeMore(view);
         setupSearchBar(view);
 
-        new Handler().postDelayed(() -> {
-            if (!isAdded()) return;
+        startupHandler.postDelayed(() -> {
+            if (getView() == null || !isAdded()) return;
             initAdapters();
             setAdapters();
             observeViewModels();
@@ -81,15 +92,21 @@ public class HomeFragment extends Fragment {
         }, 200);
     }
 
+    @Override
+    public void onDestroyView() {
+        startupHandler.removeCallbacksAndMessages(null);
+        super.onDestroyView();
+    }
+
     private void setupSearchBar(View view) {
         if (searchEditText != null) {
-            View.OnClickListener navigateToSearch = v -> NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_homeFragment_to_searchSuggestionsFragment);
-
-            searchEditText.setOnClickListener(navigateToSearch);
-            searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
-                if (hasFocus) navigateToSearch.onClick(v);
-            });
+            // O campo funciona como botão: 1º toque abre já o ecrã de pesquisa
+            // (não edita aqui). Assim navega ao primeiro toque, sem foco+clique dupla.
+            searchEditText.setFocusable(false);
+            searchEditText.setFocusableInTouchMode(false);
+            searchEditText.setOnClickListener(v -> NavUtils.navigateSafe(
+                    NavHostFragment.findNavController(this),
+                    R.id.action_homeFragment_to_searchSuggestionsFragment));
         }
     }
 
@@ -116,6 +133,18 @@ public class HomeFragment extends Fragment {
         seeMoreCat3 = view.findViewById(R.id.see_more_cat3);
         tvNameHome = view.findViewById(R.id.tvNameHome);
         searchEditText = view.findViewById(R.id.searchEditText);
+
+        cardFeatured = view.findViewById(R.id.card_featured);
+        imgFeatured = view.findViewById(R.id.img_featured);
+        txtFeaturedTitle = view.findViewById(R.id.txt_featured_title);
+        txtFeaturedTime = view.findViewById(R.id.txt_featured_time);
+        txtFeaturedRating = view.findViewById(R.id.txt_featured_rating);
+
+        // Botão de filtro ao lado da pesquisa: abre os resultados (onde os filtros vivem)
+        View btnFilter = view.findViewById(R.id.btn_filter);
+        if (btnFilter != null) {
+            btnFilter.setOnClickListener(v -> navigateToFilteredSearch("", "", "", 0, 0));
+        }
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -192,7 +221,7 @@ public class HomeFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(categoryList, category -> {
             HomeFragmentDirections.ActionHomeFragmentToSearchResultFragment action =
                     HomeFragmentDirections.actionHomeFragmentToSearchResultFragment(category.getCategoryName());
-            Navigation.findNavController(requireView()).navigate(action);
+            NavUtils.navigateSafe(Navigation.findNavController(requireView()), action.getActionId(), action.getArguments());
         });
         recyclerCategories.setAdapter(categoryAdapter);
     }
@@ -215,7 +244,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void observeViewModels() {
-        if (!isAdded()) return;
+        if (getView() == null || !isAdded()) return;
 
         categoryViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
             if (categories != null && !categories.isEmpty()) {
@@ -253,6 +282,10 @@ public class HomeFragment extends Fragment {
             if (list != null && !list.isEmpty()) {
                 adapterWeekly.updateData(list, savedRecipeIds);
                 fadeInWithAdapter(recyclerWeekly, adapterWeekly);
+                if (cardFeatured != null) cardFeatured.setVisibility(View.VISIBLE);
+                bindFeatured(list.get(0)); // primeira receita da semana em destaque no hero
+            } else {
+                if (cardFeatured != null) cardFeatured.setVisibility(View.GONE);
             }
         });
 
@@ -332,9 +365,26 @@ public class HomeFragment extends Fragment {
     }
 
     private void openRecipeDetail(RecipeData recipe) {
-        Navigation.findNavController(requireView()).navigate(
-                HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId())
-        );
+        HomeFragmentDirections.ActionHomeFragmentToRecipeDetailFragment dir =
+                HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipe.getRecipeId());
+        NavUtils.navigateSafe(Navigation.findNavController(requireView()), dir.getActionId(), dir.getArguments());
+    }
+
+    // Preenche o cartão de destaque (hero) com a receita da semana
+    private void bindFeatured(RecipeData recipe) {
+        if (recipe == null || txtFeaturedTitle == null) return;
+        txtFeaturedTitle.setText(recipe.getTitle());
+        txtFeaturedTime.setText(recipe.getPreparationTime() + " min");
+        txtFeaturedRating.setText(String.valueOf(recipe.getAverageRating()));
+        if (imgFeatured != null) {
+            Glide.with(this)
+                    .load(recipe.getImage())
+                    .placeholder(R.drawable.placeholder)
+                    .into(imgFeatured);
+        }
+        if (cardFeatured != null) {
+            cardFeatured.setOnClickListener(v -> openRecipeDetail(recipe));
+        }
     }
 
     private void animateRecycler(RecyclerView recyclerView) {

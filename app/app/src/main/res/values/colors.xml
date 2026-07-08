@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Paleta CLARA — redesign (creme quente + coral). -->
 <resources>
+    <!-- Marca -->
     <color name="primary">#F96163</color>
-    <color name="primary_light">#FFB3B4</color>
+    <color name="primary_light">#FEE7E7</color>
     <color name="primary_dark">#C53E45</color>
 
     <color name="accent_orange">#FFA94D</color>
     <color name="green">#4CAF50</color>
     <color name="red">#E63946</color>
 
-    <color name="background">#F7F7F7</color>
+    <!-- Fundos e superfícies -->
+    <color name="background">#FAF8F4</color>
     <color name="background_secondary">#FFFFFF</color>
-    <color name="background_soft">#FAFAFA</color>
-    <color name="background_card">#FCFCFC</color>
-    <color name="background_elevated">#F2F2F2</color>
-    <color name="background_overlay">#F5F6FA</color>
+    <color name="background_soft">#FFFFFF</color>
+    <color name="background_card">#FFFFFF</color>
+    <color name="background_elevated">#F1EBE3</color>
+    <color name="background_overlay">#FAF8F4</color>
 
-    <color name="text_primary">#3C444C</color>
-    <color name="text_secondary">#9E9E9E</color>
+    <!-- Texto -->
+    <color name="text_primary">#2E2A26</color>
+    <color name="text_secondary">#9B948B</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="gray">#BDBDBD</color>
+    <color name="gray">#B9B1A6</color>
+
+    <!-- Borda-fio quente usada em campos, chips e cartões do redesign -->
+    <color name="stroke_soft">#EEE7DE</color>
 
     <color name="overlay_background">#33FFFFFF</color>
-    <color name="handle">#E8E8E8</color>
+    <color name="handle">#E5DED5</color>
 
     <color name="transparent">#00E8E8E8</color>
     <color name="semi_transparent">#80E8E8E8</color>
 
-    <color name="skeletonStartColor">#EAEAEA</color>
-    <color name="skeletonCenterColor">#D6D6D6</color>
+    <color name="skeletonStartColor">#F2ECE4</color>
+    <color name="skeletonCenterColor">#E5DED5</color>
 </resources>

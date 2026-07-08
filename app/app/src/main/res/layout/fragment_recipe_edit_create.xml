@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Criar / Editar Receita — redesign (creme quente + coral).
+     Secções claras, passo numerado, steppers de doses/tempo e dificuldade segmentada. -->
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:imeOptions="actionDone"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_large"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:imeOptions="actionDone"
     android:background="@color/background"
     android:fillViewport="true">
 
@@ -15,8 +17,9 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:paddingBottom="24dp">
+        android:paddingBottom="32dp">
 
+        <!-- Cabeçalho: voltar + título -->
         <LinearLayout
             android:id="@+id/header_container"
             android:layout_width="match_parent"
@@ -24,7 +27,8 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@color/background"
-            android:padding="@dimen/padding_medium">
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_medium">
 
             <ImageButton
                 android:id="@+id/arrow_back"
@@ -50,11 +54,13 @@
 
         </LinearLayout>
 
-
+        <!-- Galeria de fotos: capa + miniaturas -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginBottom="16dp">
+            android:background="@drawable/bg_card_soft"
+            android:padding="@dimen/padding_small"
+            android:layout_marginBottom="@dimen/margin_small">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_gallery"
@@ -68,91 +74,112 @@
 
             <ImageView
                 android:id="@+id/img_gallery_placeholder"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_image"
                 android:scaleType="centerInside"
+                app:tint="@color/text_secondary"
+                android:contentDescription="@string/RecipeImages"
                 android:visibility="visible" />
         </FrameLayout>
+
         <TextView
             android:id="@+id/tv_gallery_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/gallery_hint"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="@dimen/margin_micro"
-            android:textSize="@dimen/text_holder"
+            android:textSize="@dimen/text_very_small"
             android:fontFamily="@font/poppins_regular"
-            />
+            android:layout_marginBottom="@dimen/margin_small" />
 
+        <!-- Botão adicionar fotos (secundário coral) -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/button_secundary"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
             android:textColor="@color/primary"
             android:background="@drawable/button_secundary"
             android:text="@string/AddImage"
             android:textSize="@dimen/text_medium"
             android:layout_marginTop="0dp"
-            android:layout_marginBottom="@dimen/margin_large"/>
+            android:layout_marginBottom="@dimen/margin_large" />
 
+        <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/recipe_title"
-            android:textSize="@dimen/text_large_m"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
-            android:layout_marginBottom="@dimen/margin_micro"/>
+            android:layout_marginBottom="@dimen/margin_very_small" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            app:boxBackgroundColor="@color/background_secondary"
+            app:boxStrokeColor="@color/stroke_soft"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="@color/text_secondary"
             app:boxCornerRadiusTopStart="14dp"
             app:boxCornerRadiusTopEnd="14dp"
             app:boxCornerRadiusBottomStart="14dp"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
             app:boxCornerRadiusBottomEnd="14dp"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="14dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
                 android:hint="@string/enter_recipe_name" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Categorias -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/categories"
             android:textSize="15sp"
+            android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
-            android:layout_marginBottom="2dp"/>
+            android:layout_marginBottom="@dimen/margin_very_small" />
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="14dp"
             app:singleSelection="false"
             app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="4dp"/>
+            app:chipSpacingVertical="4dp" />
 
+        <!-- Descrição -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/recipe_description_label"
             android:textSize="15sp"
+            android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
-            android:layout_marginBottom="2dp"/>
+            android:layout_marginBottom="@dimen/margin_very_small" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            app:boxBackgroundColor="@color/background_secondary"
+            app:boxStrokeColor="@color/stroke_soft"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="@color/text_secondary"
             app:boxCornerRadiusTopStart="14dp"
             app:boxCornerRadiusTopEnd="14dp"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
             app:boxCornerRadiusBottomStart="14dp"
             app:boxCornerRadiusBottomEnd="14dp"
             android:layout_marginBottom="14dp">
@@ -160,139 +187,351 @@
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="top"
                 android:hint="@string/describe_recipe"
                 android:minLines="2"
-                android:maxLines="6"/>
+                android:maxLines="6" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Doses e Tempo com stepper (− valor +) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="14dp">
+
+            <!-- Doses -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginEnd="@dimen/margin_small">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/servings"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:layout_marginBottom="@dimen/margin_very_small" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/input"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp">
+
+                    <TextView
+                        android:id="@+id/btn_servings_minus"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_stepper_btn"
+                        android:gravity="center"
+                        android:text="−"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/servings"
+                        tools:ignore="HardcodedText" />
+
+                    <EditText
+                        android:id="@+id/et_servings"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_medium"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:hint="@string/servings"
+                        android:textColorHint="@color/text_secondary"
+                        android:maxLength="3"
+                        android:importantForAutofill="no" />
+
+                    <TextView
+                        android:id="@+id/btn_servings_plus"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_stepper_btn"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="@color/primary"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/servings"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Tempo (min) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/margin_small">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/preparation_time"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:layout_marginBottom="@dimen/margin_very_small" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/input"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp">
+
+                    <TextView
+                        android:id="@+id/btn_time_minus"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_stepper_btn"
+                        android:gravity="center"
+                        android:text="−"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/preparation_time"
+                        tools:ignore="HardcodedText" />
+
+                    <EditText
+                        android:id="@+id/et_preparation_time"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_medium"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:hint="@string/preparation_time"
+                        android:textColorHint="@color/text_secondary"
+                        android:maxLength="4"
+                        android:importantForAutofill="no" />
+
+                    <TextView
+                        android:id="@+id/btn_time_plus"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_stepper_btn"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="@color/primary"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/preparation_time"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Dificuldade: seletor segmentado (Fácil / Médio / Difícil).
+             Os segmentos são a UI visível; o RadioGroup abaixo (oculto) mantém
+             a ligação existente com o Java. Início: Fácil selecionado. -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/difficulty"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="@dimen/margin_very_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_segment_track"
+            android:padding="3dp"
+            android:layout_marginBottom="14dp">
+
+            <TextView
+                android:id="@+id/btn_diff_easy"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="38dp"
+                android:gravity="center"
+                android:background="@drawable/bg_segment_selected"
+                android:text="@string/easy"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_semibold"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btn_diff_medium"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="38dp"
+                android:gravity="center"
+                android:background="@android:color/transparent"
+                android:text="@string/medium"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_regular"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btn_diff_hard"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="38dp"
+                android:gravity="center"
+                android:background="@android:color/transparent"
+                android:text="@string/hard"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_regular"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- RadioGroup oculto: fonte de verdade da dificuldade lida pelo Java. -->
+        <RadioGroup
+            android:id="@+id/rg_difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <RadioButton
+                android:id="@+id/rb_easy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/easy" />
+            <RadioButton
+                android:id="@+id/rb_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/medium" />
+            <RadioButton
+                android:id="@+id/rb_hard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hard" />
+        </RadioGroup>
+
+        <!-- Ingredientes: lista dentro de cartão + botão adicionar -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ingredients"
             android:textSize="15sp"
+            android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
-            android:layout_marginBottom="2dp"/>
+            android:layout_marginBottom="@dimen/margin_very_small" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_ingredients"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="10dp"
-            android:layout_marginBottom="8dp"
-            tools:listitem="@layout/item_ingredient_save_update"/>
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_soft"
+            android:padding="@dimen/padding_small"
+            android:layout_marginBottom="@dimen/margin_small">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="10dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_ingredient_save_update" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_ingredient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/button_secundary"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
             android:textColor="@color/primary"
             android:background="@drawable/button_secundary"
             android:text="@string/AddIngredients"
             android:textSize="@dimen/text_medium"
             android:layout_marginTop="0dp"
-            android:layout_marginBottom="@dimen/margin_large"/>
+            android:layout_marginBottom="@dimen/margin_large" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                app:boxCornerRadiusTopStart="14dp"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                app:boxCornerRadiusTopEnd="14dp"
-                app:boxCornerRadiusBottomStart="14dp"
-                app:boxCornerRadiusBottomEnd="14dp"
-                android:layout_marginEnd="8dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_servings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/servings"
-                    android:inputType="number"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                app:boxCornerRadiusTopStart="14dp"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                app:boxCornerRadiusTopEnd="14dp"
-                app:boxCornerRadiusBottomStart="14dp"
-                app:boxCornerRadiusBottomEnd="14dp"
-                android:layout_marginStart="8dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_preparation_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/preparation_time"
-                    android:inputType="number"/>
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/difficulty"
-            android:textSize="15sp"
-            android:fontFamily="@font/poppins_semibold"
-            android:layout_marginBottom="2dp"/>
-        <RadioGroup
-            android:id="@+id/rg_difficulty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="18dp">
-            <RadioButton
-                android:id="@+id/rb_easy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/easy"/>
-            <RadioButton
-                android:id="@+id/rb_medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/medium"/>
-            <RadioButton
-                android:id="@+id/rb_hard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/hard"/>
-        </RadioGroup>
-
+        <!-- Instruções: passo numerado (círculo coral) + campo -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/instructions"
             android:textSize="15sp"
+            android:textColor="@color/text_primary"
             android:fontFamily="@font/poppins_semibold"
-            android:layout_marginBottom="2dp"/>
-        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginBottom="@dimen/margin_very_small" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxCornerRadiusTopStart="14dp"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            app:boxCornerRadiusTopEnd="14dp"
-            app:boxCornerRadiusBottomStart="14dp"
-            app:boxCornerRadiusBottomEnd="14dp"
-            android:layout_marginBottom="200dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_instructions"
-                android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/margin_large">
+
+            <TextView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@drawable/bg_step_number"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_semibold"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="@dimen/margin_small"
+                tools:ignore="HardcodedText" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="@string/explain_steps"
-                android:minLines="3"
-                android:maxLines="10"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:imeOptions="actionDone"
+                app:boxBackgroundColor="@color/background_secondary"
+                app:boxStrokeColor="@color/stroke_soft"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_secondary"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusBottomEnd="14dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="top"
+                    android:hint="@string/explain_steps"
+                    android:minLines="3"
+                    android:maxLines="10" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_saving"
@@ -301,18 +540,21 @@
             android:layout_gravity="center_horizontal"
             android:visibility="gone"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:indeterminate="true"/>
+            android:indeterminate="true" />
 
+        <!-- Publicar receita (primário coral) -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save"
-            android:text="@string/save_recipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/button_primary"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
             android:textColor="@color/white"
             android:background="@drawable/button_primary"
+            android:text="@string/save_recipe"
             android:textSize="@dimen/text_medium"
-            android:layout_marginTop="@dimen/margin_hero"
-            android:layout_marginBottom="@dimen/margin_hero"/>
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_large" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

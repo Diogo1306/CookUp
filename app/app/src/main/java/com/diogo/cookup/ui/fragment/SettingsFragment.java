@@ -1,5 +1,6 @@
 package com.diogo.cookup.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.diogo.cookup.R;
+import com.diogo.cookup.ui.activity.AuthActivity;
 import com.diogo.cookup.utils.MessageUtils;
 import com.diogo.cookup.viewmodel.AuthViewModel;
 import com.diogo.cookup.viewmodel.UserViewModel;
@@ -89,5 +91,25 @@ public class SettingsFragment extends Fragment {
         btn_appearance.setOnClickListener(v ->
                 NavHostFragment.findNavController(this)
                         .navigate(R.id.action_settingsFragment_to_settingsAppearanceFragment));
+
+        // Ações novas do redesign: palavra-passe e eliminar conta reutilizam o ecrã Conta
+        // (onde o fluxo com confirmação já existe); terminar sessão é feito aqui diretamente.
+        View btnPassword = view.findViewById(R.id.button_password);
+        if (btnPassword != null) btnPassword.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_settingsFragment_to_settingsAccountFragment));
+
+        View btnDelete = view.findViewById(R.id.button_delete_account);
+        if (btnDelete != null) btnDelete.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_settingsFragment_to_settingsAccountFragment));
+
+        View btnLogout = view.findViewById(R.id.button_logout);
+        if (btnLogout != null) btnLogout.setOnClickListener(v -> {
+            authViewModel.logout();
+            Intent intent = new Intent(requireActivity(), AuthActivity.class);
+            startActivity(intent);
+            requireActivity().finish();
+        });
     }
 }

@@ -196,7 +196,12 @@ public class SettingsAccountFragment extends Fragment {
 
             @Override
             public void onError(String message) {
+                FirebaseAuth.getInstance().signOut();
+                SharedPrefHelper.getInstance(requireContext()).clearUser();
                 MessageUtils.showSnackbar(requireView(), getString(R.string.backend_delete_error, message));
+                Intent intent = new Intent(requireActivity(), AuthActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
     }

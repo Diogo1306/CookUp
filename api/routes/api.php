@@ -55,7 +55,6 @@ Router::add('GET',  'recommended',                [$recipeController, 'getRecomm
 Router::add('POST', 'upload_recipe_gallery', [$recipeController, 'uploadGallery']);
 Router::add('GET', 'recipe_gallery', [$recipeController, 'getGallery']);
 Router::add('POST', 'delete_recipe', [$recipeController, 'delete']);
-Router::add('POST', 'upload_recipe_gallery', [$recipeController, 'uploadGallery']);
 
 // PROFILE
 Router::add('GET',  'profile_summary',   [$profileController, 'getSummary']);

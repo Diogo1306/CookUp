@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bloco de skeleton com o mesmo raio dos cartões de receita (18dp). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/skeletonStartColor" />
+    <corners android:radius="@dimen/border_radius_large" />
+</shape>

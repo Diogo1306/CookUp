@@ -9,7 +9,7 @@ class SearchController
     {
         $query = $_GET['query'] ?? null;
 
-        if (!$query) {
+        if ($query === null || trim($query) === '') {
             return Response::json(["success" => false, "message" => "Parâmetro 'query' em falta."], 422);
         }
 

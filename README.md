@@ -7,10 +7,11 @@
 
 Plataforma completa de receitas: cria, guarda e partilha receitas, recebe avaliações e sugestões personalizadas — desenvolvida como Prova de Aptidão Profissional (PAP) por Diogo Esteves.
 
+![Versão](https://img.shields.io/badge/vers%C3%A3o-1.1.0-FF7043)
 ![Android](https://img.shields.io/badge/App-Android%20·%20Java-3DDC84?logo=android&logoColor=white)
 ![PHP](https://img.shields.io/badge/API-PHP%20·%20REST-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/BD-MySQL-4479A1?logo=mysql&logoColor=white)
-![React](https://img.shields.io/badge/Dashboard-React%20·%20Vite%20·%20MUI-61DAFB?logo=react&logoColor=black)
+![React](https://img.shields.io/badge/Dashboard-React%20·%20Vite-61DAFB?logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Admin-Node.js%20·%20Express-339933?logo=nodedotjs&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Auth-Firebase-FFCA28?logo=firebase&logoColor=black)
 ![Licença](https://img.shields.io/badge/Licen%C3%A7a-Todos%20os%20direitos%20reservados-c0392b)
@@ -18,6 +19,16 @@ Plataforma completa de receitas: cria, guarda e partilha receitas, recebe avalia
 </div>
 
 ---
+
+## 🆕 Novidades na v1.1.0
+
+**Redesign visual completo da app Android** — nova identidade "borda-fio quente", cartões arredondados com sombras suaves, bottom nav com estado ativo em coral e skeletons de _loading_ polidos. Destaques funcionais:
+
+- **Receita da semana** em destaque no ecrã Início (_hero_)
+- **Porções ajustáveis** no detalhe, com recálculo automático das quantidades dos ingredientes
+- **Dificuldade em segmentos** e **_steppers_ numéricos** na criação/edição de receitas
+- **Gestão de conta** nas Definições — terminar sessão e eliminar conta
+- **Estabilidade** — correções de navegação, ciclo de vida de _fragments_ e eventos de LiveData
 
 ## Sobre o projeto
 
@@ -47,7 +58,7 @@ O CookUp nasceu de uma observação simples: as receitas estão espalhadas pelas
 ```mermaid
 flowchart LR
     APP["App Android<br/>Java · MVVM · Retrofit"] -->|REST · JSON| API["API RESTful<br/>PHP"]
-    DASH["Dashboard<br/>React · MUI · Axios"] -->|REST · JSON| API
+    DASH["Dashboard<br/>React · Vite · Axios"] -->|REST · JSON| API
     API --> BD[("MySQL<br/>cookup_db")]
     APP -->|Autenticação| FB["Firebase Auth"]
     DASH -->|Autenticação| FB
@@ -63,7 +74,7 @@ A app segue o padrão **MVVM** (ViewModels + LiveData) com repositórios central
 |---|---|---|
 | [`app/`](app/) | Aplicação Android | Java, MVVM, LiveData, Retrofit, Navigation |
 | [`api/`](api/) | API RESTful + base de dados | PHP, MySQL |
-| [`dashboard/`](dashboard/) | Dashboard de administração | React, Vite, Material UI, Axios |
+| [`dashboard/`](dashboard/) | Dashboard de administração | React, Vite, Axios (design system próprio) |
 | [`firebase-admin/`](firebase-admin/) | Backend auxiliar de administração | Node.js, Express, Firebase Admin SDK |
 | [`assets/icons/`](assets/icons/) | Ícones e imagens da marca | — |
 
@@ -150,7 +161,7 @@ Este monorepo junta três repositórios originais, com o histórico completo imp
 - `Diogo1306/CookUp_Core` → `api/`
 - `Diogo1306/CookUp_Dasboard` → `dashboard/`
 
-Os repositórios originais foram arquivados.
+Os três repositórios originais foram consolidados aqui e deixaram de ser mantidos — **este monorepo é agora o único ativo**.
 
 ## Licença
 

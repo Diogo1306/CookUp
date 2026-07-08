@@ -47,8 +47,8 @@ public class RecipeAdapterSavedInList extends ListAdapter<RecipeData, RecipeAdap
 
         @Override
         public boolean areContentsTheSame(@NonNull RecipeData oldItem, @NonNull RecipeData newItem) {
-            return oldItem.getTitle().equals(newItem.getTitle()) &&
-                    oldItem.getImage().equals(newItem.getImage()) &&
+            return java.util.Objects.equals(oldItem.getTitle(), newItem.getTitle()) &&
+                    java.util.Objects.equals(oldItem.getImage(), newItem.getImage()) &&
                     oldItem.getAverageRating() == newItem.getAverageRating() &&
                     oldItem.getPreparationTime() == newItem.getPreparationTime();
         }

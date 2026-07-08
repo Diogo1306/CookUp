@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/padding_small"
-    android:elevation="6dp"
     android:layout_marginEnd="6dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        app:cardCornerRadius="@dimen/border_radius"
-        app:cardElevation="0dp">
+        app:cardCornerRadius="@dimen/border_radius_large"
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -27,11 +27,14 @@
 
             <ImageButton
                 android:id="@+id/button_save_recipe"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="6dp"
-                android:background="@drawable/bg_circle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="8dp"
+                android:padding="7dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/bg_fav_circle"
                 android:src="@drawable/ic_bookmark"
+                app:tint="@color/primary"
                 android:layout_gravity="top|end"
                 android:contentDescription="Guardar Receita" />
         </FrameLayout>
@@ -79,7 +82,8 @@
         <ImageView
             android:layout_width="@dimen/icon_size_very_small"
             android:layout_height="@dimen/icon_size_very_small"
-            android:src="@drawable/ic_star" />
+            android:src="@drawable/ic_star"
+            app:tint="@color/accent_orange" />
 
         <TextView
             android:id="@+id/rating_text"

@@ -68,6 +68,7 @@ public class SavedListViewModel extends AndroidViewModel {
     }
 
     public void loadRecipesFromList(int listId) {
+        recipesFromList.setValue(new ArrayList<>());
         repository.getRecipesFromList(listId, new SimpleCallback<>(recipesFromList::postValue));
     }
 

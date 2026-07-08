@@ -1,86 +1,133 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useIngredients } from "../hooks/useIngredients";
-import IngredientsForm from "../components/IngredientsForm";
-import IngredientsTable from "../components/IngredientsTable";
-import { Typography, Button, CircularProgress, Box, Stack } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import Modal from "../components/Modal";
+import { IconSearch, IconEdit, IconTrash, IconPlus } from "../components/icons";
+
+const FALLBACK = "/brand/ic_cookup.png";
+const EMPTY = { ingredient_name: "", image_file: null };
 
 export default function IngredientsPage() {
   const { ingredients, loading, error, handleCreate, handleEdit, handleDelete, loadIngredients } = useIngredients();
-  const [openForm, setOpenForm] = useState(false);
-  const [editData, setEditData] = useState(null);
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState(EMPTY);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    loadIngredients();
-  }, [loadIngredients]);
+  useEffect(() => { loadIngredients(); }, [loadIngredients]);
 
-  function handleAdd() {
-    setEditData(null);
-    setOpenForm(true);
+  const filtered = useMemo(
+    () => ingredients.filter((i) => i.ingredient_name?.toLowerCase().includes(query.toLowerCase())),
+    [ingredients, query]
+  );
+
+  // Campo de imagem: a API usa ingredient_image_url (tabela) ou image_url (form).
+  const imageOf = (ing) => ing.ingredient_image_url || ing.image_url || null;
+
+  function openNew() {
+    setEditing(null);
+    setForm(EMPTY);
+    setOpen(true);
   }
-
-  function handleEditIngredient(ingredient) {
-    setEditData(ingredient);
-    setOpenForm(true);
+  function openEdit(ing) {
+    setEditing(ing);
+    setForm({ ingredient_name: ing.ingredient_name, image_file: null });
+    setOpen(true);
   }
-
-  async function handleSave(form) {
-    if (editData) {
-      await handleEdit(form);
+  async function save() {
+    if (!form.ingredient_name.trim()) return;
+    setSaving(true);
+    if (editing) {
+      await handleEdit({
+        ingredient_id: editing.ingredient_id,
+        ingredient_name: form.ingredient_name,
+        oldImage: imageOf(editing), // mantém imagem se não houver nova
+        newImage: form.image_file,
+      });
     } else {
-      await handleCreate(form);
+      await handleCreate({ ingredient_name: form.ingredient_name, image_file: form.image_file });
     }
-    setOpenForm(false);
-    setEditData(null);
+    setSaving(false);
+    setOpen(false);
     loadIngredients();
   }
-
-  function handleCloseForm() {
-    setOpenForm(false);
-    setEditData(null);
+  function remove(ing) {
+    if (window.confirm(`Eliminar o ingrediente "${ing.ingredient_name}"?`)) handleDelete(ing.ingredient_id);
   }
 
   return (
-    <Box sx={{ m: { xs: 1, md: 3 }, mt: 3, maxWidth: "100%" }}>
-      <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAdd}
-          startIcon={<AddIcon />}
-          sx={{
-            borderRadius: 2,
-            fontWeight: 600,
-            textTransform: "none",
-            boxShadow: 1,
-            px: 3,
-          }}
-        >
-          Novo Ingrediente
-        </Button>
-      </Stack>
+    <div>
+      <div className="page-head">
+        <h2>Ingredientes</h2>
+        <span className="count-badge">{ingredients.length}</span>
+      </div>
 
-      {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-          <CircularProgress />
-        </Box>
+      <div className="actions">
+        <div className="field search">
+          <IconSearch />
+          <input placeholder="Pesquisar ingredientes…" value={query} onChange={(e) => setQuery(e.target.value)} />
+        </div>
+        <button className="btn-new" onClick={openNew}><IconPlus /> Novo Ingrediente</button>
+      </div>
+
+      {loading && !ingredients.length ? (
+        <div className="page-loading">A carregar…</div>
       ) : (
-        <IngredientsTable
-          ingredients={ingredients}
-          onEdit={handleEditIngredient}
-          onDelete={handleDelete}
-          onRefresh={loadIngredients}
-          loading={loading}
-        />
+        <div className="tbl">
+          <div className="tbl-scroll">
+            <table>
+              <thead>
+                <tr><th>INGREDIENTE</th><th style={{ textAlign: "right" }}>AÇÕES</th></tr>
+              </thead>
+              <tbody>
+                {filtered.map((i) => (
+                  <tr key={i.ingredient_id}>
+                    <td>
+                      <div className="cell-media">
+                        <img src={imageOf(i) || FALLBACK} alt="" onError={(e) => (e.currentTarget.src = FALLBACK)} />
+                        <div className="t">{i.ingredient_name}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="row-actions" style={{ justifyContent: "flex-end" }}>
+                        <button className="iact" onClick={() => openEdit(i)} title="Editar"><IconEdit /></button>
+                        <button className="iact del" onClick={() => remove(i)} title="Eliminar"><IconTrash /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr><td colSpan={2} className="page-empty">Nenhum ingrediente encontrado.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
 
-      <IngredientsForm open={openForm} onClose={handleCloseForm} onSave={handleSave} initialData={editData} loading={loading} />
+      {error && <div className="page-error">{error}</div>}
 
-      {error && (
-        <Typography color="error" mt={2}>
-          {error}
-        </Typography>
+      {open && (
+        <Modal
+          title={editing ? "Editar ingrediente" : "Novo ingrediente"}
+          onClose={() => setOpen(false)}
+          footer={
+            <>
+              <button className="btn ghost" onClick={() => setOpen(false)}>Cancelar</button>
+              <button className="btn primary" onClick={save} disabled={saving}>{saving ? "A guardar…" : "Guardar"}</button>
+            </>
+          }
+        >
+          <div className="field-group">
+            <label>Nome</label>
+            <input className="input" value={form.ingredient_name} onChange={(e) => setForm({ ...form, ingredient_name: e.target.value })} placeholder="Ex.: Tomate" />
+          </div>
+          <div className="field-group">
+            <label>Imagem {editing && "(deixa vazio para manter)"}</label>
+            <input className="input" type="file" accept="image/*" onChange={(e) => setForm({ ...form, image_file: e.target.files[0] || null })} style={{ paddingTop: 9 }} />
+          </div>
+        </Modal>
       )}
-    </Box>
+    </div>
   );
 }

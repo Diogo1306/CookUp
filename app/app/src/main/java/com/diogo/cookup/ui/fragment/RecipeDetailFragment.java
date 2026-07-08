@@ -28,6 +28,7 @@ import com.diogo.cookup.R;
 import com.diogo.cookup.data.model.CategoryData;
 import com.diogo.cookup.data.model.CommentData;
 import com.diogo.cookup.data.model.IngredientData;
+import com.diogo.cookup.data.model.RecipeData;
 import com.diogo.cookup.data.model.TrackRequest;
 import com.diogo.cookup.data.repository.TrackingRepository;
 import com.diogo.cookup.ui.activity.MainActivity;
@@ -58,6 +59,15 @@ public class RecipeDetailFragment extends Fragment {
     private ViewPager2 galleryPager;
     private TabLayout galleryIndicator;
     private RecipeGalleryDetailAdapter galleryPagerAdapter;
+
+    // Pílula de avaliação (atualizada tanto pelo detalhe como pela média)
+    private TextView txtRating;
+
+    // Seletor de porções (ajusta as quantidades dos ingredientes)
+    private TextView txtPortions, txtServings;
+    private java.util.List<IngredientData> baseIngredients;
+    private int baseServings = 1;
+    private int currentServings = 1;
 
     public static RecipeDetailFragment newInstance(int recipeId) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
@@ -97,7 +107,7 @@ public class RecipeDetailFragment extends Fragment {
         TextView recipeDescription = view.findViewById(R.id.recipe_description);
         TextView recipeInstructions = view.findViewById(R.id.recipe_instructions);
         TextView txtTime = view.findViewById(R.id.txt_time);
-        TextView txtRating = view.findViewById(R.id.txt_rating);
+        txtRating = view.findViewById(R.id.txt_rating);
         TextView txtDifficulty = view.findViewById(R.id.txt_difficulty);
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_categories);
         ImageButton btnBack = view.findViewById(R.id.arrow_back);
@@ -110,6 +120,17 @@ public class RecipeDetailFragment extends Fragment {
         ingredientsRecyclerView = view.findViewById(R.id.ingredients_recycler_view);
         ingredientsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredientsRecyclerView.setNestedScrollingEnabled(false);
+
+        txtPortions = view.findViewById(R.id.txt_portions);
+        txtServings = view.findViewById(R.id.txt_servings);
+        View btnPortionMinus = view.findViewById(R.id.btn_portion_minus);
+        View btnPortionPlus = view.findViewById(R.id.btn_portion_plus);
+        if (btnPortionMinus != null) btnPortionMinus.setOnClickListener(v -> {
+            if (currentServings > 1) { currentServings--; updatePortionsUi(); }
+        });
+        if (btnPortionPlus != null) btnPortionPlus.setOnClickListener(v -> {
+            currentServings++; updatePortionsUi();
+        });
 
         btnBack.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).popBackStack();
@@ -228,17 +249,7 @@ public class RecipeDetailFragment extends Fragment {
                 }
             }
 
-            List<IngredientData> ingredients = recipe.getIngredients();
-            if (ingredients != null && !ingredients.isEmpty()) {
-                ingredientAdapter = new IngredientAdapter(ingredients, requireContext());
-                ingredientsRecyclerView.setAdapter(ingredientAdapter);
-
-                ingredientsRecyclerView.post(() -> {
-                    ingredientAdapter.notifyDataSetChanged();
-                    ingredientsRecyclerView.getLayoutParams().height = ingredientAdapter.getItemCount() * dpToPx(60);
-                    ingredientsRecyclerView.requestLayout();
-                });
-            }
+            setupPortions(recipe);
 
             recipeInstructions.setText(recipe.getInstructions());
             recipeInstructions.setVisibility(View.VISIBLE);
@@ -315,6 +326,11 @@ public class RecipeDetailFragment extends Fragment {
             }
         });
 
+        viewModel.getAverageRatingLiveData().observe(getViewLifecycleOwner(), avg -> {
+            if (txtRating == null || avg == null) return;
+            txtRating.setText(avg > 0 ? String.format(Locale.getDefault(), "%.1f", avg) : "—");
+        });
+
         viewModel.getRatingSuccessLiveData().observe(getViewLifecycleOwner(), success -> {
             if (success != null && success) {
                 inputComment.setText("");
@@ -351,6 +367,73 @@ public class RecipeDetailFragment extends Fragment {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
+    }
+
+    // Guarda as porções originais e mostra os ingredientes já na base da receita
+    private void setupPortions(RecipeData recipe) {
+        baseIngredients = recipe.getIngredients();
+        baseServings = Math.max(1, recipe.getServings());
+        currentServings = baseServings;
+        updatePortionsUi();
+    }
+
+    // Atualiza o número de porções e reescala as quantidades dos ingredientes
+    private void updatePortionsUi() {
+        if (txtPortions != null) txtPortions.setText(String.valueOf(currentServings));
+        if (txtServings != null) txtServings.setText(String.valueOf(currentServings));
+
+        if (baseIngredients == null || baseIngredients.isEmpty()) return;
+
+        double factor = (double) currentServings / baseServings;
+        java.util.List<IngredientData> scaled = new java.util.ArrayList<>();
+        for (IngredientData ing : baseIngredients) {
+            scaled.add(new IngredientData(ing.getName(), scaleQuantity(ing.getQuantity(), factor), ing.getImage()));
+        }
+
+        ingredientAdapter = new IngredientAdapter(scaled, requireContext());
+        ingredientsRecyclerView.setAdapter(ingredientAdapter);
+        ingredientsRecyclerView.post(() -> {
+            ingredientAdapter.notifyDataSetChanged();
+            ingredientsRecyclerView.getLayoutParams().height = ingredientAdapter.getItemCount() * dpToPx(60);
+            ingredientsRecyclerView.requestLayout();
+        });
+    }
+
+    // Multiplica o número no início da quantidade (ex.: "160 g" -> "320 g").
+    // Se não houver número (ex.: "a gosto"), devolve a quantidade tal como está.
+    private String scaleQuantity(String quantity, double factor) {
+        if (quantity == null || quantity.isEmpty()) return quantity;
+
+        // Fração no início (ex.: "1/2 chávena") -> escala o valor da fração, não só o numerador.
+        java.util.regex.Matcher fraction = java.util.regex.Pattern.compile("^\\s*(\\d+)\\s*/\\s*(\\d+)").matcher(quantity);
+        if (fraction.find()) {
+            try {
+                double denominator = Double.parseDouble(fraction.group(2));
+                if (denominator != 0) {
+                    double value = (Double.parseDouble(fraction.group(1)) / denominator) * factor;
+                    return formatQuantityValue(value) + quantity.substring(fraction.end());
+                }
+            } catch (NumberFormatException e) {
+                return quantity;
+            }
+        }
+
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("^\\s*(\\d+(?:[.,]\\d+)?)").matcher(quantity);
+        if (!m.find()) return quantity;
+        try {
+            double value = Double.parseDouble(m.group(1).replace(',', '.')) * factor;
+            return formatQuantityValue(value) + quantity.substring(m.end());
+        } catch (NumberFormatException e) {
+            return quantity;
+        }
+    }
+
+    // Arredonda para inteiro quando está muito perto de um; caso contrário mostra uma casa decimal.
+    private String formatQuantityValue(double value) {
+        if (Math.abs(value - Math.rint(value)) < 0.05) {
+            return String.valueOf((int) Math.rint(value));
+        }
+        return String.format(Locale.getDefault(), "%.1f", value);
     }
 
     @Override

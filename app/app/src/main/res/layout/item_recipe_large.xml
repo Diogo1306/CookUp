@@ -6,7 +6,8 @@
     android:layout_marginVertical="@dimen/margin_micro"
     android:layout_marginHorizontal="@dimen/margin_small"
     app:cardCornerRadius="20dp"
-    app:cardElevation="0dp">
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,6 +56,7 @@
                     android:layout_height="32dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_bookmark"
+                    app:tint="@color/primary"
                     android:contentDescription="Favoritar"
                     android:padding="4dp" />
             </LinearLayout>
@@ -87,6 +89,7 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:src="@drawable/ic_star"
+                    app:tint="@color/accent_orange"
                     android:layout_marginEnd="4dp"/>
 
                 <TextView

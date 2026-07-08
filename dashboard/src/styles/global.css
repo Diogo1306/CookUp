@@ -1,0 +1,139 @@
+/* ------------------------------------------------------------------ *
+ * CookUp Dashboard — fundação de estilo
+ * Tokens (cores, tipografia, raios, sombras) partilhados por toda a UI.
+ * ------------------------------------------------------------------ */
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/poppins_regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/poppins_semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/poppins_bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* Marca */
+  --primary: #f96163;
+  --primary-dark: #c53e45;
+
+  /* Superfícies e fundo */
+  --bg-page: #faf8f4;
+  --surface: #ffffff;
+  --chrome: #ffffff; /* sidebar + topbar */
+  --neutral-bg: #f6f2ec;
+  --neutral-bg-alt: #fbf9f6;
+  --sidebar-active-bg: #fee7e7;
+
+  /* Texto */
+  --text-primary: #2e2a26;
+  --text-secondary: #6b645c;
+  --text-muted: #9b948b;
+  --text-faint: #b9b1a6;
+
+  /* Linhas */
+  --border: #eee7de;
+  --border-row: #f2ece4;
+  --border-axis: #e5ded5;
+
+  /* Estados */
+  --success: #2e7d32;
+  --success-bg: #e8f5e9;
+  --warning: #a05a00;
+  --warning-bg: #fff4e5;
+  --danger: #c62828;
+  --danger-bg: #fdecea;
+  --heart: #e63946;
+  --star: #ffa94d;
+
+  /* Raios */
+  --r-card: 16px;
+  --r-btn: 12px;
+  --r-input: 14px;
+  --r-sm: 8px;
+  --r-pill: 999px;
+
+  /* Sombras */
+  --shadow-card: 0 1px 4px rgba(46, 42, 38, 0.06);
+  --shadow-primary: 0 4px 12px rgba(249, 97, 99, 0.3);
+  --shadow-primary-lg: 0 6px 18px rgba(249, 97, 99, 0.35);
+
+  --font: "Poppins", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Animações reutilizáveis pela UI */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes growUp {
+  from { transform: scaleY(0.001); }
+  to { transform: scaleY(1); }
+}
+@keyframes fillBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Modo escuro (alinhado ao design: neutro, cards planos) ---------- */
+:root[data-theme="dark"] {
+  --bg-page: #121212;
+  --surface: #232324;
+  --chrome: #1a1a1c;
+  --neutral-bg: #2a2a2c;
+  --neutral-bg-alt: #1f1f21;
+  --sidebar-active-bg: #3b2326;
+
+  --text-primary: #e6e6e8;
+  --text-secondary: #b0b0b4;
+  --text-muted: #86868a;
+  --text-faint: #6a6a6e;
+
+  --border: #2e2e30;
+  --border-row: #2c2c2e;
+  --border-axis: #3a3a3c;
+
+  --primary-dark: #ff9b9d; /* coral do texto/estados ativos em escuro */
+  --success: #7bc98b;
+  --success-bg: rgba(123, 201, 139, 0.16);
+  --warning: #ffb562;
+  --warning-bg: rgba(255, 181, 98, 0.16);
+  --danger: #ef6b6b;
+  --danger-bg: rgba(239, 107, 107, 0.18);
+  --star: #ffa94d;
+
+  --shadow-card: none; /* em escuro os cards são planos (contraste de superfície) */
+  --shadow-primary: 0 4px 12px rgba(249, 97, 99, 0.28);
+}
+
+/* Transição suave ao alternar tema nas superfícies principais */
+body { transition: background-color 0.25s ease, color 0.2s ease; }
