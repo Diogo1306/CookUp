@@ -27,29 +27,15 @@
         android:id="@+id/settingsFragment"
         android:name="com.diogo.cookup.ui.fragment.SettingsFragment">
         <action
-            android:id="@+id/action_settingsFragment_to_settingsAccountFragment"
-            app:destination="@id/settingsAccountFragment" />
+            android:id="@+id/action_settingsFragment_to_changeEmailFragment"
+            app:destination="@id/changeEmailFragment" />
         <action
-            android:id="@+id/action_settingsFragment_to_settingsAppearanceFragment"
-            app:destination="@id/settingsAppearanceFragment" />
+            android:id="@+id/action_settingsFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_settingsProfileFragment"
             app:destination="@id/settingsProfileFragment" />
     </fragment>
-
-    <fragment
-        android:id="@+id/settingsAccountFragment"
-        android:name="com.diogo.cookup.ui.fragment.SettingsAccountFragment">
-        <action
-            android:id="@+id/action_settingsAccountFragment_to_changeEmailFragment"
-            app:destination="@id/changeEmailFragment" />
-        <action
-            android:id="@+id/action_settingsAccountFragment_to_changePasswordFragment"
-            app:destination="@id/changePasswordFragment" />
-    </fragment>
-
-    <fragment android:id="@+id/settingsAppearanceFragment"
-        android:name="com.diogo.cookup.ui.fragment.SettingsAppearanceFragment" />
 
     <fragment android:id="@+id/settingsProfileFragment"
         android:name="com.diogo.cookup.ui.fragment.SettingsProfileFragment" />

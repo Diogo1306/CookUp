@@ -234,6 +234,7 @@
 
                     <!-- Fio de separação -->
                     <View
+                        android:id="@+id/account_divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="@dimen/margin_medium"
@@ -317,14 +318,10 @@
                 android:textSize="@dimen/text_very_small"
                 android:fontFamily="@font/poppins_semibold" />
 
-            <!-- Cartão de aparência: pré-visualização do tema (abre o ecrã de Aparência) -->
+            <!-- Cartão de aparência: seletor de tema inline (aplica logo ao tocar) -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/button_appearance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/background_secondary"
                 app:cardCornerRadius="@dimen/border_radius_large"
                 app:cardElevation="0dp"
@@ -347,9 +344,12 @@
                         android:padding="@dimen/padding_micro">
 
                         <TextView
+                            android:id="@+id/seg_theme_light"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/btn_height_small"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:background="@drawable/bg_container"
                             android:text="@string/settings_theme_light"
@@ -358,9 +358,12 @@
                             android:fontFamily="@font/poppins_semibold" />
 
                         <TextView
+                            android:id="@+id/seg_theme_dark"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/btn_height_small"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:text="@string/settings_theme_dark"
                             android:textColor="@color/text_secondary"
@@ -368,9 +371,12 @@
                             android:fontFamily="@font/poppins_regular" />
 
                         <TextView
+                            android:id="@+id/seg_theme_system"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/btn_height_small"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:text="Sistema"
                             android:textColor="@color/text_secondary"
