@@ -80,6 +80,9 @@ public interface ApiService {
     @GET("api.php")
     Call<ApiResponse<List<RecipeData>>> getProfileRecipes(@Query("route") String route, @Query("user_id") int userId);
 
+    @GET("api.php")
+    Call<ApiResponse<List<RecipeData>>> getFinishedRecipes(@Query("route") String route, @Query("user_id") int userId);
+
     // === HOME FEED ===
     @GET("api.php")
     Call<ApiResponse<HomeFeedData>> getFullHomeFeed(@Query("route") String route, @Query("user_id") int userId);

@@ -28,6 +28,12 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
     private List<RecipeData> recipeList;
     private final OnRecipeActionListener actionListener;
     private final Context context;
+    private boolean showActions = true;
+
+    public void setShowActions(boolean s) {
+        this.showActions = s;
+        notifyDataSetChanged();
+    }
 
     public ProfileRecipeAdapter(Context context, List<RecipeData> recipes, OnRecipeActionListener listener) {
         this.context = context;
@@ -55,6 +61,9 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
                 .load(recipe.getImage())
                 .placeholder(R.drawable.placeholder)
                 .into(holder.recipeImage);
+
+        holder.buttonEdit.setVisibility(showActions ? View.VISIBLE : View.GONE);
+        holder.buttonDelete.setVisibility(showActions ? View.VISIBLE : View.GONE);
 
         holder.buttonEdit.setOnClickListener(v -> {
             if (actionListener != null) actionListener.onEdit(recipe);

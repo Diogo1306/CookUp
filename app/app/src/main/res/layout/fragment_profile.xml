@@ -314,6 +314,18 @@
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false" />
 
+            <TextView
+                android:id="@+id/empty_recipes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:gravity="center"
+                android:visibility="gone"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_small"
+                tools:text="Ainda não finalizaste receitas." />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

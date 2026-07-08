@@ -56,4 +56,22 @@ class ProfileController
                 : ['success' => false, 'message' => 'Nenhuma receita encontrada para este utilizador.']
         );
     }
+
+    /** Retorna todas as receitas finalizadas pelo usuário */
+    public function getFinishedRecipes()
+    {
+        if (!isset($_GET['user_id'])) {
+            Response::json(['success' => false, 'message' => 'Parâmetro user_id em falta.']);
+            return;
+        }
+
+        $user_id = intval($_GET['user_id']);
+        $recipes = Recipe::getFinishedByUser($user_id);
+
+        Response::json(
+            !empty($recipes)
+                ? ['success' => true, 'data' => $recipes]
+                : ['success' => false, 'message' => 'Nenhuma receita finalizada encontrada.']
+        );
+    }
 }

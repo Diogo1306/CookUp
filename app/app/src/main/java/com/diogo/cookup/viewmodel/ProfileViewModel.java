@@ -16,6 +16,7 @@ public class ProfileViewModel extends ViewModel {
     private final ProfileRepository repository = new ProfileRepository();
     private final MutableLiveData<ProfileData> profileSummary = new MutableLiveData<>();
     private final MutableLiveData<List<RecipeData>> userRecipes = new MutableLiveData<>();
+    private final MutableLiveData<List<RecipeData>> finishedRecipes = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> deleteSuccess = new MutableLiveData<>();
@@ -23,6 +24,7 @@ public class ProfileViewModel extends ViewModel {
 
     public LiveData<ProfileData> getProfileSummary() { return profileSummary; }
     public LiveData<List<RecipeData>> getUserRecipes() { return userRecipes; }
+    public LiveData<List<RecipeData>> getFinishedRecipes() { return finishedRecipes; }
     public LiveData<String> getError() { return error; }
 
     public LiveData<Boolean> getDeleteSuccess() { return deleteSuccess; }
@@ -37,6 +39,10 @@ public class ProfileViewModel extends ViewModel {
 
     public void loadProfileRecipes(int userId) {
         repository.getProfileRecipes(userId, userRecipes, error);
+    }
+
+    public void loadFinishedRecipes(int userId) {
+        repository.getFinishedRecipes(userId, finishedRecipes, error);
     }
 
     public void deleteRecipe(int recipeId) {

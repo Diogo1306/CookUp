@@ -399,6 +399,24 @@ class Recipe
     }
 
 
+    // Retorna as receitas finalizadas por um utilizador (por user_id)
+    public static function getFinishedByUser($user_id)
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT r.* FROM recipes r INNER JOIN user_recipe_finished f ON f.recipe_id = r.recipe_id WHERE f.user_id = ? ORDER BY f.finished_at DESC");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $recipes = [];
+        while ($row = $result->fetch_assoc()) {
+            $row['image'] = self::buildImageUrl($row['image']);
+            $row['finished_count'] = Tracking::countUniqueUsersFinishedRecipe($row['recipe_id']);
+            $recipes[] = $row;
+        }
+        return $recipes;
+    }
+
+
     // Retorna só os IDs das receitas de um autor (por user_id)
     public static function getIdsByAuthor($user_id)
     {

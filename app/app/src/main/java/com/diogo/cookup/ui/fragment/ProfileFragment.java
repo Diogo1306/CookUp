@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -33,6 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -40,9 +43,14 @@ public class ProfileFragment extends Fragment {
     private ProfileRecipeAdapter adapter;
     ImageView profile_image;
     TextView user_name, user_rating, user_total_views, total_finished_my_recipes, total_recipes;
+    TextView segment_created, segment_finished, empty_recipes;
     RecyclerView UserRecipesRecyclerView;
     FloatingActionButton fab_add_recipe;
     ImageButton btnSettings, btnEditProfile;
+
+    private String currentTab = "created";
+    private List<RecipeData> createdCache;
+    private List<RecipeData> finishedCache;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +101,9 @@ public class ProfileFragment extends Fragment {
         UserRecipesRecyclerView = view.findViewById(R.id.UserRecipesRecyclerView);
         fab_add_recipe = view.findViewById(R.id.fab_add_recipe);
         total_recipes = view.findViewById(R.id.total_recipes);
+        segment_created = view.findViewById(R.id.segment_created);
+        segment_finished = view.findViewById(R.id.segment_finished);
+        empty_recipes = view.findViewById(R.id.empty_recipes);
     }
 
     private void setupListeners(View view) {
@@ -151,6 +162,65 @@ public class ProfileFragment extends Fragment {
                 }
         );
         UserRecipesRecyclerView.setAdapter(adapter);
+
+        segment_created.setOnClickListener(v -> {
+            selectSegment(true);
+            adapter.setShowActions(true);
+            if (createdCache != null) {
+                renderRecipes(createdCache, true);
+            } else {
+                showLoadingList();
+                UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+                if (user != null) profileViewModel.loadProfileRecipes(user.getUserId());
+            }
+        });
+
+        segment_finished.setOnClickListener(v -> {
+            selectSegment(false);
+            adapter.setShowActions(false);
+            if (finishedCache != null) {
+                renderRecipes(finishedCache, false);
+            } else {
+                showLoadingList();
+                UserData user = SharedPrefHelper.getInstance(requireContext()).getUser();
+                if (user != null) profileViewModel.loadFinishedRecipes(user.getUserId());
+            }
+        });
+    }
+
+    private void selectSegment(boolean created) {
+        currentTab = created ? "created" : "finished";
+
+        TextView active = created ? segment_created : segment_finished;
+        TextView inactive = created ? segment_finished : segment_created;
+
+        float density = getResources().getDisplayMetrics().density;
+
+        active.setBackgroundResource(R.drawable.bg_profile_segment_selected);
+        active.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
+        active.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.poppins_semibold));
+        active.setElevation(1 * density);
+
+        inactive.setBackground(null);
+        inactive.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+        inactive.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.poppins_regular));
+        inactive.setElevation(0);
+    }
+
+    private void renderRecipes(List<RecipeData> list, boolean created) {
+        boolean empty = (list == null || list.isEmpty());
+        adapter.setRecipeList(list != null ? list : new ArrayList<>());
+        UserRecipesRecyclerView.setVisibility(empty ? View.GONE : View.VISIBLE);
+        if (empty_recipes != null) {
+            empty_recipes.setText(created ? R.string.profile_empty_created : R.string.profile_empty_finished);
+            empty_recipes.setVisibility(empty ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void showLoadingList() {
+        adapter.setRecipeList(new ArrayList<>());
+        UserRecipesRecyclerView.setVisibility(View.GONE);
+        if (empty_recipes != null) empty_recipes.setVisibility(View.GONE);
     }
 
     private void loadUserFromLocalStorage() {
@@ -186,8 +256,15 @@ public class ProfileFragment extends Fragment {
 
         profileViewModel.getUserRecipes().observe(getViewLifecycleOwner(), recipes -> {
             if (recipes != null) {
-                adapter.setRecipeList(recipes);
-                UserRecipesRecyclerView.setVisibility(recipes.isEmpty() ? View.GONE : View.VISIBLE);
+                createdCache = recipes;
+                if (currentTab.equals("created")) renderRecipes(recipes, true);
+            }
+        });
+
+        profileViewModel.getFinishedRecipes().observe(getViewLifecycleOwner(), recipes -> {
+            if (recipes != null) {
+                finishedCache = recipes;
+                if (currentTab.equals("finished")) renderRecipes(recipes, false);
             }
         });
 

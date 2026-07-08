@@ -70,6 +70,29 @@ public class ProfileRepository {
                 });
     }
 
+    public void getFinishedRecipes(int userId, MutableLiveData<List<RecipeData>> data, MutableLiveData<String> error) {
+        apiService.getFinishedRecipes("profile_finished_recipes", userId)
+                .enqueue(new Callback<ApiResponse<List<RecipeData>>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Response<ApiResponse<List<RecipeData>>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            data.postValue(response.body().getData());
+                        } else if (response.isSuccessful() && response.body() != null) {
+                            // A API devolve success:false quando o utilizador ainda nao finalizou receitas -> lista vazia
+                            data.postValue(new java.util.ArrayList<>());
+                        } else {
+                            Log.e("ProfileRepo", "Erro ao carregar receitas finalizadas: " + response.code() + ", body: " + response.body());
+                            error.postValue("Erro ao carregar receitas finalizadas do usuário.");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<List<RecipeData>>> call, @NonNull Throwable t) {
+                        error.postValue("Falha de conexão: " + t.getMessage());
+                    }
+                });
+    }
+
     public void deleteRecipe(int recipeId, DeleteCallback callback) {
         apiService.deleteRecipe("delete_recipe", recipeId)
                 .enqueue(new Callback<ApiResponse<Void>>() {

@@ -211,4 +211,6 @@
     <string name="WhatAreYouGoingCook">O que vais cozinhar hoje?</string>
     <string name="saved_greeting">Olá, xxxxxx 👋</string>
     <string name="saved_intro">O que vais cozinhar hoje?</string>
+    <string name="profile_empty_created">Ainda não criaste receitas.</string>
+    <string name="profile_empty_finished">Ainda não finalizaste receitas.</string>
 </resources>

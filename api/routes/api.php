@@ -59,6 +59,7 @@ Router::add('POST', 'delete_recipe', [$recipeController, 'delete']);
 // PROFILE
 Router::add('GET',  'profile_summary',   [$profileController, 'getSummary']);
 Router::add('GET',  'profile_recipes',   [$profileController, 'getRecipes']);
+Router::add('GET',  'profile_finished_recipes', [$profileController, 'getFinishedRecipes']);
 
 // CATEGORIES
 Router::add('POST', 'create_category', [$categoryController, 'create']);
